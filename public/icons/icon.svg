@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="112" fill="#070D0A" />
+  <rect x="24" y="24" width="464" height="464" rx="92" stroke="#1E3026" stroke-width="4" />
+  <path
+    d="M368 132C264 132 180 198 156 294C144 342 152 372 152 372C152 372 182 380 230 368C326 344 392 260 392 156C392 142 382 132 368 132Z"
+    fill="url(#leafGrad)"
+  />
+  <path
+    d="M152 372C198 326 258 268 332 198"
+    stroke="#070D0A"
+    stroke-width="18"
+    stroke-linecap="round"
+  />
+  <circle cx="164" cy="176" r="18" fill="#84CC16" />
+  <defs>
+    <linearGradient id="leafGrad" x1="152" y1="132" x2="392" y2="372" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#84CC16" />
+      <stop offset="1" stop-color="#10B981" />
+    </linearGradient>
+  </defs>
+</svg>

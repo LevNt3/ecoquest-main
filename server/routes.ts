@@ -26,7 +26,7 @@ import {
 } from './auth.ts';
 import {db, EVIDENCE_DIR, finalizeSubmissionTx} from './db.ts';
 import {getLevelProgress, getUtcDateString, getUtcPeriodKey} from './gamification.ts';
-import {verifyEvidenceWithOpenRouter} from './openrouter.ts';
+import {DEFAULT_CLOUDFLARE_MODEL, verifyEvidenceWithCloudflare} from './cloudflare-ai.ts';
 
 interface AuthenticatedRequest extends Request {
   user?: UserProfile;
@@ -130,8 +130,22 @@ const VerificationPayloadSchema = z.object({
 });
 
 const AdminClaimSchema = z.object({
-  passcode: z.string().min(4).max(128).optional(),
+  passcode: z.string().min(4).max(128),
 });
+
+const authAttempts = new Map<string, number[]>();
+
+function isRateLimited(key: string, maxAttempts: number, windowMs: number): boolean {
+  const now = Date.now();
+  const recent = (authAttempts.get(key) || []).filter((ts) => now - ts < windowMs);
+  if (recent.length >= maxAttempts) {
+    authAttempts.set(key, recent);
+    return true;
+  }
+  recent.push(now);
+  authAttempts.set(key, recent);
+  return false;
+}
 
 export function createApiRouter(): Router {
   const router = express.Router();
@@ -142,8 +156,11 @@ export function createApiRouter(): Router {
   router.get('/health', (_req, res) => {
     res.json({
       ok: true,
-      openrouterConfigured: Boolean(process.env.OPENROUTER_API_KEY?.trim()),
-      model: process.env.OPENROUTER_MODEL?.trim() || 'openrouter/free',
+      aiProvider: 'cloudflare',
+      aiConfigured: Boolean(
+        process.env.CLOUDFLARE_ACCOUNT_ID?.trim() && process.env.CLOUDFLARE_API_TOKEN?.trim(),
+      ),
+      model: process.env.CLOUDFLARE_AI_MODEL?.trim() || DEFAULT_CLOUDFLARE_MODEL,
     });
   });
 
@@ -167,7 +184,7 @@ export function createApiRouter(): Router {
     res.json({
       hasAdmin: adminCountRow.count > 0,
       passcodeConfigured,
-      canClaimInitialAdmin: !passcodeConfigured && adminCountRow.count === 0,
+      canClaimInitialAdmin: false,
     });
   });
 
@@ -202,6 +219,10 @@ export function createApiRouter(): Router {
   });
 
   router.post('/auth/login', (req, res) => {
+    if (isRateLimited(`login:${req.ip || 'unknown'}`, 20, 15 * 60 * 1000)) {
+      res.status(429).json({error: 'Too many login attempts. Please try again later.'});
+      return;
+    }
     const parsed = AuthLoginSchema.safeParse(req.body);
     if (!parsed.success) {
       res.status(400).json({error: 'Please enter a valid email and password'});
@@ -229,31 +250,30 @@ export function createApiRouter(): Router {
   });
 
   router.post('/auth/claim-admin', requireAuth, (req: AuthenticatedRequest, res) => {
+    if (isRateLimited(`claim-admin:${req.user!.id}`, 10, 15 * 60 * 1000)) {
+      res.status(429).json({error: 'Too many admin claim attempts. Please try again later.'});
+      return;
+    }
+
+    const configuredPasscode = process.env.ADMIN_PASSCODE?.trim();
+    if (!configuredPasscode) {
+      res.status(403).json({
+        error: 'ADMIN_PASSCODE is not configured on the server. Admin promotion is disabled.',
+      });
+      return;
+    }
+
     const parsed = AdminClaimSchema.safeParse(req.body || {});
     if (!parsed.success) {
       res.status(400).json({error: 'Invalid passcode format'});
       return;
     }
 
-    const configuredPasscode = process.env.ADMIN_PASSCODE?.trim();
-    const adminCount = (
-      db.prepare(`SELECT COUNT(*) as count FROM profiles WHERE role = 'admin'`).get() as {
-        count: number;
-      }
-    ).count;
-
-    if (configuredPasscode) {
-      const provided = parsed.data.passcode?.trim() || '';
-      const a = Buffer.from(provided, 'utf8');
-      const b = Buffer.from(configuredPasscode, 'utf8');
-      if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
-        res.status(403).json({error: 'Invalid server admin passcode'});
-        return;
-      }
-    } else if (adminCount > 0) {
-      res.status(403).json({
-        error: 'Initial admin has already been claimed. Set ADMIN_PASSCODE in server environment to promote additional admins.',
-      });
+    const provided = parsed.data.passcode.trim();
+    const a = Buffer.from(provided, 'utf8');
+    const b = Buffer.from(configuredPasscode, 'utf8');
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+      res.status(403).json({error: 'Invalid server admin passcode'});
       return;
     }
 
@@ -741,7 +761,7 @@ export function createApiRouter(): Router {
       Date.now(),
     );
 
-    const aiResult = await verifyEvidenceWithOpenRouter({
+    const aiResult = await verifyEvidenceWithCloudflare({
       questTitle: quest.title,
       questDescription: quest.description,
       verificationCriteria: quest.verification_criteria,
@@ -892,6 +912,13 @@ export function createApiRouter(): Router {
 
     if (!sub) {
       res.status(404).json({error: 'Submission not found'});
+      return;
+    }
+
+    if (sub.status === 'approved') {
+      res.status(409).json({
+        error: 'Approved submissions are terminal and cannot be modified.',
+      });
       return;
     }
 

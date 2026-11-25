@@ -152,8 +152,8 @@ export function SettingsView({
         <div className="space-y-2 text-sm leading-relaxed text-[var(--text-secondary)]">
           <p>
             When you submit a quest photo, EcoQuest stores it in private server storage and sends
-            the image to an external OpenRouter vision model solely to verify the quest&apos;s
-            visible criteria.
+            the image to a server-side Cloudflare Workers AI vision model solely to verify the
+            quest&apos;s visible criteria.
           </p>
           <p>
             We never require selfies, facial recognition, government IDs, or background camera

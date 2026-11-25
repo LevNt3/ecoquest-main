@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" fill="#070D0A" />
+  <path
+    d="M348 156C262 156 194 210 174 288C164 328 171 352 171 352C171 352 195 359 235 349C313 329 367 261 367 175C367 164 359 156 348 156Z"
+    fill="url(#leafGradMask)"
+  />
+  <path
+    d="M171 352C209 314 258 267 318 210"
+    stroke="#070D0A"
+    stroke-width="16"
+    stroke-linecap="round"
+  />
+  <circle cx="184" cy="192" r="15" fill="#84CC16" />
+  <defs>
+    <linearGradient id="leafGradMask" x1="171" y1="156" x2="367" y2="352" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#84CC16" />
+      <stop offset="1" stop-color="#10B981" />
+    </linearGradient>
+  </defs>
+</svg>

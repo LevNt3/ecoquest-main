@@ -5,6 +5,17 @@ import {createServer as createViteServer} from 'vite';
 import {createApiRouter} from './server/routes.ts';
 
 async function startServer() {
+  if (process.env.NODE_ENV === 'production') {
+    const missing: string[] = [];
+    if (!process.env.SESSION_SECRET?.trim()) missing.push('SESSION_SECRET');
+    if (!process.env.ADMIN_PASSCODE?.trim()) missing.push('ADMIN_PASSCODE');
+    if (missing.length > 0) {
+      throw new Error(
+        `Missing required production environment variable(s): ${missing.join(', ')}`,
+      );
+    }
+  }
+
   const app = express();
   const PORT = 3000;
 

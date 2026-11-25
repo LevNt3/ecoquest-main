@@ -1,4 +1,4 @@
-import {CheckCircle2, Loader2, Plus, ShieldCheck, XCircle} from 'lucide-react';
+import {CheckCircle2, Loader2, Pencil, Plus, ShieldCheck, XCircle} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 import {StatusIndicator} from '../components/StatusBadge';
 import {apiFetch, formatDifficultyLabel, formatQuestTypeLabel} from '../lib/api';
@@ -20,6 +20,22 @@ export function AdminView() {
   const [error, setError] = useState<string | null>(null);
   const [reviewReasons, setReviewReasons] = useState<Record<string, string>>({});
   const [busyId, setBusyId] = useState<string | null>(null);
+
+  // Edit quest form state
+  const [editingQuestId, setEditingQuestId] = useState<string | null>(null);
+  const [editQuest, setEditQuest] = useState<{
+    title: string;
+    description: string;
+    instructions: string;
+    environmental_impact: string;
+    category: QuestCategory;
+    difficulty: string;
+    quest_type: string;
+    estimated_minutes: number;
+    xp_reward: number;
+    eco_points_reward: number;
+    verification_criteria: string;
+  } | null>(null);
 
   // Create quest form state
   const [showCreate, setShowCreate] = useState(false);
@@ -106,6 +122,48 @@ export function AdminView() {
       await loadData();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not update quest status');
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  function startEditingQuest(quest: QuestItem) {
+    if (editingQuestId === quest.id) {
+      setEditingQuestId(null);
+      setEditQuest(null);
+      return;
+    }
+    setEditingQuestId(quest.id);
+    setEditQuest({
+      title: quest.title,
+      description: quest.description,
+      instructions: quest.instructions,
+      environmental_impact: quest.environmental_impact,
+      category: quest.category,
+      difficulty: quest.difficulty,
+      quest_type: quest.quest_type,
+      estimated_minutes: quest.estimated_minutes,
+      xp_reward: quest.xp_reward,
+      eco_points_reward: quest.eco_points_reward,
+      verification_criteria: quest.verification_criteria,
+    });
+  }
+
+  async function handleSaveQuestEdit(e: React.FormEvent, questId: string) {
+    e.preventDefault();
+    if (!editQuest) return;
+    setBusyId(`edit:${questId}`);
+    setError(null);
+    try {
+      await apiFetch(`/api/admin/quests/${encodeURIComponent(questId)}`, {
+        method: 'PATCH',
+        body: JSON.stringify(editQuest),
+      });
+      setEditingQuestId(null);
+      setEditQuest(null);
+      await loadData();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not save quest changes');
     } finally {
       setBusyId(null);
     }
@@ -434,26 +492,187 @@ export function AdminView() {
 
           <div className="divide-y divide-[var(--border-hairline)] rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)]">
             {quests.map((q) => (
-              <div key={q.id} className="flex flex-wrap items-center justify-between gap-4 p-4">
-                <div className="space-y-0.5">
-                  <p className="font-display text-sm font-semibold">{q.title}</p>
-                  <p className="text-xs text-[var(--text-secondary)]">
-                    {q.category} · {formatQuestTypeLabel(q.quest_type)} · +{q.xp_reward} XP · +
-                    {q.eco_points_reward} pts
-                  </p>
+              <div key={q.id} className="p-4 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="space-y-0.5">
+                    <p className="font-display text-sm font-semibold">{q.title}</p>
+                    <p className="text-xs text-[var(--text-secondary)]">
+                      {q.category} · {formatQuestTypeLabel(q.quest_type)} · +{q.xp_reward} XP · +
+                      {q.eco_points_reward} pts · {q.estimated_minutes} min
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => startEditingQuest(q)}
+                      className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-1 text-xs font-semibold text-[var(--text-primary)] hover:border-lime-500/40"
+                    >
+                      <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>{editingQuestId === q.id ? 'Close' : 'Edit'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busyId === q.id}
+                      onClick={() => void handleToggleQuestActive(q)}
+                      className={`min-h-[36px] rounded-lg border px-3 py-1 text-xs font-semibold ${
+                        q.is_active
+                          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
+                          : 'border-[var(--border-hairline)] bg-[var(--bg-canvas)] text-[var(--text-secondary)]'
+                      }`}
+                    >
+                      {q.is_active ? 'Active' : 'Inactive'}
+                    </button>
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  disabled={busyId === q.id}
-                  onClick={() => void handleToggleQuestActive(q)}
-                  className={`min-h-[36px] rounded-lg border px-3 py-1 text-xs font-semibold ${
-                    q.is_active
-                      ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
-                      : 'border-[var(--border-hairline)] bg-[var(--bg-canvas)] text-[var(--text-secondary)]'
-                  }`}
-                >
-                  {q.is_active ? 'Active' : 'Inactive'}
-                </button>
+
+                {editingQuestId === q.id && editQuest && (
+                  <form
+                    onSubmit={(e) => void handleSaveQuestEdit(e, q.id)}
+                    className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 grid gap-3 sm:grid-cols-2"
+                  >
+                    <input
+                      required
+                      placeholder="Quest Title"
+                      value={editQuest.title}
+                      onChange={(e) => setEditQuest({...editQuest, title: e.target.value})}
+                      className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                    />
+                    <select
+                      value={editQuest.category}
+                      onChange={(e) =>
+                        setEditQuest({
+                          ...editQuest,
+                          category: e.target.value as (typeof QUEST_CATEGORIES)[number],
+                        })
+                      }
+                      className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                    >
+                      {QUEST_CATEGORIES.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="grid grid-cols-2 gap-2">
+                      <select
+                        value={editQuest.quest_type}
+                        onChange={(e) => setEditQuest({...editQuest, quest_type: e.target.value})}
+                        className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                      >
+                        {QUEST_TYPES.map((t) => (
+                          <option key={t} value={t}>
+                            {formatQuestTypeLabel(t)}
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        value={editQuest.difficulty}
+                        onChange={(e) => setEditQuest({...editQuest, difficulty: e.target.value})}
+                        className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                      >
+                        {QUEST_DIFFICULTIES.map((d) => (
+                          <option key={d} value={d}>
+                            {formatDifficultyLabel(d)}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      <input
+                        type="number"
+                        min={1}
+                        max={480}
+                        title="Estimated Minutes"
+                        placeholder="Minutes"
+                        value={editQuest.estimated_minutes}
+                        onChange={(e) =>
+                          setEditQuest({...editQuest, estimated_minutes: Number(e.target.value)})
+                        }
+                        className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="number"
+                        min={5}
+                        max={1000}
+                        title="XP Reward"
+                        placeholder="XP"
+                        value={editQuest.xp_reward}
+                        onChange={(e) =>
+                          setEditQuest({...editQuest, xp_reward: Number(e.target.value)})
+                        }
+                        className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="number"
+                        min={0}
+                        max={1000}
+                        title="EcoPoints Reward"
+                        placeholder="EcoPoints"
+                        value={editQuest.eco_points_reward}
+                        onChange={(e) =>
+                          setEditQuest({...editQuest, eco_points_reward: Number(e.target.value)})
+                        }
+                        className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                      />
+                    </div>
+                    <textarea
+                      required
+                      rows={2}
+                      placeholder="Short description..."
+                      value={editQuest.description}
+                      onChange={(e) => setEditQuest({...editQuest, description: e.target.value})}
+                      className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                    />
+                    <textarea
+                      required
+                      rows={3}
+                      placeholder="Step-by-step instructions..."
+                      value={editQuest.instructions}
+                      onChange={(e) => setEditQuest({...editQuest, instructions: e.target.value})}
+                      className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                    />
+                    <textarea
+                      required
+                      rows={2}
+                      placeholder="Environmental impact explanation..."
+                      value={editQuest.environmental_impact}
+                      onChange={(e) =>
+                        setEditQuest({...editQuest, environmental_impact: e.target.value})
+                      }
+                      className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                    />
+                    <textarea
+                      required
+                      rows={2}
+                      placeholder="AI Verification Criteria..."
+                      value={editQuest.verification_criteria}
+                      onChange={(e) =>
+                        setEditQuest({...editQuest, verification_criteria: e.target.value})
+                      }
+                      className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                    />
+                    <div className="sm:col-span-2 flex items-center justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingQuestId(null);
+                          setEditQuest(null);
+                        }}
+                        className="min-h-[38px] rounded-xl border border-[var(--border-hairline)] px-4 py-1.5 text-xs font-semibold text-[var(--text-secondary)]"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={busyId === `edit:${q.id}`}
+                        className="inline-flex min-h-[38px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-1.5 text-xs font-semibold text-[var(--accent-primary-fg)] disabled:opacity-50"
+                      >
+                        {busyId === `edit:${q.id}` && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                        <span>Save Changes</span>
+                      </button>
+                    </div>
+                  </form>
+                )}
               </div>
             ))}
           </div>

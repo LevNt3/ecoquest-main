@@ -1,0 +1,26 @@
+{
+  "name": "EcoQuest — Gamified Sustainability & Habit Quests",
+  "short_name": "EcoQuest",
+  "description": "Complete real-world sustainability quests, verify impact with AI-assisted photo checks, earn XP and EcoPoints, and build lasting eco-habits.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#070D0A",
+  "theme_color": "#070D0A",
+  "categories": ["education", "lifestyle", "productivity"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

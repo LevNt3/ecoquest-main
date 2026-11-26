@@ -47,7 +47,7 @@ export function SettingsView({
       });
       onUserUpdate(res.user);
     } catch {
-      setErrorMessage('Theme updated locally, but could not save preference to your account.');
+      setErrorMessage('A téma helyben frissült, de nem sikerült elmenteni a fiókodba.');
     }
   }
 
@@ -61,10 +61,10 @@ export function SettingsView({
       });
       setConfirmBulkDelete(false);
       setStatusMessage(
-        `Deleted ${res.deletedCount} stored evidence photo${res.deletedCount === 1 ? '' : 's'}. Your XP and quest history remain intact.`,
+        `${res.deletedCount} tárolt bizonyítékfotó törölve. A megszerzett XP-d és küldetéstörténeted változatlan maradt.`,
       );
     } catch (err) {
-      setErrorMessage(err instanceof Error ? err.message : 'Failed to delete evidence');
+      setErrorMessage(err instanceof Error ? err.message : 'Nem sikerült törölni a bizonyítékokat');
     } finally {
       setDeletingAll(false);
     }
@@ -82,9 +82,9 @@ export function SettingsView({
       });
       onUserUpdate(res.user);
       setPasscode('');
-      setStatusMessage('Admin role activated for your account. Open Admin Queue from the menu.');
+      setStatusMessage('Adminisztrátori jogosultság aktiválva. Nyisd meg az Admin sort a menüből.');
     } catch (err) {
-      setErrorMessage(err instanceof Error ? err.message : 'Could not activate admin role');
+      setErrorMessage(err instanceof Error ? err.message : 'Nem sikerült aktiválni az admin szerepkört');
     } finally {
       setClaiming(false);
     }
@@ -93,9 +93,9 @@ export function SettingsView({
   return (
     <div className="max-w-3xl space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">Settings</h1>
+        <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">Beállítások</h1>
         <p className="text-sm text-[var(--text-secondary)]">
-          Manage appearance, evidence privacy, and account access.
+          Megjelenés, bizonyítékok adatvédelme és fiókhozzáférés kezelése.
         </p>
       </div>
 
@@ -119,72 +119,72 @@ export function SettingsView({
 
       {/* Theme Selection */}
       <section className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4">
-        <h2 className="font-display text-lg font-semibold">Theme Preference</h2>
+        <h2 className="font-display text-lg font-semibold">Téma beállítása</h2>
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
             aria-pressed={theme === 'dark'}
             onClick={() => void handleThemeSelect('dark')}
-            className={`flex min-h-[48px] items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors ${
+            className={`eq-interactive-btn flex min-h-[48px] items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium ${
               theme === 'dark'
                 ? 'border-lime-500 bg-[var(--bg-surface-elevated)] text-[var(--accent-primary)]'
                 : 'border-[var(--border-hairline)] bg-[var(--bg-canvas)] text-[var(--text-secondary)]'
             }`}
           >
             <Moon className="h-4 w-4" aria-hidden="true" />
-            <span>Dark Forest</span>
+            <span>Sötét erdő</span>
           </button>
           <button
             type="button"
             aria-pressed={theme === 'light'}
             onClick={() => void handleThemeSelect('light')}
-            className={`flex min-h-[48px] items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors ${
+            className={`eq-interactive-btn flex min-h-[48px] items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium ${
               theme === 'light'
                 ? 'border-lime-600 bg-[var(--bg-surface-elevated)] text-[var(--accent-primary)]'
                 : 'border-[var(--border-hairline)] bg-[var(--bg-canvas)] text-[var(--text-secondary)]'
             }`}
           >
             <Sun className="h-4 w-4" aria-hidden="true" />
-            <span>Light Sage</span>
+            <span>Világos zsálya</span>
           </button>
         </div>
       </section>
 
       {/* AI Verification & Privacy */}
       <section className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4">
-        <h2 className="font-display text-lg font-semibold">AI Verification &amp; Privacy</h2>
+        <h2 className="font-display text-lg font-semibold">AI-ellenőrzés és adatvédelem</h2>
         <div className="space-y-2 text-sm leading-relaxed text-[var(--text-secondary)]">
           <p>
-            When you submit a quest photo, EcoQuest stores it in private server storage and sends
-            the image to a server-side Cloudflare Workers AI vision model solely to verify the
-            quest&apos;s visible criteria.
+            Amikor beküldesz egy küldetésfotót, az EcoQuest privát szervertárhelyen tárolja, és
+            kizárólag a küldetés látható feltételeinek ellenőrzésére továbbítja a szerveroldali
+            Cloudflare Workers AI látásmodell felé.
           </p>
           <p>
-            We never require selfies, facial recognition, government IDs, or background camera
-            access. You can delete your stored evidence photos anytime without losing earned XP or
-            EcoPoints.
+            Soha nem kérünk szelfit, arcfelismerést, igazolványt vagy háttérbeli kamerahozzáférést.
+            A tárolt bizonyítékfotókat bármikor törölheted anélkül, hogy elveszítenéd az XP-det vagy
+            az EcoPoints pontjaidat.
           </p>
         </div>
 
         {confirmBulkDelete ? (
           <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 space-y-3">
             <p className="text-xs font-medium text-rose-800 dark:text-rose-300">
-              Permanently delete all stored evidence photos? Your XP, EcoPoints, and quest history
-              will remain intact.
+              Véglegesen törlöd az összes tárolt bizonyítékfotódat? Az XP-d, az EcoPoints egyenleged
+              és a küldetéstörténeted érintetlen marad.
             </p>
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={() => void handleBulkDeleteEvidence()}
                 disabled={deletingAll}
-                className="inline-flex min-h-[40px] items-center gap-2 rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-500 disabled:opacity-50"
+                className="eq-interactive-btn inline-flex min-h-[40px] items-center gap-2 rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-500 disabled:opacity-50"
               >
                 {deletingAll ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <Trash2 className="h-4 w-4" aria-hidden="true" />
                 )}
-                <span>Confirm Delete All Photos</span>
+                <span>Összes fotó törlésének megerősítése</span>
               </button>
               <button
                 type="button"
@@ -192,7 +192,7 @@ export function SettingsView({
                 onClick={() => setConfirmBulkDelete(false)}
                 className="min-h-[40px] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-4 py-2 text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               >
-                Cancel
+                Mégse
               </button>
             </div>
           </div>
@@ -201,10 +201,10 @@ export function SettingsView({
             type="button"
             onClick={() => setConfirmBulkDelete(true)}
             disabled={deletingAll}
-            className="inline-flex min-h-[42px] items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-700 dark:text-rose-400 hover:bg-rose-500/20 disabled:opacity-50"
+            className="eq-interactive-btn inline-flex min-h-[42px] items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-700 dark:text-rose-400 hover:bg-rose-500/20 disabled:opacity-50"
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
-            <span>Delete All My Stored Evidence Photos</span>
+            <span>Összes tárolt bizonyítékfotó törlése</span>
           </button>
         )}
       </section>
@@ -216,12 +216,11 @@ export function SettingsView({
           <section className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4">
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-[var(--accent-emerald)]" aria-hidden="true" />
-              <h2 className="font-display text-lg font-semibold">Admin Access Setup</h2>
+              <h2 className="font-display text-lg font-semibold">Admin hozzáférés beállítása</h2>
             </div>
             <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
-              {adminStatus.passcodeConfigured
-                ? 'Enter the server ADMIN_PASSCODE to promote your account to Admin for quest management and review queue moderation.'
-                : 'No admin account has been claimed yet. You may claim the initial Admin role for this workspace once.'}
+              Add meg a szerveroldali admin jelszót (`ADMIN_PASSCODE`), hogy adminisztrátori
+              jogosultságot kapj a küldetések és a felülvizsgálati sor kezeléséhez.
             </p>
             <form onSubmit={handleClaimAdmin} className="flex flex-wrap items-end gap-3">
               {adminStatus.passcodeConfigured && (
@@ -230,14 +229,14 @@ export function SettingsView({
                     htmlFor="admin-passcode"
                     className="block text-xs font-medium text-[var(--text-secondary)]"
                   >
-                    Server Admin Passcode
+                    Szerver admin jelszó
                   </label>
                   <input
                     id="admin-passcode"
                     type="password"
                     value={passcode}
                     onChange={(e) => setPasscode(e.target.value)}
-                    placeholder="Enter ADMIN_PASSCODE"
+                    placeholder="Add meg az ADMIN_PASSCODE értéket"
                     className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
                   />
                 </div>
@@ -245,12 +244,10 @@ export function SettingsView({
               <button
                 type="submit"
                 disabled={claiming}
-                className="inline-flex min-h-[42px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2 text-xs font-semibold text-[var(--accent-primary-fg)]"
+                className="eq-interactive-btn inline-flex min-h-[42px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2 text-xs font-semibold text-[var(--accent-primary-fg)]"
               >
                 {claiming && <Loader2 className="h-4 w-4 animate-spin" />}
-                <span>
-                  {adminStatus.passcodeConfigured ? 'Unlock Admin Role' : 'Claim Initial Admin Role'}
-                </span>
+                <span>Admin szerepkör feloldása</span>
               </button>
             </form>
           </section>
@@ -259,16 +256,18 @@ export function SettingsView({
       {/* Account Sign Out */}
       <section className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 flex items-center justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold">Signed in as {user.email}</p>
-          <p className="text-xs text-[var(--text-secondary)]">Role: {user.role}</p>
+          <p className="text-sm font-semibold">Bejelentkezve: {user.email}</p>
+          <p className="text-xs text-[var(--text-secondary)]">
+            Szerepkör: {user.role === 'admin' ? 'Adminisztrátor' : 'Felhasználó'}
+          </p>
         </div>
         <button
           type="button"
           onClick={onLogout}
-          className="inline-flex min-h-[42px] items-center gap-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-4 py-2 text-sm font-medium hover:bg-[var(--bg-surface-elevated)]"
+          className="eq-interactive-btn inline-flex min-h-[42px] items-center gap-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-4 py-2 text-sm font-medium hover:bg-[var(--bg-surface-elevated)]"
         >
           <LogOut className="h-4 w-4" aria-hidden="true" />
-          <span>Sign Out</span>
+          <span>Kijelentkezés</span>
         </button>
       </section>
     </div>

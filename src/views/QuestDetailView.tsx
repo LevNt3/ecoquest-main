@@ -16,6 +16,7 @@ import {StatusIndicator} from '../components/StatusBadge';
 import {
   apiFetch,
   compressImageToDataUrl,
+  formatCategoryLabel,
   formatDifficultyLabel,
   formatQuestTypeLabel,
 } from '../lib/api';
@@ -71,7 +72,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
       setSubmissions(res.submissions);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Quest not found');
+      setError(err instanceof Error ? err.message : 'A küldetés nem található');
     } finally {
       setLoading(false);
     }
@@ -91,7 +92,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
       });
       await loadQuest();
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : 'Could not start quest');
+      setActionError(err instanceof Error ? err.message : 'Nem sikerült elindítani a küldetést');
     } finally {
       setStarting(false);
     }
@@ -104,7 +105,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
       const compressed = await compressImageToDataUrl(file);
       setPreviewDataUrl(compressed);
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : 'Could not process image');
+      setActionError(err instanceof Error ? err.message : 'Nem sikerült feldolgozni a képet');
     }
   }
 
@@ -113,7 +114,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
     if (!quest || !previewDataUrl) return;
     setActionError(null);
     setStatusBanner(null);
-    setUploadStage('Uploading photo to private storage...');
+    setUploadStage('Fotó feltöltése privát tárhelyre...');
 
     if (stageTimerRef.current) {
       clearTimeout(stageTimerRef.current);
@@ -122,7 +123,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
 
     try {
       stageTimerRef.current = setTimeout(() => {
-        setUploadStage('Analyzing visible evidence with Cloudflare Workers AI...');
+        setUploadStage('Látható bizonyíték elemzése Cloudflare Workers AI-val...');
       }, 600);
 
       const res = await apiFetch<{
@@ -151,27 +152,27 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
       if (res.reward.submissionStatus === 'approved') {
         const achText =
           res.reward.newAchievements.length > 0
-            ? ` Unlocked: ${res.reward.newAchievements.join(', ')}.`
+            ? ` Feloldott eredmények: ${res.reward.newAchievements.join(', ')}.`
             : '';
         setStatusBanner({
           tone: 'approved',
-          text: `Verified! Earned +${res.reward.xpAwarded} XP and +${res.reward.pointsAwarded} EcoPoints.${achText}`,
+          text: `Igazolva! Szereztél +${res.reward.xpAwarded} XP-t és +${res.reward.pointsAwarded} EcoPoints pontot.${achText}`,
         });
       } else if (res.reward.submissionStatus === 'needs_review') {
         setStatusBanner({
           tone: 'needs_review',
-          text: 'Submitted! Your photo is timestamped and safely queued for human admin review. Your XP, EcoPoints, and UTC streak will be credited once approved.',
+          text: 'Beküldve! A fotód időbélyeggel mentésre került és manuális adminisztrátori felülvizsgálatra vár. Jóváhagyás után az XP-d, az EcoPoints pontjaid és a napi sorozatod automatikusan frissül.',
         });
       } else if (res.reward.submissionStatus === 'rejected') {
         setStatusBanner({
           tone: 'rejected',
-          text: 'Verification did not pass. Check the verification criteria and limitations below, then upload a clearer photo.',
+          text: 'Az ellenőrzés nem ment át. Nézd meg az alábbi teljesítési feltételeket és korlátokat, majd tölts fel egy tisztább fotót.',
         });
       }
 
       await loadQuest();
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : 'Verification request failed');
+      setActionError(err instanceof Error ? err.message : 'Az ellenőrzési kérés sikertelen volt');
     } finally {
       if (stageTimerRef.current) {
         clearTimeout(stageTimerRef.current);
@@ -191,7 +192,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
       setConfirmDeletePhoto(false);
       await loadQuest();
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : 'Could not delete evidence photo');
+      setActionError(err instanceof Error ? err.message : 'Nem sikerült törölni a bizonyítékfotót');
     } finally {
       setDeletingPhoto(false);
     }
@@ -210,10 +211,10 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
           className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          <span>Back to Quests</span>
+          <span>Vissza a küldetésekhez</span>
         </button>
         <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-700 dark:text-rose-400">
-          {error || 'Quest not found'}
+          {error || 'A küldetés nem található'}
         </div>
       </div>
     );
@@ -233,7 +234,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
         className="inline-flex min-h-[40px] items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        <span>Back to Quest Explorer</span>
+        <span>Vissza a küldetésfelfedezőhöz</span>
       </button>
 
       <div className="grid gap-6 lg:grid-cols-12">
@@ -253,8 +254,8 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
 
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-xs text-[var(--text-secondary)]">
-                {quest.category} · {formatQuestTypeLabel(quest.quest_type)} ·{' '}
-                {formatDifficultyLabel(quest.difficulty)} · {quest.estimated_minutes} min
+                {formatCategoryLabel(quest.category)} · {formatQuestTypeLabel(quest.quest_type)} ·{' '}
+                {formatDifficultyLabel(quest.difficulty)} · {quest.estimated_minutes} perc
               </p>
               <StatusIndicator status={quest.user_status || 'available'} />
             </div>
@@ -270,7 +271,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
 
             <div className="flex flex-wrap items-center gap-6 border-y border-[var(--border-hairline)] py-4 text-sm">
               <div>
-                <p className="text-xs text-[var(--text-secondary)]">XP Reward</p>
+                <p className="text-xs text-[var(--text-secondary)]">XP jutalom</p>
                 <p className="font-mono-tabular font-semibold text-[var(--accent-primary)]">
                   +{quest.xp_reward} XP
                 </p>
@@ -278,24 +279,24 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
               <div>
                 <p className="text-xs text-[var(--text-secondary)]">EcoPoints</p>
                 <p className="font-mono-tabular font-semibold text-[var(--accent-emerald)]">
-                  +{quest.eco_points_reward} pts
+                  +{quest.eco_points_reward} pont
                 </p>
               </div>
               <div>
-                <p className="text-xs text-[var(--text-secondary)]">Verification</p>
-                <p className="font-medium">Photo Evidence</p>
+                <p className="text-xs text-[var(--text-secondary)]">Ellenőrzés</p>
+                <p className="font-medium">Fotóbizonyíték</p>
               </div>
             </div>
 
             <div className="space-y-2">
-              <h2 className="font-display text-base font-semibold">Instructions</h2>
+              <h2 className="font-display text-base font-semibold">Útmutató</h2>
               <div className="whitespace-pre-line text-sm leading-relaxed text-[var(--text-secondary)]">
                 {quest.instructions}
               </div>
             </div>
 
             <div className="space-y-2">
-              <h2 className="font-display text-base font-semibold">Why It Matters</h2>
+              <h2 className="font-display text-base font-semibold">Miért számít ez?</h2>
               <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
                 {quest.environmental_impact}
               </p>
@@ -303,7 +304,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
 
             <div className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 space-y-1.5">
               <p className="text-xs font-semibold text-[var(--text-primary)]">
-                Verification Criteria
+                Teljesítési feltételek
               </p>
               <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
                 {quest.verification_criteria}
@@ -349,7 +350,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
 
           <div className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-5">
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold">Submit Evidence</h2>
+              <h2 className="font-display text-lg font-semibold">Bizonyíték feltöltése</h2>
               {quest.user_status === 'available' && (
                 <button
                   type="button"
@@ -362,7 +363,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                   ) : (
                     <Play className="h-3.5 w-3.5 text-[var(--accent-primary)]" />
                   )}
-                  <span>Start Quest</span>
+                  <span>Küldetés indítása</span>
                 </button>
               )}
             </div>
@@ -371,13 +372,13 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
               <div className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 space-y-2">
                 <p className="text-sm font-semibold">
                   {latest?.status === 'approved'
-                    ? 'Quest Completed for This Period'
-                    : 'Submission Timestamped & Queued for Review'}
+                    ? 'Küldetés teljesítve erre az időszakra'
+                    : 'Beküldés rögzítve, felülvizsgálatra vár'}
                 </p>
                 <p className="text-xs text-[var(--text-secondary)]">
                   {latest?.status === 'approved'
-                    ? `Verified for period ${quest.period_key}. Come back on the next reset cycle!`
-                    : 'Your photo evidence is saved in the admin moderation queue. Your XP, EcoPoints, and streak will update as soon as a reviewer approves it.'}
+                    ? `Igazolva a(z) ${quest.period_key} időszakban. Térj vissza a következő ciklusban!`
+                    : 'A fotóbizonyítékod az adminisztrátori felülvizsgálati sorba került. Jóváhagyáskor az XP-d, az EcoPoints egyenleged és a napi sorozatod frissülni fog.'}
                 </p>
               </div>
             ) : (
@@ -404,7 +405,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                     <div className="relative overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)]">
                       <img
                         src={previewDataUrl}
-                        alt="Selected quest evidence preview"
+                        alt="Kiválasztott bizonyíték előnézete"
                         className="max-h-64 w-full object-contain"
                       />
                     </div>
@@ -413,7 +414,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                       onClick={() => setPreviewDataUrl(null)}
                       className="text-xs font-medium text-rose-700 dark:text-rose-400 hover:underline"
                     >
-                      Remove selected photo
+                      Kiválasztott fotó eltávolítása
                     </button>
                   </div>
                 ) : (
@@ -424,7 +425,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                       className="eq-interactive-btn flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 text-xs font-medium hover:border-lime-500/50 hover:bg-[var(--bg-surface-elevated)]/40"
                     >
                       <Camera className="h-5 w-5 text-[var(--accent-primary)]" aria-hidden="true" />
-                      <span>Use Camera</span>
+                      <span>Kamera használata</span>
                     </button>
                     <button
                       type="button"
@@ -432,14 +433,14 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                       className="eq-interactive-btn flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 text-xs font-medium hover:border-lime-500/50 hover:bg-[var(--bg-surface-elevated)]/40"
                     >
                       <Upload className="h-5 w-5 text-[var(--accent-emerald)]" aria-hidden="true" />
-                      <span>Choose Image</span>
+                      <span>Kép kiválasztása</span>
                     </button>
                   </div>
                 )}
 
                 <div className="space-y-1.5">
                   <label htmlFor="quest-note" className="block text-xs font-medium text-[var(--text-secondary)]">
-                    Optional Context Note
+                    Opcionális megjegyzés
                   </label>
                   <textarea
                     id="quest-note"
@@ -447,7 +448,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                     maxLength={400}
                     value={userNote}
                     onChange={(e) => setUserNote(e.target.value)}
-                    placeholder="Briefly describe what the photo shows (e.g., sorted cans and paper)..."
+                    placeholder="Írd le röviden, mi látható a fotón (pl. különválogatott palackok és papír)..."
                     className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
                   />
                 </div>
@@ -455,8 +456,9 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                 <div className="flex items-start gap-2 rounded-xl bg-[var(--bg-canvas)] p-3 text-xs text-[var(--text-secondary)]">
                   <Info className="h-4 w-4 shrink-0 text-[var(--accent-primary)] mt-0.5" aria-hidden="true" />
                   <span>
-                    Uploaded photos are stored privately and sent to Cloudflare Workers AI solely to
-                    verify this quest&apos;s criteria. Do not include faces or sensitive documents.
+                    A feltöltött fotók privát tárhelyen maradnak, és kizárólag a küldetés feltételeinek
+                    ellenőrzéséhez kerülnek a Cloudflare Workers AI rendszeréhez. Ne szerepeljenek rajta
+                    arcok vagy bizalmas dokumentumok.
                   </span>
                 </div>
 
@@ -472,7 +474,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                   disabled={!previewDataUrl || Boolean(uploadStage)}
                   className="eq-interactive-btn flex w-full min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 disabled:opacity-50"
                 >
-                  <span>Submit for Verification</span>
+                  <span>Beküldés ellenőrzésre</span>
                 </button>
               </form>
             )}
@@ -485,7 +487,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
               className="eq-animate-card rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4"
             >
               <div className="flex items-center justify-between gap-2">
-                <h3 className="font-display text-base font-semibold">Submission Result</h3>
+                <h3 className="font-display text-base font-semibold">Beküldés eredménye</h3>
                 <StatusIndicator status={latest.status} />
               </div>
 
@@ -493,13 +495,13 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                 <div className="space-y-2">
                   <img
                     src={`/api/submissions/${latest.id}/evidence`}
-                    alt="Uploaded submission evidence"
+                    alt="Feltöltött bizonyíték"
                     className="max-h-48 w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] object-contain"
                   />
                   {confirmDeletePhoto ? (
                     <div className="flex flex-wrap items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3">
                       <span className="text-xs font-medium text-rose-800 dark:text-rose-300 mr-auto">
-                        Delete this photo permanently? Your verification record stays intact.
+                        Véglegesen törlöd ezt a fotót? Az ellenőrzési naplód megmarad.
                       </span>
                       <button
                         type="button"
@@ -507,7 +509,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                         onClick={() => void handleDeleteEvidence(latest.id)}
                         className="min-h-[34px] rounded-lg bg-rose-600 px-3 py-1 text-xs font-semibold text-white hover:bg-rose-500 disabled:opacity-50"
                       >
-                        {deletingPhoto ? 'Deleting...' : 'Confirm Delete Photo'}
+                        {deletingPhoto ? 'Törlés...' : 'Fotó törlése'}
                       </button>
                       <button
                         type="button"
@@ -515,7 +517,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                         onClick={() => setConfirmDeletePhoto(false)}
                         className="min-h-[34px] rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-1 text-xs font-medium text-[var(--text-secondary)]"
                       >
-                        Cancel
+                        Mégse
                       </button>
                     </div>
                   ) : (
@@ -525,7 +527,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                       className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-700 dark:text-rose-400 hover:underline"
                     >
                       <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
-                      <span>Delete Evidence Photo</span>
+                      <span>Bizonyítékfotó törlése</span>
                     </button>
                   )}
                 </div>
@@ -533,13 +535,13 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
 
               {!latest.has_evidence && latest.evidence_deleted_at && (
                 <p className="text-xs text-[var(--text-secondary)]">
-                  Evidence photo deleted by user. Verification record retained.
+                  A bizonyítékfotót a felhasználó törölte. Az ellenőrzési bejegyzés megmaradt.
                 </p>
               )}
 
               {latest.review_note && (
                 <div className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-3 text-xs space-y-1">
-                  <p className="font-semibold">Admin Review Note</p>
+                  <p className="font-semibold">Adminisztrátori megjegyzés</p>
                   <p className="text-[var(--text-secondary)]">{latest.review_note}</p>
                 </div>
               )}
@@ -547,16 +549,16 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
               {latest.ai_result && (
                 <div className="space-y-3 text-xs">
                   <div className="flex items-center justify-between text-[var(--text-secondary)]">
-                    <span>AI Assessment Summary</span>
+                    <span>AI-értékelés összefoglalója</span>
                     <span className="font-mono-tabular">
-                      Confidence: {Math.round(latest.ai_result.confidence * 100)}%
+                      Megbízhatóság: {Math.round(latest.ai_result.confidence * 100)}%
                     </span>
                   </div>
                   <p className="text-sm leading-relaxed">{latest.ai_result.summary}</p>
 
                   {latest.ai_result.evidence_found.length > 0 && (
                     <div className="space-y-1">
-                      <p className="font-semibold text-[var(--text-secondary)]">Visible Evidence</p>
+                      <p className="font-semibold text-[var(--text-secondary)]">Látható bizonyítékok</p>
                       <ul className="list-disc pl-4 space-y-0.5 text-[var(--text-secondary)]">
                         {latest.ai_result.evidence_found.map((item, idx) => (
                           <li key={idx}>{item}</li>
@@ -569,7 +571,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                     <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 space-y-1">
                       <p className="flex items-center gap-1.5 font-semibold text-amber-700 dark:text-amber-400">
                         <AlertCircle className="h-3.5 w-3.5" aria-hidden="true" />
-                        <span>Verification Limitations</span>
+                        <span>Ellenőrzési korlátok</span>
                       </p>
                       <ul className="list-disc pl-4 space-y-0.5 text-[var(--text-secondary)]">
                         {latest.ai_result.limitations.map((lim, idx) => (

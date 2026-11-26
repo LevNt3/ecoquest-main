@@ -65,7 +65,7 @@ function attachOptionalUser(req: AuthenticatedRequest, _res: Response, next: Nex
 
 function requireAuth(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
   if (!req.user) {
-    res.status(401).json({error: 'Authentication required'});
+    res.status(401).json({error: 'Bejelentkezés szükséges'});
     return;
   }
   next();
@@ -73,11 +73,11 @@ function requireAuth(req: AuthenticatedRequest, res: Response, next: NextFunctio
 
 function requireAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
   if (!req.user) {
-    res.status(401).json({error: 'Authentication required'});
+    res.status(401).json({error: 'Bejelentkezés szükséges'});
     return;
   }
   if (req.user.role !== 'admin') {
-    res.status(403).json({error: 'Admin access required'});
+    res.status(403).json({error: 'Adminisztrátori jogosultság szükséges'});
     return;
   }
   next();
@@ -190,7 +190,7 @@ export function createApiRouter(): Router {
   router.post('/auth/signup', (req, res) => {
     const parsed = AuthSignupSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({error: parsed.error.issues[0]?.message || 'Invalid signup fields'});
+      res.status(400).json({error: parsed.error.issues[0]?.message || 'Érvénytelen regisztrációs adatok'});
       return;
     }
     const email = parsed.data.email.trim().toLowerCase();
@@ -199,7 +199,7 @@ export function createApiRouter(): Router {
       .prepare('SELECT id FROM profiles WHERE email = ? OR lower(username) = lower(?)')
       .get(email, username);
     if (existing) {
-      res.status(409).json({error: 'An account with that email or username already exists'});
+      res.status(409).json({error: 'Ezzel az e-mail-címmel vagy felhasználónévvel már létezik fiók'});
       return;
     }
 
@@ -219,12 +219,12 @@ export function createApiRouter(): Router {
 
   router.post('/auth/login', (req, res) => {
     if (isRateLimited(`login:${req.ip || 'unknown'}`, 20, 15 * 60 * 1000)) {
-      res.status(429).json({error: 'Too many login attempts. Please try again later.'});
+      res.status(429).json({error: 'Túl sok bejelentkezési kísérlet. Próbáld meg később.'});
       return;
     }
     const parsed = AuthLoginSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({error: 'Please enter a valid email and password'});
+      res.status(400).json({error: 'Kérjük, adj meg érvényes e-mail-címet és jelszót'});
       return;
     }
     const email = parsed.data.email.trim().toLowerCase();
@@ -233,7 +233,7 @@ export function createApiRouter(): Router {
       | undefined;
 
     if (!row || !verifyPassword(parsed.data.password, row.password_hash)) {
-      res.status(401).json({error: 'Invalid email or password'});
+      res.status(401).json({error: 'Hibás e-mail-cím vagy jelszó'});
       return;
     }
 
@@ -250,21 +250,21 @@ export function createApiRouter(): Router {
 
   router.post('/auth/claim-admin', requireAuth, (req: AuthenticatedRequest, res) => {
     if (isRateLimited(`claim-admin:${req.user!.id}`, 10, 15 * 60 * 1000)) {
-      res.status(429).json({error: 'Too many admin claim attempts. Please try again later.'});
+      res.status(429).json({error: 'Túl sok próbálkozás. Próbáld meg később.'});
       return;
     }
 
     const configuredPasscode = process.env.ADMIN_PASSCODE?.trim();
     if (!configuredPasscode) {
       res.status(403).json({
-        error: 'ADMIN_PASSCODE is not configured on the server. Admin promotion is disabled.',
+        error: 'Az ADMIN_PASSCODE nincs beállítva a szerveren. Az admin előléptetés le van tiltva.',
       });
       return;
     }
 
     const parsed = AdminClaimSchema.safeParse(req.body || {});
     if (!parsed.success) {
-      res.status(400).json({error: 'Invalid passcode format'});
+      res.status(400).json({error: 'Érvénytelen jelszóformátum'});
       return;
     }
 
@@ -272,7 +272,7 @@ export function createApiRouter(): Router {
     const a = Buffer.from(provided, 'utf8');
     const b = Buffer.from(configuredPasscode, 'utf8');
     if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
-      res.status(403).json({error: 'Invalid server admin passcode'});
+      res.status(403).json({error: 'Hibás szerver admin jelszó'});
       return;
     }
 
@@ -366,7 +366,7 @@ export function createApiRouter(): Router {
       | undefined;
 
     if (!q) {
-      res.status(404).json({error: 'Quest not found'});
+      res.status(404).json({error: 'A küldetés nem található'});
       return;
     }
 
@@ -421,7 +421,7 @@ export function createApiRouter(): Router {
       | undefined;
 
     if (!q) {
-      res.status(404).json({error: 'Quest not found'});
+      res.status(404).json({error: 'A küldetés nem található'});
       return;
     }
 
@@ -501,7 +501,7 @@ export function createApiRouter(): Router {
         .get(userId, dateStr) as {c: number};
       last7Days.push({
         date: dateStr,
-        label: d.toLocaleDateString('en-US', {weekday: 'short', timeZone: 'UTC'}),
+        label: d.toLocaleDateString('hu-HU', {weekday: 'short', timeZone: 'UTC'}),
         completed: row.c,
       });
     }
@@ -595,7 +595,7 @@ export function createApiRouter(): Router {
   router.patch('/profile', requireAuth, (req: AuthenticatedRequest, res) => {
     const parsed = UpdateProfileSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({error: parsed.error.issues[0]?.message || 'Invalid profile update'});
+      res.status(400).json({error: parsed.error.issues[0]?.message || 'Érvénytelen profilfrissítés'});
       return;
     }
 
@@ -607,7 +607,7 @@ export function createApiRouter(): Router {
         .prepare('SELECT id FROM profiles WHERE lower(username) = lower(?) AND id != ?')
         .get(parsed.data.username, req.user!.id);
       if (conflict) {
-        res.status(409).json({error: 'Username is already taken'});
+        res.status(409).json({error: 'Ez a felhasználónév már foglalt'});
         return;
       }
       updates.push('username = ?');
@@ -634,7 +634,7 @@ export function createApiRouter(): Router {
   router.post('/verification', requireAuth, async (req: AuthenticatedRequest, res) => {
     const parsed = VerificationPayloadSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({error: 'Invalid verification submission payload'});
+      res.status(400).json({error: 'Érvénytelen beküldési adatok'});
       return;
     }
 
@@ -650,7 +650,7 @@ export function createApiRouter(): Router {
 
     if (rateRow.c >= 10) {
       res.status(429).json({
-        error: 'Hourly AI verification limit reached (10/hour). Please try again later.',
+        error: 'Elérted az óránkénti AI-ellenőrzési limitet (10/óra). Kérjük, próbáld meg később.',
       });
       return;
     }
@@ -668,7 +668,7 @@ export function createApiRouter(): Router {
       | undefined;
 
     if (!quest) {
-      res.status(404).json({error: 'Quest not found or inactive'});
+      res.status(404).json({error: 'A küldetés nem található vagy inaktív'});
       return;
     }
 
@@ -686,8 +686,8 @@ export function createApiRouter(): Router {
       res.status(409).json({
         error:
           blockingSubmission.status === 'approved'
-            ? 'You have already completed this quest for the current period.'
-            : 'A submission for this quest period is already pending review.',
+            ? 'Ezt a küldetést már teljesítetted az aktuális időszakban.'
+            : 'Ehhez a küldetéshez már van folyamatban lévő beküldésed ebben az időszakban.',
       });
       return;
     }
@@ -695,7 +695,7 @@ export function createApiRouter(): Router {
     // Validate base64 data URI
     const match = parsed.data.imageDataUrl.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/);
     if (!match) {
-      res.status(400).json({error: 'Only JPEG, PNG, or WebP images are supported'});
+      res.status(400).json({error: 'Csak JPEG, PNG vagy WebP képek támogatottak'});
       return;
     }
     const mimeType = match[1];
@@ -703,7 +703,7 @@ export function createApiRouter(): Router {
     const buffer = Buffer.from(base64Body, 'base64');
 
     if (buffer.byteLength === 0 || buffer.byteLength > 5 * 1024 * 1024) {
-      res.status(400).json({error: 'Image must be smaller than 5 MB'});
+      res.status(400).json({error: 'A kép mérete legfeljebb 5 MB lehet'});
       return;
     }
 
@@ -727,7 +727,7 @@ export function createApiRouter(): Router {
     const fullPath = resolveConfinedEvidencePath(relativePath);
 
     if (!fullPath) {
-      res.status(400).json({error: 'Invalid storage path'});
+      res.status(400).json({error: 'Érvénytelen tárhely-útvonal'});
       return;
     }
 
@@ -795,23 +795,23 @@ export function createApiRouter(): Router {
       | undefined;
 
     if (!sub) {
-      res.status(404).json({error: 'Submission not found'});
+      res.status(404).json({error: 'A beküldés nem található'});
       return;
     }
 
     if (sub.user_id !== req.user!.id && req.user!.role !== 'admin') {
-      res.status(403).json({error: 'Forbidden: You may only view your own private evidence'});
+      res.status(403).json({error: 'Tiltott: csak a saját privát bizonyítékodat tekintheted meg'});
       return;
     }
 
     if (!sub.evidence_path) {
-      res.status(404).json({error: 'Evidence photo has been deleted'});
+      res.status(404).json({error: 'A bizonyítékfotó törölve lett'});
       return;
     }
 
     const fullPath = resolveConfinedEvidencePath(sub.evidence_path);
     if (!fullPath || !fs.existsSync(fullPath)) {
-      res.status(404).json({error: 'Evidence file not found'});
+      res.status(404).json({error: 'A bizonyítékfájl nem található'});
       return;
     }
 
@@ -826,11 +826,11 @@ export function createApiRouter(): Router {
       .get(req.params.id) as {id: string; user_id: string; evidence_path: string | null} | undefined;
 
     if (!sub) {
-      res.status(404).json({error: 'Submission not found'});
+      res.status(404).json({error: 'A beküldés nem található'});
       return;
     }
     if (sub.user_id !== req.user!.id) {
-      res.status(403).json({error: 'Forbidden: Only the owner can delete their evidence'});
+      res.status(403).json({error: 'Tiltott: csak a tulajdonos törölheti a saját bizonyítékát'});
       return;
     }
 
@@ -897,7 +897,7 @@ export function createApiRouter(): Router {
   router.post('/admin/submissions/:id/review', requireAdmin, (req: AuthenticatedRequest, res) => {
     const parsed = AdminReviewSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({error: parsed.error.issues[0]?.message || 'Invalid review payload'});
+      res.status(400).json({error: parsed.error.issues[0]?.message || 'Érvénytelen felülvizsgálati adatok'});
       return;
     }
 
@@ -906,13 +906,13 @@ export function createApiRouter(): Router {
       .get(req.params.id) as {id: string; status: string} | undefined;
 
     if (!sub) {
-      res.status(404).json({error: 'Submission not found'});
+      res.status(404).json({error: 'A beküldés nem található'});
       return;
     }
 
     if (sub.status === 'approved') {
       res.status(409).json({
-        error: 'Approved submissions are terminal and cannot be modified.',
+        error: 'A jóváhagyott beküldések véglegesek, nem módosíthatók.',
       });
       return;
     }
@@ -952,13 +952,13 @@ export function createApiRouter(): Router {
   router.post('/admin/quests', requireAdmin, (req, res) => {
     const parsed = CreateQuestSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({error: parsed.error.issues[0]?.message || 'Invalid quest payload'});
+      res.status(400).json({error: parsed.error.issues[0]?.message || 'Érvénytelen küldetésadatok'});
       return;
     }
 
     const existing = db.prepare('SELECT id FROM quests WHERE slug = ?').get(parsed.data.slug);
     if (existing) {
-      res.status(409).json({error: 'A quest with that slug already exists'});
+      res.status(409).json({error: 'Már létezik küldetés ezzel a sluggal'});
       return;
     }
 
@@ -999,13 +999,13 @@ export function createApiRouter(): Router {
   router.patch('/admin/quests/:id', requireAdmin, (req, res) => {
     const parsed = UpdateQuestSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({error: parsed.error.issues[0]?.message || 'Invalid quest update'});
+      res.status(400).json({error: parsed.error.issues[0]?.message || 'Érvénytelen küldetésfrissítés'});
       return;
     }
 
     const existing = db.prepare('SELECT id FROM quests WHERE id = ?').get(req.params.id);
     if (!existing) {
-      res.status(404).json({error: 'Quest not found'});
+      res.status(404).json({error: 'A küldetés nem található'});
       return;
     }
 

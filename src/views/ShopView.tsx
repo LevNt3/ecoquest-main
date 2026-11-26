@@ -18,34 +18,34 @@ interface PlaceholderReward {
 const PLACEHOLDER_REWARDS: PlaceholderReward[] = [
   {
     id: 'badge-canopy',
-    title: 'Canopy Guardian Crest',
-    category: 'Digital Badge',
+    title: 'Lombkorona-őr címer',
+    category: 'Digitális jelvény',
     cost: 120,
-    description: 'Showcase a brushed titanium emerald leaf crest beside your profile username.',
+    description: 'Szálcsiszolt smaragd levéljelvény megjelenítése a profilod neve mellett.',
     icon: Award,
   },
   {
     id: 'theme-bioluminescent',
-    title: 'Bioluminescent Moss Theme',
-    category: 'Profile Theme',
+    title: 'Biolumineszcens moha téma',
+    category: 'Profiltéma',
     cost: 200,
-    description: 'Custom profile banner accent and twilight moss surface highlight palette.',
+    description: 'Egyedi profilkiemelő színséma és esti erdei felület-hangulat.',
     icon: Palette,
   },
   {
     id: 'coupon-campus-cafe',
-    title: 'Campus Reusable Cup Discount',
-    category: 'Future Partner Coupon',
+    title: 'Iskolai kávézó újrapohár-kedvezmény',
+    category: 'Jövőbeli partnerkupon',
     cost: 350,
-    description: 'Planned partner perk: 15% off drinks when bringing a reusable tumbler.',
+    description: 'Tervezett partnerkedvezmény: 15% kedvezmény saját kulacs vagy pohár használatakor.',
     icon: Coffee,
   },
   {
     id: 'coupon-transit',
-    title: 'Local Bike Share Day Pass',
-    category: 'Future Partner Coupon',
+    title: 'Helyi közbringa napijegy',
+    category: 'Jövőbeli partnerkupon',
     cost: 500,
-    description: 'Planned student mobility reward for verified Sustainable Commute streaks.',
+    description: 'Tervezett mobilitási jutalom igazolt Fenntartható ingázás sorozatokért.',
     icon: Ticket,
   },
 ];
@@ -81,17 +81,17 @@ export function ShopView({user}: ShopViewProps) {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-            Reward Shop Preview
+            Jutalombolt előnézet
           </h1>
           <p className="text-sm text-[var(--text-secondary)]">
-            Preview upcoming digital badges, profile themes, and partner perks.
+            Tekintsd meg a tervezett digitális jelvényeket, témákat és partnerkedvezményeket.
           </p>
         </div>
 
         <div className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-5 py-3">
-          <p className="text-xs text-[var(--text-secondary)]">Your EcoPoints</p>
+          <p className="text-xs text-[var(--text-secondary)]">EcoPoints egyenleged</p>
           <p className="font-mono-tabular text-xl font-bold text-[var(--accent-primary)]">
-            {user.eco_points} pts
+            {user.eco_points} pont
           </p>
         </div>
       </div>
@@ -99,8 +99,8 @@ export function ShopView({user}: ShopViewProps) {
       <div className="flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs leading-relaxed text-amber-900 dark:text-amber-200">
         <Info className="h-4 w-4 shrink-0 text-amber-700 dark:text-amber-400 mt-0.5" aria-hidden="true" />
         <span>
-          Reward redemption is a placeholder preview for this MVP. Your EcoPoints balance is tracked
-          securely in the server ledger, and no payments or real-world fulfillment are processed.
+          A jutalombeváltás ebben az MVP demóban előnézeti funkció. Az EcoPoints egyenleged
+          biztonságosan rögzítésre kerül a szerver főkönyvében, valódi fizetés vagy beváltás még nem történik.
         </span>
       </div>
 
@@ -119,7 +119,7 @@ export function ShopView({user}: ShopViewProps) {
                   <span className="text-xs text-[var(--text-secondary)]">{item.category}</span>
                   <span className="inline-flex items-center gap-1 font-mono-tabular text-xs font-semibold text-[var(--accent-primary)]">
                     <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                    {item.cost} pts
+                    {item.cost} pont
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5">
@@ -134,7 +134,7 @@ export function ShopView({user}: ShopViewProps) {
                 onClick={() => openRewardModal(item)}
                 className="eq-interactive-btn min-h-[42px] w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-4 py-2 text-xs font-semibold hover:border-lime-500/40 hover:bg-[var(--bg-surface-elevated)]"
               >
-                {canAfford ? 'Preview Reward (Coming Soon)' : `Need ${item.cost - user.eco_points} more pts`}
+                {canAfford ? 'Jutalom előnézete (Hamarosan)' : `Még ${item.cost - user.eco_points} pont szükséges`}
               </button>
             </div>
           );
@@ -157,16 +157,16 @@ export function ShopView({user}: ShopViewProps) {
             </h3>
             <p className="text-sm text-[var(--text-secondary)]">{selectedReward.description}</p>
             <p className="text-xs text-amber-800 dark:text-amber-300">
-              Placeholder Item ({selectedReward.cost} EcoPoints): Redemption will unlock in a future
-              release once campus partner codes are connected.
+              Előnézeti elem ({selectedReward.cost} EcoPoints): A beváltás egy későbbi verzióban nyílik
+              meg az iskolai partnerkódok csatlakoztatása után.
             </p>
             <button
               ref={closeButtonRef}
               type="button"
               onClick={() => setSelectedReward(null)}
-              className="w-full min-h-[42px] rounded-xl bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--accent-primary-fg)]"
+              className="eq-interactive-btn w-full min-h-[42px] rounded-xl bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--accent-primary-fg)]"
             >
-              Close Preview
+              Előnézet bezárása
             </button>
           </div>
         </div>

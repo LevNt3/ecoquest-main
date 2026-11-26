@@ -2,7 +2,12 @@ import {ArrowRight, Camera, Leaf, Search} from 'lucide-react';
 import {useEffect, useMemo, useState} from 'react';
 import type {AppRoute} from '../components/AppShell';
 import {StatusIndicator} from '../components/StatusBadge';
-import {apiFetch, formatDifficultyLabel, formatQuestTypeLabel} from '../lib/api';
+import {
+  apiFetch,
+  formatCategoryLabel,
+  formatDifficultyLabel,
+  formatQuestTypeLabel,
+} from '../lib/api';
 import {
   QUEST_CATEGORIES,
   QUEST_DIFFICULTIES,
@@ -33,7 +38,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
       })
       .catch((err) => {
         if (!active) return;
-        setError(err instanceof Error ? err.message : 'Failed to load quests');
+        setError(err instanceof Error ? err.message : 'Nem sikerült betölteni a küldetéseket');
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -60,10 +65,10 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
     <div className="space-y-6">
       <div className="space-y-1">
         <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-          Quest Explorer
+          Küldetésfelfedező
         </h1>
         <p className="text-sm text-[var(--text-secondary)]">
-          Filter daily, weekly, one-time, and special quests across 7 sustainability categories.
+          Szűrj napi, heti, egyszeri és különleges küldetésekre 7 fenntarthatósági kategóriában.
         </p>
       </div>
 
@@ -79,8 +84,8 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search quests (e.g., water, digital, commute)..."
-              aria-label="Search quests"
+              placeholder="Keresés (pl. kulacs, digitális, ingázás)..."
+              aria-label="Küldetések keresése"
               className="w-full min-h-[42px] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] pl-10 pr-4 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
             />
           </div>
@@ -89,13 +94,13 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              aria-label="Filter by category"
+              aria-label="Szűrés kategória szerint"
               className="w-full min-h-[42px] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
             >
-              <option value="all">All Categories</option>
+              <option value="all">Minden kategória</option>
               {QUEST_CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
-                  {cat}
+                  {formatCategoryLabel(cat)}
                 </option>
               ))}
             </select>
@@ -105,10 +110,10 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
             <select
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value)}
-              aria-label="Filter by difficulty"
+              aria-label="Szűrés nehézség szerint"
               className="w-full min-h-[42px] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
             >
-              <option value="all">All Difficulties</option>
+              <option value="all">Minden nehézség</option>
               {QUEST_DIFFICULTIES.map((diff) => (
                 <option key={diff} value={diff}>
                   {formatDifficultyLabel(diff)}
@@ -121,7 +126,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
         {/* Quest Type Segmented Tabs */}
         <div className="flex flex-wrap items-center gap-1.5 rounded-xl bg-[var(--bg-canvas)] p-1">
           {[
-            {id: 'all', label: 'All Quests'},
+            {id: 'all', label: 'Összes küldetés'},
             ...QUEST_TYPES.map((t) => ({id: t, label: formatQuestTypeLabel(t)})),
           ].map((tab) => (
             <button
@@ -154,7 +159,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
       ) : filteredQuests.length === 0 ? (
         <div className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-10 text-center space-y-3">
           <Leaf className="mx-auto h-7 w-7 text-[var(--text-secondary)]" aria-hidden="true" />
-          <p className="font-display text-base font-semibold">No quests match your current filters</p>
+          <p className="font-display text-base font-semibold">Nincs a szűrőknek megfelelő küldetés</p>
           <button
             type="button"
             onClick={() => {
@@ -165,7 +170,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
             }}
             className="min-h-[40px] rounded-xl border border-[var(--border-hairline)] px-4 py-2 text-xs font-semibold hover:bg-[var(--bg-surface-elevated)] transition-colors"
           >
-            Reset Filters
+            Szűrők visszaállítása
           </button>
         </div>
       ) : (
@@ -181,7 +186,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs text-[var(--text-secondary)] truncate">
-                    {quest.category}
+                    {formatCategoryLabel(quest.category)}
                   </span>
                   <StatusIndicator status={quest.user_status || 'available'} />
                 </div>
@@ -192,7 +197,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
                   </h2>
                   <p className="mt-1 text-xs text-[var(--text-secondary)]">
                     {formatQuestTypeLabel(quest.quest_type)} · {formatDifficultyLabel(quest.difficulty)} ·{' '}
-                    {quest.estimated_minutes} min
+                    {quest.estimated_minutes} perc
                   </p>
                 </div>
 
@@ -203,11 +208,11 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
 
               <div className="mt-5 flex items-center justify-between border-t border-[var(--border-hairline)] pt-3.5 text-xs">
                 <span className="font-mono-tabular font-semibold text-[var(--accent-primary)]">
-                  +{quest.xp_reward} XP · +{quest.eco_points_reward} pts
+                  +{quest.xp_reward} XP · +{quest.eco_points_reward} pont
                 </span>
                 <span className="inline-flex items-center gap-1 text-[var(--text-secondary)]">
                   <Camera className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Photo</span>
+                  <span>Fotó</span>
                   <ArrowRight
                     className="h-3.5 w-3.5 transition-transform duration-150 group-hover:translate-x-1 group-hover:text-[var(--accent-primary)]"
                     aria-hidden="true"

@@ -61,7 +61,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
                 }}
                 className="hover:text-[var(--text-primary)] transition-colors whitespace-nowrap shrink-0"
               >
-                How It Works
+                Hogyan működik
               </a>
               <a
                 href="#sample-quests"
@@ -73,7 +73,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
                 }}
                 className="hover:text-[var(--text-primary)] transition-colors whitespace-nowrap shrink-0"
               >
-                Quests
+                Küldetések
               </a>
               <a
                 href="#progression"
@@ -85,7 +85,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
                 }}
                 className="hover:text-[var(--text-primary)] transition-colors whitespace-nowrap shrink-0"
               >
-                Levels
+                Szintek
               </a>
               <a
                 href="#mission"
@@ -97,7 +97,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
                 }}
                 className="hover:text-[var(--text-primary)] transition-colors whitespace-nowrap shrink-0"
               >
-                Mission
+                Küldetésünk
               </a>
             </nav>
 
@@ -108,7 +108,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
                   onClick={() => onNavigate('dashboard')}
                   className="eq-interactive-btn min-h-[40px] rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 whitespace-nowrap shrink-0"
                 >
-                  Open Dashboard
+                  Irányítópult megnyitása
                 </button>
               ) : (
                 <button
@@ -116,7 +116,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
                   onClick={() => onNavigate(route === 'signup' ? 'login' : 'signup')}
                   className="eq-interactive-btn min-h-[40px] rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 whitespace-nowrap shrink-0"
                 >
-                  {route === 'signup' ? 'Sign In' : 'Get Started'}
+                  {route === 'signup' ? 'Bejelentkezés' : 'Kezdés'}
                 </button>
               )}
             </div>
@@ -131,15 +131,15 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
   }
 
   const navItems: Array<{id: AppRoute; label: string; icon: typeof LayoutDashboard}> = [
-    {id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard},
-    {id: 'quests', label: 'Explore', icon: Compass},
-    {id: 'shop', label: 'Shop', icon: ShoppingBag},
-    {id: 'profile', label: 'Profile', icon: User},
-    {id: 'settings', label: 'Settings', icon: Settings},
+    {id: 'dashboard', label: 'Irányítópult', icon: LayoutDashboard},
+    {id: 'quests', label: 'Küldetések', icon: Compass},
+    {id: 'shop', label: 'Bolt', icon: ShoppingBag},
+    {id: 'profile', label: 'Profil', icon: User},
+    {id: 'settings', label: 'Beállítások', icon: Settings},
   ];
 
   if (user.role === 'admin') {
-    navItems.push({id: 'admin', label: 'Admin Queue', icon: ShieldCheck});
+    navItems.push({id: 'admin', label: 'Admin sor', icon: ShieldCheck});
   }
 
   const activeNavId: AppRoute = route === 'quest-detail' ? 'quests' : route;
@@ -159,7 +159,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1 px-3 py-4" aria-label="Primary navigation">
+        <nav className="flex-1 space-y-1 px-3 py-4" aria-label="Elsődleges navigáció">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeNavId === item.id;
@@ -187,9 +187,9 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
 
         <div className="border-t border-[var(--border-hairline)] p-4 space-y-3">
           <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
-            <span className="font-mono-tabular">Level {user.level}</span>
+            <span className="font-mono-tabular">{user.level}. szint</span>
             <span className="font-mono-tabular font-semibold text-[var(--text-primary)]">
-              {user.eco_points} pts
+              {user.eco_points} pont
             </span>
           </div>
           <div className="flex items-center justify-between gap-2">
@@ -203,8 +203,8 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
             <button
               type="button"
               onClick={onLogout}
-              title="Sign out"
-              aria-label="Sign out"
+              title="Kijelentkezés"
+              aria-label="Kijelentkezés"
               className="min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg text-[var(--text-secondary)] hover:bg-[var(--bg-surface-elevated)] hover:text-[var(--text-primary)] transition-colors"
             >
               <LogOut className="h-4 w-4" aria-hidden="true" />
@@ -228,16 +228,16 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
           <div className="flex items-center gap-4 text-xs font-mono-tabular">
             <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-500">
               <Flame className="h-3.5 w-3.5" aria-hidden="true" />
-              {user.current_streak}d
+              {user.current_streak}n
             </span>
             <span className="font-semibold text-[var(--accent-primary)]">
-              {user.eco_points} pts
+              {user.eco_points} pont
             </span>
             {user.role === 'admin' && (
               <button
                 type="button"
                 onClick={() => onNavigate('admin')}
-                aria-label="Admin Queue"
+                aria-label="Admin sor"
                 className="min-h-[40px] min-w-[40px] flex items-center justify-center text-[var(--accent-emerald)]"
               >
                 <ShieldCheck className="h-4 w-4" aria-hidden="true" />
@@ -255,15 +255,15 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
 
       {/* Mobile Bottom Thumb-Zone Navigation (64px) */}
       <nav
-        aria-label="Mobile navigation"
+        aria-label="Mobil navigáció"
         className="fixed bottom-0 left-0 right-0 z-40 grid grid-cols-5 h-16 border-t border-[var(--border-hairline)] bg-[var(--bg-surface)]/95 backdrop-blur-md lg:hidden"
       >
         {[
-          {id: 'dashboard' as AppRoute, label: 'Home', icon: LayoutDashboard},
-          {id: 'quests' as AppRoute, label: 'Quests', icon: Compass},
-          {id: 'shop' as AppRoute, label: 'Shop', icon: ShoppingBag},
-          {id: 'profile' as AppRoute, label: 'Profile', icon: User},
-          {id: 'settings' as AppRoute, label: 'Settings', icon: Settings},
+          {id: 'dashboard' as AppRoute, label: 'Főoldal', icon: LayoutDashboard},
+          {id: 'quests' as AppRoute, label: 'Küldetések', icon: Compass},
+          {id: 'shop' as AppRoute, label: 'Bolt', icon: ShoppingBag},
+          {id: 'profile' as AppRoute, label: 'Profil', icon: User},
+          {id: 'settings' as AppRoute, label: 'Beállítások', icon: Settings},
         ].map((item) => {
           const Icon = item.icon;
           const isActive = activeNavId === item.id;

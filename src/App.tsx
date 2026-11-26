@@ -173,7 +173,7 @@ export default function App() {
   if (booting) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--bg-canvas)] text-[var(--text-secondary)] text-sm">
-        Loading EcoQuest...
+        EcoQuest betöltése...
       </div>
     );
   }

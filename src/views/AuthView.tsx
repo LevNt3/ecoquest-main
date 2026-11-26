@@ -38,7 +38,7 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
       });
       onSuccess(res.user, res.levelProgress);
     } catch (err) {
-      setServerError(err instanceof Error ? err.message : 'Unable to sign in');
+      setServerError(err instanceof Error ? err.message : 'Nem sikerült bejelentkezni');
     }
   }
 
@@ -51,7 +51,7 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
       });
       onSuccess(res.user, res.levelProgress);
     } catch (err) {
-      setServerError(err instanceof Error ? err.message : 'Unable to create account');
+      setServerError(err instanceof Error ? err.message : 'Nem sikerült létrehozni a fiókot');
     }
   }
 
@@ -60,12 +60,12 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
       <div className="w-full rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 sm:p-8 space-y-6">
         <div className="space-y-1.5">
           <h1 className="font-display text-2xl font-bold tracking-tight">
-            {mode === 'login' ? 'Sign in to EcoQuest' : 'Create your EcoQuest account'}
+            {mode === 'login' ? 'Bejelentkezés az EcoQuestbe' : 'EcoQuest fiók létrehozása'}
           </h1>
           <p className="text-sm text-[var(--text-secondary)]">
             {mode === 'login'
-              ? 'Continue your daily sustainability streak and quests.'
-              : 'Start earning XP and EcoPoints for verified eco-habits.'}
+              ? 'Folytasd a napi fenntarthatósági sorozatodat és küldetéseidet.'
+              : 'Kezdj el XP-t és EcoPoints pontokat gyűjteni igazolt öko-szokásokkal.'}
           </p>
         </div>
 
@@ -82,7 +82,7 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
           <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
             <div className="space-y-1.5">
               <label htmlFor="login-email" className="block text-xs font-medium text-[var(--text-secondary)]">
-                Email Address
+                E-mail-cím
               </label>
               <input
                 id="login-email"
@@ -90,7 +90,7 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
                 autoComplete="email"
                 {...loginForm.register('email')}
                 className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
-                placeholder="alex@university.edu"
+                placeholder="alex@egyetem.hu"
               />
               {loginForm.formState.errors.email && (
                 <p className="text-xs text-rose-700 dark:text-rose-400">{loginForm.formState.errors.email.message}</p>
@@ -99,7 +99,7 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
 
             <div className="space-y-1.5">
               <label htmlFor="login-password" className="block text-xs font-medium text-[var(--text-secondary)]">
-                Password
+                Jelszó
               </label>
               <input
                 id="login-password"
@@ -117,17 +117,17 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
             <button
               type="submit"
               disabled={loginForm.formState.isSubmitting}
-              className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 disabled:opacity-60 transition-opacity"
+              className="eq-interactive-btn flex w-full min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 disabled:opacity-60"
             >
               {loginForm.formState.isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-              <span>Sign In</span>
+              <span>Bejelentkezés</span>
             </button>
           </form>
         ) : (
           <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4">
             <div className="space-y-1.5">
               <label htmlFor="signup-username" className="block text-xs font-medium text-[var(--text-secondary)]">
-                Username
+                Felhasználónév
               </label>
               <input
                 id="signup-username"
@@ -135,7 +135,7 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
                 autoComplete="username"
                 {...signupForm.register('username')}
                 className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
-                placeholder="eco_explorer"
+                placeholder="oko_felfedezo"
               />
               {signupForm.formState.errors.username && (
                 <p className="text-xs text-rose-700 dark:text-rose-400">{signupForm.formState.errors.username.message}</p>
@@ -144,7 +144,7 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
 
             <div className="space-y-1.5">
               <label htmlFor="signup-email" className="block text-xs font-medium text-[var(--text-secondary)]">
-                Email Address
+                E-mail-cím
               </label>
               <input
                 id="signup-email"
@@ -152,7 +152,7 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
                 autoComplete="email"
                 {...signupForm.register('email')}
                 className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
-                placeholder="alex@university.edu"
+                placeholder="alex@egyetem.hu"
               />
               {signupForm.formState.errors.email && (
                 <p className="text-xs text-rose-700 dark:text-rose-400">{signupForm.formState.errors.email.message}</p>
@@ -161,7 +161,7 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
 
             <div className="space-y-1.5">
               <label htmlFor="signup-password" className="block text-xs font-medium text-[var(--text-secondary)]">
-                Password (min 8 characters)
+                Jelszó (min. 8 karakter)
               </label>
               <input
                 id="signup-password"
@@ -179,10 +179,10 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
             <button
               type="submit"
               disabled={signupForm.formState.isSubmitting}
-              className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 disabled:opacity-60 transition-opacity"
+              className="eq-interactive-btn flex w-full min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 disabled:opacity-60"
             >
               {signupForm.formState.isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-              <span>Create Account</span>
+              <span>Fiók létrehozása</span>
             </button>
           </form>
         )}
@@ -190,24 +190,24 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
         <div className="border-t border-[var(--border-hairline)] pt-4 text-center text-sm text-[var(--text-secondary)]">
           {mode === 'login' ? (
             <>
-              New to EcoQuest?{' '}
+              Új vagy az EcoQuestben?{' '}
               <button
                 type="button"
                 onClick={() => onNavigate('signup')}
                 className="font-semibold text-[var(--accent-primary)] hover:underline"
               >
-                Create an account
+                Regisztrálj itt
               </button>
             </>
           ) : (
             <>
-              Already have an account?{' '}
+              Már van fiókod?{' '}
               <button
                 type="button"
                 onClick={() => onNavigate('login')}
                 className="font-semibold text-[var(--accent-primary)] hover:underline"
               >
-                Sign in
+                Jelentkezz be
               </button>
             </>
           )}

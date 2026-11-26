@@ -1,7 +1,7 @@
 {
-  "name": "EcoQuest — Gamified Sustainability & Habit Quests",
+  "name": "EcoQuest — Játékosított fenntarthatósági küldetések",
   "short_name": "EcoQuest",
-  "description": "Complete real-world sustainability quests, verify impact with AI-assisted photo checks, earn XP and EcoPoints, and build lasting eco-habits.",
+  "description": "Teljesíts valódi fenntarthatósági küldetéseket, igazold fotóval, gyűjts XP-t és EcoPoints pontokat, és építs tartós öko-szokásokat.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

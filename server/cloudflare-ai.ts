@@ -22,16 +22,18 @@ SECURITY & HONESTY RULES (NON-NEGOTIABLE):
 4. Return "rejected" ONLY when the photo is clearly unrelated, off-topic, blank, or directly contradicts the quest (e.g., a disposable plastic bottle for a refillable bottle quest).
 5. Return "needs_review" whenever evidence is ambiguous, partially obscured, or requires human judgment.
 
+6. Write ALL human-readable text fields ("summary", "evidence_found", "criteria_results[].note", and "limitations") in natural, clear Hungarian (magyar nyelven), while keeping all JSON keys and enum values ("status": "approved" | "rejected" | "needs_review", "met": "yes" | "no" | "uncertain") strictly in English.
+
 Respond ONLY with valid JSON matching this exact schema (no markdown fences, no extra prose):
 {
   "status": "approved" | "rejected" | "needs_review",
   "confidence": <number between 0 and 1>,
-  "summary": "<1-2 sentence objective summary>",
-  "evidence_found": ["<visible observation>", ...],
+  "summary": "<1-2 mondatos tárgyilagos magyar összefoglaló>",
+  "evidence_found": ["<látható megfigyelés magyarul>", ...],
   "criteria_results": [
-    { "criterion": "<criterion checked>", "met": "yes" | "no" | "uncertain", "note": "<reason>" }
+    { "criterion": "<ellenőrzött feltétel>", "met": "yes" | "no" | "uncertain", "note": "<indoklás magyarul>" }
   ],
-  "limitations": ["<limitation or ambiguity>", ...]
+  "limitations": ["<korlát vagy bizonytalanság magyarul>", ...]
 }`;
 
 export function extractJsonObject(raw: string): unknown {
@@ -50,8 +52,8 @@ export function buildFallbackResult(reason: string, criteria: string): AiVerific
   return {
     status: 'needs_review',
     confidence: 0,
-    summary: 'Queued for manual admin review because automated vision verification could not complete.',
-    evidence_found: ['Evidence photo uploaded and stored securely.'],
+    summary: 'Manuális adminisztrátori felülvizsgálatra továbbítva, mert az automatikus képelemzés nem tudott lefutni.',
+    evidence_found: ['A bizonyítékfotó sikeresen feltöltve és biztonságosan eltárolva.'],
     criteria_results: [
       {
         criterion: criteria,
@@ -70,7 +72,7 @@ export function parseCloudflareVisionResponse(
   model: string,
 ): AiVerificationResult {
   if (!payload || typeof payload !== 'object') {
-    return buildFallbackResult('Cloudflare Workers AI returned an empty payload.', criteria);
+    return buildFallbackResult('A Cloudflare Workers AI üres választ adott vissza.', criteria);
   }
 
   const record = payload as {
@@ -84,7 +86,7 @@ export function parseCloudflareVisionResponse(
   };
 
   if (record.success === false) {
-    const msg = record.errors?.[0]?.message || 'Cloudflare Workers AI returned an error.';
+    const msg = record.errors?.[0]?.message || 'A Cloudflare Workers AI hibát jelzett.';
     return buildFallbackResult(msg, criteria);
   }
 
@@ -94,22 +96,22 @@ export function parseCloudflareVisionResponse(
     record.choices?.[0]?.message?.content;
 
   if (typeof rawText !== 'string' || !rawText.trim()) {
-    return buildFallbackResult('Cloudflare Workers AI returned an empty response.', criteria);
+    return buildFallbackResult('A Cloudflare Workers AI üres választ adott vissza.', criteria);
   }
 
   try {
     const parsedJson = extractJsonObject(rawText);
     const validated = AiVerificationResultSchema.safeParse(parsedJson);
     if (!validated.success) {
-      return buildFallbackResult('AI response failed structured schema validation.', criteria);
+      return buildFallbackResult('Az AI válasza nem felelt meg a strukturált sémának.', criteria);
     }
 
     return {
       ...validated.data,
-      provider_note: `Evaluated via Cloudflare Workers AI (${model})`,
+      provider_note: `Cloudflare Workers AI által értékelve (${model})`,
     };
   } catch {
-    return buildFallbackResult('AI response was not valid JSON.', criteria);
+    return buildFallbackResult('Az AI válasza nem érvényes JSON formátumú volt.', criteria);
   }
 }
 
@@ -152,7 +154,7 @@ export async function verifyEvidenceWithCloudflare(
 
   if (!accountId || !apiToken) {
     return buildFallbackResult(
-      'Cloudflare Workers AI credentials are not configured on the server; submission queued for admin review.',
+      'A Cloudflare Workers AI hitelesítő adatok nincsenek konfigurálva a szerveren; a beküldés manuális felülvizsgálatra került.',
       params.verificationCriteria,
     );
   }
@@ -176,7 +178,7 @@ export async function verifyEvidenceWithCloudflare(
 
     if (!response.ok) {
       return buildFallbackResult(
-        `Cloudflare Workers AI returned HTTP ${response.status}; submission queued for admin review.`,
+        `A Cloudflare Workers AI HTTP ${response.status} hibát adott vissza; a beküldés manuális felülvizsgálatra került.`,
         params.verificationCriteria,
       );
     }
@@ -184,9 +186,9 @@ export async function verifyEvidenceWithCloudflare(
     const data = (await response.json()) as unknown;
     return parseCloudflareVisionResponse(data, params.verificationCriteria, model);
   } catch (err) {
-    const reason = err instanceof Error ? err.message : 'Network error calling Cloudflare Workers AI';
+    const reason = err instanceof Error ? err.message : 'Hálózati hiba a Cloudflare Workers AI hívásakor';
     return buildFallbackResult(
-      `${reason}. Submission safely queued for admin review.`,
+      `${reason}. A beküldés biztonságosan manuális felülvizsgálatra került.`,
       params.verificationCriteria,
     );
   } finally {

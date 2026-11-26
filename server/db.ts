@@ -161,12 +161,12 @@ interface SeedQuest {
 const STARTER_QUESTS: SeedQuest[] = [
   {
     slug: 'digital-learner',
-    title: 'Digital Learner',
-    description: 'Write at least two pages of study notes digitally instead of on disposable paper.',
+    title: 'Digitális tanuló',
+    description: 'Írj legalább két oldalnyi tanulási jegyzetet digitálisan eldobható papír helyett.',
     instructions:
-      '1. Open your preferred digital note-taking app on a laptop or tablet.\n2. Complete your study session notes cleanly in digital format.\n3. Capture a clear photo showing your digital notes on screen (avoid sensitive personal data).',
+      '1. Nyisd meg a kedvenc digitális jegyzetelő alkalmazásodat laptopon vagy tableten.\n2. Készítsd el a tanulási jegyzeteidet digitális formátumban.\n3. Készíts egy tiszta fotót, amelyen látszanak a képernyőn lévő digitális jegyzetek (kerüld az érzékeny személyes adatokat).',
     environmental_impact:
-      'Replacing paper notebooks with digital study workflows reduces pulp demand, bleaching chemicals, and forestry water consumption.',
+      'A papírfüzetek digitális jegyzetelésre cserélése csökkenti a cellulózigényt, a fehérítő vegyszerek használatát és az erdőgazdálkodási vízfogyasztást.',
     category: 'Digital Sustainability',
     difficulty: 'easy',
     quest_type: 'daily',
@@ -174,17 +174,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 30,
     eco_points_reward: 15,
     verification_criteria:
-      'Image must clearly show a tablet, laptop, or desktop screen displaying digital study notes. Note: A single photo cannot prove exact page count or zero paper usage elsewhere.',
+      'A képnek egyértelműen mutatnia kell egy tablet, laptop vagy asztali monitor képernyőjét digitális tanulási jegyzetekkel. Megjegyzés: Egyetlen fotó nem bizonyítja a pontos oldalszámot vagy azt, hogy máshol nem használtak papírt.',
     image_url: '/src/assets/images/quest_digital_notes_1795617620749.jpg',
   },
   {
     slug: 'refill-hero',
-    title: 'Refill Hero',
-    description: 'Use a reusable water bottle instead of purchasing a single-use plastic bottle.',
+    title: 'Kulacshős',
+    description: 'Használj újratölthető kulacsot egyszer használatos műanyag palack vásárlása helyett.',
     instructions:
-      '1. Bring your reusable stainless steel, glass, or durable bottle.\n2. Fill it at a tap, water dispenser, or campus refill station.\n3. Snap a photo of your reusable bottle being refilled or next to the tap.',
+      '1. Hozd magaddal az újratölthető rozsdamentes acél, üveg vagy tartós kulacsodat.\n2. Töltsd meg csapnál, vízadagolónál vagy iskolai/egyetemi töltőállomáson.\n3. Készíts egy fotót a kulacsodról töltés közben vagy a csap mellett.',
     environmental_impact:
-      'One person switching to a refillable bottle prevents an average of 150+ single-use plastic bottles from entering landfills or waterways each year.',
+      'Ha egy ember újratölthető kulacsra vált, évente átlagosan több mint 150 egyszer használatos műanyag palackot előz meg a hulladéklerakókban és a vizekben.',
     category: 'Water Conservation',
     difficulty: 'easy',
     quest_type: 'daily',
@@ -192,17 +192,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 25,
     eco_points_reward: 10,
     verification_criteria:
-      'Image must show a reusable water bottle (metal, glass, or hard reusable flask) near a tap, kitchen sink, or refill station. Reject disposable thin PET bottles.',
+      'A képen újratölthető kulacsnak (fém, üveg vagy kemény falú kulacs) kell szerepelnie csap, mosogató vagy töltőállomás közelében. Az eldobható vékony PET palackokat el kell utasítani.',
     image_url: null,
   },
   {
     slug: 'energy-saver',
-    title: 'Energy Saver',
-    description: 'Turn off unnecessary room lights and eliminate idle electrical draw.',
+    title: 'Energiatakarékos',
+    description: 'Kapcsold le a felesleges szobai lámpákat, és szüntesd meg az üresjárati áramfogyasztást.',
     instructions:
-      '1. Check unoccupied rooms or desk lamps when daylight is sufficient.\n2. Switch off overhead lighting and idle appliances.\n3. Take a photo showing the switched-off light switch or darkened room powered by daylight.',
+      '1. Ellenőrizd az üres helyiségeket vagy az asztali lámpákat, amikor elég a természetes fény.\n2. Kapcsold le a mennyezeti világítást és a használaton kívüli eszközöket.\n3. Készíts egy fotót a kikapcsolt villanykapcsolóról vagy a természetes fénnyel megvilágított szobáról.',
     environmental_impact:
-      'Cutting unnecessary lighting reduces peak grid demand and lowers fossil-fuel electricity generation.',
+      'A felesleges világítás lekapcsolása csökkenti a hálózati csúcsterhelést és a fosszilis alapú áramtermelést.',
     category: 'Energy Saving',
     difficulty: 'easy',
     quest_type: 'daily',
@@ -210,17 +210,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 25,
     eco_points_reward: 10,
     verification_criteria:
-      'Image must visibly depict a switched-off light fixture, light switch in off position, or a workspace lit by natural daylight with lamps off.',
+      'A képen láthatónak kell lennie egy lekapcsolt világítótestnek, kikapcsolt állású villanykapcsolónak vagy természetes nappali fénnyel megvilágított munkaasztalnak lekapcsolt lámpákkal.',
     image_url: null,
   },
   {
     slug: 'recycling-master',
-    title: 'Recycling Master',
-    description: 'Sort recyclable household waste cleanly into paper, plastic, metal, or glass streams.',
+    title: 'Szelektáló mester',
+    description: 'Válogasd szét tisztán a háztartási újrahasznosítható hulladékot papír, műanyag, fém vagy üveg szerint.',
     instructions:
-      '1. Rinse food residue from containers before sorting.\n2. Separate clean paper/cardboard from plastics, cans, or glass.\n3. Take a clear photo showing your sorted recyclables placed in distinct bins or bags.',
+      '1. Válogatás előtt öblítsd ki az ételmaradékot a csomagolásokból.\n2. Válaszd külön a tiszta papírt/kartont a műanyagoktól, alumíniumdobozoktól vagy üvegektől.\n3. Készíts egy tiszta fotót a külön gyűjtőkbe vagy zsákokba válogatott hulladékról.',
     environmental_impact:
-      'Clean source separation prevents contamination batches from being sent to landfill and keeps recycled aluminum and paper fibers viable.',
+      'A tiszta forrásoldali szelektálás megakadályozza, hogy a szennyezett tételek a szemétlerakóba kerüljenek, és megőrzi az alumínium- és papírrostok újrahasznosíthatóságát.',
     category: 'Recycling',
     difficulty: 'medium',
     quest_type: 'daily',
@@ -228,17 +228,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 45,
     eco_points_reward: 20,
     verification_criteria:
-      'Image must show clearly separated recyclable materials (e.g., paper, plastic bottles, aluminum cans, or glass) in recycling bins or sorted piles.',
+      'A képen egyértelműen szétválogatott újrahasznosítható anyagoknak (pl. papír, műanyag palackok, alumíniumdobozok vagy üveg) kell látszaniuk szelektív kukákban vagy külön kupacokban.',
     image_url: null,
   },
   {
     slug: 'sustainable-commute',
-    title: 'Sustainable Commute',
-    description: 'Walk, cycle, or ride public transit instead of taking a private car for a suitable trip.',
+    title: 'Fenntartható ingázás',
+    description: 'Gyalogolj, biciklizz vagy használj tömegközlekedést személyautó helyett egy megfelelő úton.',
     instructions:
-      '1. Plan a local campus, school, or grocery journey on foot, by bike, or via bus/train.\n2. Capture a safe photo while stopped (parked bicycle, transit platform, or pedestrian trail—never while riding in traffic).',
+      '1. Tervezz meg egy helyi iskolai, egyetemi vagy bevásárlóutat gyalog, kerékpárral vagy busszal/vonattal.\n2. Készíts biztonságos fotót megállva (leparkolt kerékpár, megálló vagy gyalogút — soha ne forgalomban haladás közben).',
     environmental_impact:
-      'Replacing a single 10 km solo car trip with cycling or public transit avoids roughly 1.5–2 kg of tailpipe CO2 emissions.',
+      'Egyetlen 10 km-es egyéni autóút kerékpárra vagy tömegközlekedésre cserélése nagyjából 1,5–2 kg kipufogógáz-eredetű CO2-kibocsátást takarít meg.',
     category: 'Sustainable Transport',
     difficulty: 'medium',
     quest_type: 'daily',
@@ -246,17 +246,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 50,
     eco_points_reward: 25,
     verification_criteria:
-      'Image must show a parked bicycle on a bike path/rack, a public transit bus/train/station, or an outdoor walking footpath.',
+      'A képen kerékpárúton/tárolónál leparkolt kerékpárnak, tömegközlekedési járműnek/állomásnak vagy szabadtéri gyalogútnak kell szerepelnie.',
     image_url: '/src/assets/images/quest_sustainable_commute_1795617621118.jpg',
   },
   {
     slug: 'daylight-desk',
-    title: 'Daylight Desk',
-    description: 'Complete a full 1-hour study block using natural window light with artificial lamps off.',
+    title: 'Nappali fényű asztal',
+    description: 'Tanulj egy teljes órán át természetes ablakfénynél, mesterséges lámpák nélkül.',
     instructions:
-      '1. Position your study workspace beside a window.\n2. Keep desk lamps and overhead lights turned off.\n3. Take a photo of your naturally lit desk setup.',
+      '1. Helyezd a tanulóasztalodat egy ablak mellé.\n2. Kapcsold ki az asztali lámpát és a mennyezeti világítást.\n3. Készíts egy fotót a természetes fénnyel megvilágított asztalodról.',
     environmental_impact:
-      'Daylighting reduces daytime residential electricity draw and improves visual comfort without extra wattage.',
+      'A nappali természetes fény használata csökkenti a nappali lakossági áramfogyasztást, és kíméli a szemet extra teljesítmény nélkül.',
     category: 'Energy Saving',
     difficulty: 'easy',
     quest_type: 'weekly',
@@ -264,17 +264,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 60,
     eco_points_reward: 30,
     verification_criteria:
-      'Image must show a desk or study table illuminated by natural window light with visible lamps switched off.',
+      'A képen ablakból érkező természetes fénnyel megvilágított íróasztalnak kell látszania, láthatóan kikapcsolt lámpákkal.',
     image_url: null,
   },
   {
     slug: 'five-minute-flow',
-    title: 'Five-Minute Flow',
-    description: 'Cap your shower or tap flow at 5 minutes using a physical or phone timer.',
+    title: 'Ötperces zuhany',
+    description: 'Korlátozd a zuhanyzást vagy vízfolyatást legfeljebb 5 percre fizikai vagy telefonos időzítővel.',
     instructions:
-      '1. Set a 5-minute countdown timer before turning on the water.\n2. Keep the shower concise and turn off water while lathering.\n3. Photograph your timer showing 5:00 or completed countdown beside a dry sink counter.',
+      '1. Állíts be egy 5 perces visszaszámlálót a víz megnyitása előtt.\n2. Zuhanyozz röviden, és zárd el a vizet szappanozás közben.\n3. Fotózd le az 5:00-át vagy lejárt időzítőt mutató órát egy száraz mosdópult mellett.',
     environmental_impact:
-      'Cutting shower length from 10 minutes to 5 minutes saves up to 45 liters of heated water per session.',
+      'A zuhanyzás idejének 10 percről 5 percre csökkentése alkalmanként akár 45 liter felmelegített vizet is megtakarít.',
     category: 'Water Conservation',
     difficulty: 'medium',
     quest_type: 'daily',
@@ -282,17 +282,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 40,
     eco_points_reward: 20,
     verification_criteria:
-      'Image must show a 5-minute countdown timer on a phone or kitchen timer near a bathroom sink or tile counter (no people in frame).',
+      'A képen 5 perces visszaszámláló időzítőnek kell látszania telefonon vagy konyhai órán fürdőszobai mosdó vagy csempézett pult mellett (személyek nélkül a képen).',
     image_url: null,
   },
   {
     slug: 'cloud-declutter',
-    title: 'Cloud Declutter',
-    description: 'Delete at least 50 old promotional emails and empty your spam/trash folders.',
+    title: 'Felhő nagytakarítás',
+    description: 'Törölj legalább 50 régi promóciós e-mailt, és ürítsd ki a Spam és Kuka mappákat.',
     instructions:
-      '1. Search your inbox for old newsletters or expired promotions.\n2. Batch-delete unnecessary threads and empty the Trash folder.\n3. Upload a cropped screenshot showing your cleared Trash/Spam count of 0 (hide private email addresses).',
+      '1. Keress rá a régi hírlevelekre vagy lejárt promóciókra a postafiókodban.\n2. Töröld ki a felesleges leveleket, és ürítsd ki a Kuka mappát.\n3. Tölts fel egy megvágott képernyőképet, amelyen a Kuka/Spam 0 üzenetet mutat (takard ki a privát e-mail-címeket).',
     environmental_impact:
-      'Trimming redundant cloud storage reduces continuous data center server storage and cooling energy over time.',
+      'A felesleges felhőtárhely csökkentése hosszú távon mérsékli az adatközpontok folyamatos tárhely- és hűtési energiaigényét.',
     category: 'Digital Sustainability',
     difficulty: 'medium',
     quest_type: 'weekly',
@@ -300,17 +300,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 55,
     eco_points_reward: 25,
     verification_criteria:
-      'Screenshot must show an email client Trash or Spam view indicating deleted or zero messages remaining.',
+      'A képernyőképnek egy e-mail kliens Kuka vagy Spam nézetét kell mutatnia, amely jelzi az üres vagy 0 darabos állapotot.',
     image_url: null,
   },
   {
     slug: 'zero-waste-lunch',
-    title: 'Zero-Waste Lunch',
-    description: 'Pack a homemade meal using reusable containers, cloth napkins, and washable cutlery.',
+    title: 'Hulladékmentes ebéd',
+    description: 'Csomagolj otthoni ételt újrafelhasználható dobozba, mosható evőeszközökkel.',
     instructions:
-      '1. Prepare lunch in reusable glass, steel, or durable containers.\n2. Pack metal/bamboo utensils instead of single-use plastic.\n3. Photograph your packed meal setup before eating.',
+      '1. Készítsd el az ebédet üveg, fém vagy tartós műanyag ételtároló dobozba.\n2. Csomagolj fém vagy bambusz evőeszközt egyszer használatos műanyag helyett.\n3. Fotózd le az összekészített ebédet evés előtt.',
     environmental_impact:
-      'Avoiding single-use takeout clamshells and plastic cutlery prevents unrecyclable food-soiled packaging waste.',
+      'Az eldobható elviteles dobozok és műanyag evőeszközök mellőzése megelőzi a nem újrahasznosítható, ételmaradékkal szennyezett csomagolási hulladékot.',
     category: 'Responsible Consumption',
     difficulty: 'medium',
     quest_type: 'daily',
@@ -318,17 +318,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 50,
     eco_points_reward: 25,
     verification_criteria:
-      'Image must show food packed in reusable containers with washable utensils (no disposable foam or single-use plastic takeout boxes).',
+      'A képen újrafelhasználható ételdobozban lévő ételnek és mosható evőeszköznek kell látszania (eldobható habszivacs vagy egyszer használatos elviteles doboz nélkül).',
     image_url: null,
   },
   {
     slug: 'borrow-dont-buy',
-    title: "Borrow, Don't Buy",
-    description: 'Borrow a book, tool, or study resource from a library or peer swap instead of buying new.',
+    title: 'Kölcsönözz, ne vásárolj',
+    description: 'Kölcsönözz könyvet, eszközt vagy tananyagot könyvtárból vagy cserepolcról új vásárlása helyett.',
     instructions:
-      '1. Visit your school/public library or campus sharing shelf.\n2. Check out or borrow an item you need.\n3. Take a photo of the borrowed item at the library desk or with its library label.',
+      '1. Látogass el az iskolai/városi könyvtárba vagy egy közösségi cserepolchoz.\n2. Vedd ki vagy kölcsönözd ki a szükséges könyvet vagy eszközt.\n3. Készíts egy fotót a kikölcsönzött tárgyról a könyvtári pultnál vagy a könyvtári vonalkóddal.',
     environmental_impact:
-      'Sharing resources extends product lifecycles and prevents manufacturing emissions from redundant personal purchases.',
+      'Az eszközök és könyvek megosztása meghosszabbítja az életciklust, és csökkenti a felesleges gyártási kibocsátást.',
     category: 'Responsible Consumption',
     difficulty: 'hard',
     quest_type: 'one_time',
@@ -336,17 +336,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 100,
     eco_points_reward: 50,
     verification_criteria:
-      'Image must show a library book with a library barcode/spine label, a library shelf/kiosk, or a shared item swap table.',
+      'A képen könyvtári vonalkóddal/gerinccímkével ellátott könyvnek, könyvtári polcnak/pultnak vagy közösségi csereasztalnak kell szerepelnie.',
     image_url: null,
   },
   {
     slug: 'phantom-load-hunt',
-    title: 'Phantom Load Hunt',
-    description: 'Identify and power down standby electronics on a switched multi-outlet power strip.',
+    title: 'Fantomfogyasztás-vadászat',
+    description: 'Keresd meg és kapcsold le a készenléti (standby) elektronikát egy kapcsolós elosztón.',
     instructions:
-      '1. Locate chargers, monitors, or consoles drawing standby power.\n2. Flip the main power strip rocker switch OFF when not in use.\n3. Capture a photo of the switched-off power strip.',
+      '1. Keresd meg a készenléti áramot fogyasztó töltőket, monitorokat vagy konzolokat.\n2. Kapcsold OFF állásba az elosztó főkapcsolóját, amikor nem használod őket.\n3. Készíts egy fotót a kikapcsolt elosztóról.',
     environmental_impact:
-      'Standby "vampire" loads account for 5–10% of typical household electricity use; master switches eliminate idle draw.',
+      'A készenléti „vámpír” terhelések a háztartási áramfogyasztás 5–10%-át teszik ki; a főkapcsoló megszünteti az üresjárati veszteséget.',
     category: 'Energy Saving',
     difficulty: 'hard',
     quest_type: 'weekly',
@@ -354,17 +354,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 80,
     eco_points_reward: 40,
     verification_criteria:
-      'Image must show a multi-outlet power strip with its power switch clearly in the OFF position (indicator light off).',
+      'A képen többaljzatú elosztónak kell látszania, amelynek kapcsolója egyértelműen kikapcsolt (OFF) állásban van (a jelzőfény nem világít).',
     image_url: null,
   },
   {
     slug: 'micro-litter-sweep',
-    title: 'Micro-Litter Sweep',
-    description: 'Safely collect visible litter from a park, sidewalk, or campus courtyard using gloves or a grabber.',
+    title: 'Mikroszemét-söprés',
+    description: 'Szedd össze biztonságosan a látható szemetet egy parkban, járdán vagy iskolaudvaron kesztyűvel vagy csipesszel.',
     instructions:
-      '1. Wear protective gloves or use a litter grabber—never pick up sharp glass or hazardous items.\n2. Collect safe dry litter (wrappers, bottles, cans) into a bag.\n3. Photograph the collected bag placed beside a public trash or recycling bin.',
+      '1. Viselj védőkesztyűt vagy használj szemétszedő csipeszt — soha ne nyúlj törött üveghez vagy veszélyes tárgyhoz.\n2. Gyűjtsd össze a biztonságos, száraz hulladékot (csomagolások, palackok, dobozok) egy zsákba.\n3. Fotózd le az összegyűjtött zsákot egy köztéri szemetes vagy szelektív gyűjtő mellett.',
     environmental_impact:
-      'Intercepting urban litter prevents microplastics and aluminum from washing into storm drains and local rivers.',
+      'A városi hulladék összegyűjtése megakadályozza, hogy a mikroműanyagok és az alumínium a csapadékvíz-elvezetőkbe és a folyókba jussanak.',
     category: 'General Eco Habits',
     difficulty: 'epic',
     quest_type: 'special',
@@ -372,17 +372,17 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 150,
     eco_points_reward: 75,
     verification_criteria:
-      'Image must show collected litter in a bag or glove/grabber next to a public waste or recycling receptacle.',
+      'A képen zsákba gyűjtött szemétnek vagy kesztyűnek/csipesznek kell látszania egy köztéri szemetes vagy szelektív gyűjtő mellett.',
     image_url: null,
   },
   {
     slug: 'tote-over-plastic',
-    title: 'Tote Over Plastic',
-    description: 'Carry groceries or books in a reusable cloth tote bag instead of accepting disposable plastic bags.',
+    title: 'Vászontáska nejlon helyett',
+    description: 'Vidd a bevásárlást vagy a könyveidet újrafelhasználható vászontáskában eldobható műanyag zacskó helyett.',
     instructions:
-      '1. Keep a foldable fabric tote in your backpack.\n2. Use it to carry your errands or books home.\n3. Take a photo of your packed reusable tote bag.',
+      '1. Tarts egy összehajtható szövettáskát a hátizsákodban.\n2. Használd bevásárláshoz vagy könyvek szállításához.\n3. Készíts egy fotót a megpakolt vászontáskádról.',
     environmental_impact:
-      'Reusable cloth totes displace hundreds of thin polyethylene bags that jam sorting machinery and persist in soil.',
+      'Az újrafelhasználható vászontáskák több száz vékony polietilén zacskót váltanak ki, amelyek eltömítik a válogatógépeket és szennyezik a talajt.',
     category: 'General Eco Habits',
     difficulty: 'easy',
     quest_type: 'one_time',
@@ -390,7 +390,7 @@ const STARTER_QUESTS: SeedQuest[] = [
     xp_reward: 35,
     eco_points_reward: 15,
     verification_criteria:
-      'Image must show a reusable cloth or canvas tote bag holding books, groceries, or personal items.',
+      'A képen könyveket, élelmiszert vagy személyes tárgyakat tartó újrafelhasználható szövet- vagy vászontáskának kell szerepelnie.',
     image_url: null,
   },
 ];
@@ -398,64 +398,64 @@ const STARTER_QUESTS: SeedQuest[] = [
 const STARTER_ACHIEVEMENTS = [
   {
     code: 'first_quest',
-    title: 'First Sprout',
-    description: 'Complete your first verified sustainability quest.',
+    title: 'Első hajtás',
+    description: 'Teljesítsd az első igazolt fenntarthatósági küldetésedet.',
     rule_type: 'quests_completed',
     rule_threshold: 1,
     xp_bonus: 25,
   },
   {
     code: 'five_quests',
-    title: 'Habit Builder',
-    description: 'Complete 5 verified sustainability quests.',
+    title: 'Szokásépítő',
+    description: 'Teljesíts 5 igazolt fenntarthatósági küldetést.',
     rule_type: 'quests_completed',
     rule_threshold: 5,
     xp_bonus: 50,
   },
   {
     code: 'ten_quests',
-    title: 'Canopy Guardian',
-    description: 'Complete 10 verified sustainability quests.',
+    title: 'Lombkorona-őr',
+    description: 'Teljesíts 10 igazolt fenntarthatósági küldetést.',
     rule_type: 'quests_completed',
     rule_threshold: 10,
     xp_bonus: 100,
   },
   {
     code: 'streak_3',
-    title: 'Three-Day Momentum',
-    description: 'Maintain an active daily quest streak for 3 days.',
+    title: 'Háromnapos lendület',
+    description: 'Tarts fenn aktív napi küldetéssorozatot 3 napon át.',
     rule_type: 'streak_days',
     rule_threshold: 3,
     xp_bonus: 40,
   },
   {
     code: 'streak_7',
-    title: 'Weekly Steward',
-    description: 'Maintain an active daily quest streak for 7 days.',
+    title: 'Heti gondnok',
+    description: 'Tarts fenn aktív napi küldetéssorozatot 7 napon át.',
     rule_type: 'streak_days',
     rule_threshold: 7,
     xp_bonus: 100,
   },
   {
     code: 'xp_250',
-    title: 'Rising Eco-Advocate',
-    description: 'Reach 250 total XP across all sustainability quests.',
+    title: 'Feltörekvő öko-aktivista',
+    description: 'Érj el összesen 250 XP-t a fenntarthatósági küldetésekkel.',
     rule_type: 'total_xp',
     rule_threshold: 250,
     xp_bonus: 30,
   },
   {
     code: 'xp_500',
-    title: 'Solar Trailblazer',
-    description: 'Reach 500 total XP across all sustainability quests.',
+    title: 'Napfény-úttörő',
+    description: 'Érj el összesen 500 XP-t a fenntarthatósági küldetésekkel.',
     rule_type: 'total_xp',
     rule_threshold: 500,
     xp_bonus: 75,
   },
   {
     code: 'categories_3',
-    title: 'All-Rounder',
-    description: 'Complete verified quests across 3 different eco categories.',
+    title: 'Sokoldalú hős',
+    description: 'Teljesíts igazolt küldetéseket legalább 3 különböző öko-kategóriában.',
     rule_type: 'category_count',
     rule_threshold: 3,
     xp_bonus: 60,
@@ -464,7 +464,7 @@ const STARTER_ACHIEVEMENTS = [
 
 function seedDatabase(): void {
   const insertQuest = db.prepare(`
-    INSERT OR IGNORE INTO quests (
+    INSERT INTO quests (
       id, slug, title, description, instructions, environmental_impact,
       category, difficulty, quest_type, estimated_minutes,
       xp_reward, eco_points_reward, verification_type, verification_criteria,
@@ -475,12 +475,21 @@ function seedDatabase(): void {
       @xp_reward, @eco_points_reward, 'photo', @verification_criteria,
       1, @image_url
     )
+    ON CONFLICT(slug) DO UPDATE SET
+      title = excluded.title,
+      description = excluded.description,
+      instructions = excluded.instructions,
+      environmental_impact = excluded.environmental_impact,
+      verification_criteria = excluded.verification_criteria
   `);
 
   const insertAchievement = db.prepare(`
-    INSERT OR IGNORE INTO achievements (
+    INSERT INTO achievements (
       id, code, title, description, rule_type, rule_threshold, xp_bonus
     ) VALUES (@id, @code, @title, @description, @rule_type, @rule_threshold, @xp_bonus)
+    ON CONFLICT(code) DO UPDATE SET
+      title = excluded.title,
+      description = excluded.description
   `);
 
   const tx = db.transaction(() => {
@@ -630,7 +639,7 @@ export const finalizeSubmissionTx = db.transaction(
       submission.id,
       quest.xp_reward,
       quest.eco_points_reward,
-      `Completed quest: ${quest.title}`,
+      `Teljesített küldetés: ${quest.title}`,
     );
 
     const profile = db
@@ -719,7 +728,7 @@ export const finalizeSubmissionTx = db.transaction(
             crypto.randomUUID(),
             submission.user_id,
             ach.xp_bonus,
-            `Achievement unlocked: ${ach.title}`,
+            `Elért eredmény: ${ach.title}`,
           );
         }
         unlockedTitles.push(ach.title);

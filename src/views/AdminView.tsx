@@ -1,7 +1,12 @@
 import {CheckCircle2, Loader2, Pencil, Plus, ShieldCheck, XCircle} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 import {StatusIndicator} from '../components/StatusBadge';
-import {apiFetch, formatDifficultyLabel, formatQuestTypeLabel} from '../lib/api';
+import {
+  apiFetch,
+  formatCategoryLabel,
+  formatDifficultyLabel,
+  formatQuestTypeLabel,
+} from '../lib/api';
 import {
   QUEST_CATEGORIES,
   QUEST_DIFFICULTIES,
@@ -80,7 +85,7 @@ export function AdminView() {
       setSubmissions(subsRes.submissions);
       setQuests(questsRes.quests);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Admin access failed');
+      setError(err instanceof Error ? err.message : 'Adminisztrátori hozzáférés sikertelen');
     } finally {
       setLoading(false);
     }
@@ -94,8 +99,8 @@ export function AdminView() {
     const reason =
       reviewReasons[submissionId]?.trim() ||
       (decision === 'approved'
-        ? 'Verified manually by admin reviewer.'
-        : 'Evidence does not meet quest criteria.');
+        ? 'Adminisztrátor által manuálisan jóváhagyva.'
+        : 'A bizonyíték nem felel meg a küldetés feltételeinek.');
 
     setBusyId(submissionId);
     setError(null);
@@ -106,7 +111,7 @@ export function AdminView() {
       });
       await loadData();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Review action failed');
+      setError(err instanceof Error ? err.message : 'A felülvizsgálati művelet sikertelen');
     } finally {
       setBusyId(null);
     }
@@ -121,7 +126,7 @@ export function AdminView() {
       });
       await loadData();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not update quest status');
+      setError(err instanceof Error ? err.message : 'Nem sikerült frissíteni a küldetés állapotát');
     } finally {
       setBusyId(null);
     }
@@ -163,7 +168,7 @@ export function AdminView() {
       setEditQuest(null);
       await loadData();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not save quest changes');
+      setError(err instanceof Error ? err.message : 'Nem sikerült menteni a küldetés módosításait');
     } finally {
       setBusyId(null);
     }
@@ -199,7 +204,7 @@ export function AdminView() {
       });
       await loadData();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not create quest');
+      setError(err instanceof Error ? err.message : 'Nem sikerült létrehozni a küldetést');
     } finally {
       setBusyId(null);
     }
@@ -211,9 +216,9 @@ export function AdminView() {
         <div className="flex items-center gap-2.5">
           <ShieldCheck className="h-6 w-6 text-[var(--accent-emerald)]" aria-hidden="true" />
           <div>
-            <h1 className="font-display text-2xl font-bold tracking-tight">Admin Console</h1>
+            <h1 className="font-display text-2xl font-bold tracking-tight">Adminisztrátori konzol</h1>
             <p className="text-xs text-[var(--text-secondary)]">
-              Role-verified moderation queue and quest catalog management.
+              Szerepkör-ellenőrzött moderációs sor és küldetéskatalógus-kezelés.
             </p>
           </div>
         </div>
@@ -228,7 +233,7 @@ export function AdminView() {
                 : 'text-[var(--text-secondary)]'
             }`}
           >
-            Review Queue
+            Felülvizsgálati sor
           </button>
           <button
             type="button"
@@ -239,7 +244,7 @@ export function AdminView() {
                 : 'text-[var(--text-secondary)]'
             }`}
           >
-            Quest Manager ({quests.length})
+            Küldetéskezelő ({quests.length})
           </button>
         </div>
       </div>
@@ -265,7 +270,7 @@ export function AdminView() {
                   : 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)]'
               }`}
             >
-              Needs Review
+              Felülvizsgálatra vár
             </button>
             <button
               type="button"
@@ -276,7 +281,7 @@ export function AdminView() {
                   : 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)]'
               }`}
             >
-              All Submissions
+              Összes beküldés
             </button>
           </div>
 
@@ -284,7 +289,7 @@ export function AdminView() {
             <div className="h-48 rounded-2xl bg-[var(--bg-surface)] animate-pulse" />
           ) : submissions.length === 0 ? (
             <div className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-10 text-center text-sm text-[var(--text-secondary)]">
-              No submissions in this queue filter.
+              Nincs beküldés ebben a szűrőben.
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
@@ -296,7 +301,7 @@ export function AdminView() {
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p className="text-xs text-[var(--text-secondary)]">
-                        {sub.username} · Period {sub.period_key}
+                        {sub.username} · Időszak: {sub.period_key}
                       </p>
                       <h2 className="font-display text-base font-semibold">{sub.quest_title}</h2>
                     </div>
@@ -306,22 +311,24 @@ export function AdminView() {
                   {sub.has_evidence ? (
                     <img
                       src={`/api/submissions/${sub.id}/evidence`}
-                      alt="Submitted evidence for review"
+                      alt="Felülvizsgálatra beküldött bizonyíték"
                       className="max-h-56 w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] object-contain"
                     />
                   ) : (
-                    <p className="text-xs text-[var(--text-secondary)]">Evidence photo deleted.</p>
+                    <p className="text-xs text-[var(--text-secondary)]">A bizonyítékfotó törölve lett.</p>
                   )}
 
                   {sub.user_note && (
                     <p className="text-xs text-[var(--text-secondary)]">
-                      User note: &ldquo;{sub.user_note}&rdquo;
+                      Felhasználói megjegyzés: &bdquo;{sub.user_note}&rdquo;
                     </p>
                   )}
 
                   {sub.ai_result && (
                     <div className="rounded-xl bg-[var(--bg-canvas)] p-3 text-xs space-y-1">
-                      <p className="font-semibold">AI Note ({Math.round(sub.ai_result.confidence * 100)}%)</p>
+                      <p className="font-semibold">
+                        AI megjegyzés ({Math.round(sub.ai_result.confidence * 100)}%)
+                      </p>
                       <p className="text-[var(--text-secondary)]">{sub.ai_result.summary}</p>
                     </div>
                   )}
@@ -333,7 +340,7 @@ export function AdminView() {
                           htmlFor={`review-reason-${sub.id}`}
                           className="block text-[11px] font-medium text-[var(--text-secondary)]"
                         >
-                          Review Reason (optional)
+                          Értékelési indoklás (opcionális)
                         </label>
                         <input
                           id={`review-reason-${sub.id}`}
@@ -342,7 +349,7 @@ export function AdminView() {
                           onChange={(e) =>
                             setReviewReasons((prev) => ({...prev, [sub.id]: e.target.value}))
                           }
-                          placeholder="Optional review reason..."
+                          placeholder="Opcionális indoklás..."
                           className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-xs focus-visible:ring-2 focus-visible:ring-lime-500"
                         />
                       </div>
@@ -354,7 +361,7 @@ export function AdminView() {
                           className="flex-1 inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-500 disabled:opacity-50"
                         >
                           <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
-                          <span>Approve</span>
+                          <span>Jóváhagyás</span>
                         </button>
                         <button
                           type="button"
@@ -363,7 +370,7 @@ export function AdminView() {
                           className="flex-1 inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-700 dark:text-rose-400 hover:bg-rose-500/20 disabled:opacity-50"
                         >
                           <XCircle className="h-3.5 w-3.5" aria-hidden="true" />
-                          <span>Reject</span>
+                          <span>Elutasítás</span>
                         </button>
                       </div>
                     </div>
@@ -379,10 +386,10 @@ export function AdminView() {
             <button
               type="button"
               onClick={() => setShowCreate((v) => !v)}
-              className="inline-flex min-h-[40px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2 text-xs font-semibold text-[var(--accent-primary-fg)]"
+              className="eq-interactive-btn inline-flex min-h-[40px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2 text-xs font-semibold text-[var(--accent-primary-fg)]"
             >
               <Plus className="h-4 w-4" aria-hidden="true" />
-              <span>{showCreate ? 'Cancel' : 'Create Quest'}</span>
+              <span>{showCreate ? 'Mégse' : 'Új küldetés'}</span>
             </button>
           </div>
 
@@ -393,12 +400,12 @@ export function AdminView() {
             >
               <div className="space-y-1.5">
                 <label htmlFor="create-quest-slug" className="block text-xs font-medium text-[var(--text-secondary)]">
-                  Quest Slug
+                  Küldetés slug (technikai azonosító)
                 </label>
                 <input
                   id="create-quest-slug"
                   required
-                  placeholder="e.g. cold-water-wash"
+                  placeholder="pl. hideg-vizes-mosas"
                   value={newQuest.slug}
                   onChange={(e) => setNewQuest({...newQuest, slug: e.target.value})}
                   className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
@@ -406,12 +413,12 @@ export function AdminView() {
               </div>
               <div className="space-y-1.5">
                 <label htmlFor="create-quest-title" className="block text-xs font-medium text-[var(--text-secondary)]">
-                  Quest Title
+                  Küldetés címe
                 </label>
                 <input
                   id="create-quest-title"
                   required
-                  placeholder="Quest Title"
+                  placeholder="Küldetés címe"
                   value={newQuest.title}
                   onChange={(e) => setNewQuest({...newQuest, title: e.target.value})}
                   className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
@@ -419,7 +426,7 @@ export function AdminView() {
               </div>
               <div className="space-y-1.5">
                 <label htmlFor="create-quest-category" className="block text-xs font-medium text-[var(--text-secondary)]">
-                  Category
+                  Kategória
                 </label>
                 <select
                   id="create-quest-category"
@@ -431,7 +438,7 @@ export function AdminView() {
                 >
                   {QUEST_CATEGORIES.map((c) => (
                     <option key={c} value={c}>
-                      {c}
+                      {formatCategoryLabel(c)}
                     </option>
                   ))}
                 </select>
@@ -439,7 +446,7 @@ export function AdminView() {
               <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-1.5">
                   <label htmlFor="create-quest-type" className="block text-xs font-medium text-[var(--text-secondary)]">
-                    Frequency
+                    Gyakoriság
                   </label>
                   <select
                     id="create-quest-type"
@@ -456,7 +463,7 @@ export function AdminView() {
                 </div>
                 <div className="space-y-1.5">
                   <label htmlFor="create-quest-difficulty" className="block text-xs font-medium text-[var(--text-secondary)]">
-                    Difficulty
+                    Nehézség
                   </label>
                   <select
                     id="create-quest-difficulty"
@@ -474,13 +481,13 @@ export function AdminView() {
               </div>
               <div className="space-y-1.5">
                 <label htmlFor="create-quest-xp" className="block text-xs font-medium text-[var(--text-secondary)]">
-                  XP Reward
+                  XP jutalom
                 </label>
                 <input
                   id="create-quest-xp"
                   type="number"
                   min={5}
-                  placeholder="XP Reward"
+                  placeholder="XP jutalom"
                   value={newQuest.xp_reward}
                   onChange={(e) => setNewQuest({...newQuest, xp_reward: Number(e.target.value)})}
                   className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
@@ -488,13 +495,13 @@ export function AdminView() {
               </div>
               <div className="space-y-1.5">
                 <label htmlFor="create-quest-points" className="block text-xs font-medium text-[var(--text-secondary)]">
-                  EcoPoints Reward
+                  EcoPoints jutalom
                 </label>
                 <input
                   id="create-quest-points"
                   type="number"
                   min={0}
-                  placeholder="EcoPoints Reward"
+                  placeholder="EcoPoints jutalom"
                   value={newQuest.eco_points_reward}
                   onChange={(e) =>
                     setNewQuest({...newQuest, eco_points_reward: Number(e.target.value)})
@@ -504,12 +511,12 @@ export function AdminView() {
               </div>
               <div className="sm:col-span-2 space-y-1.5">
                 <label htmlFor="create-quest-description" className="block text-xs font-medium text-[var(--text-secondary)]">
-                  Short Description
+                  Rövid leírás
                 </label>
                 <textarea
                   id="create-quest-description"
                   required
-                  placeholder="Short description..."
+                  placeholder="Rövid leírás..."
                   value={newQuest.description}
                   onChange={(e) => setNewQuest({...newQuest, description: e.target.value})}
                   className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
@@ -517,12 +524,12 @@ export function AdminView() {
               </div>
               <div className="sm:col-span-2 space-y-1.5">
                 <label htmlFor="create-quest-instructions" className="block text-xs font-medium text-[var(--text-secondary)]">
-                  Step-by-Step Instructions
+                  Lépésről lépésre útmutató
                 </label>
                 <textarea
                   id="create-quest-instructions"
                   required
-                  placeholder="Step-by-step instructions..."
+                  placeholder="Lépésről lépésre útmutató..."
                   value={newQuest.instructions}
                   onChange={(e) => setNewQuest({...newQuest, instructions: e.target.value})}
                   className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
@@ -530,12 +537,12 @@ export function AdminView() {
               </div>
               <div className="sm:col-span-2 space-y-1.5">
                 <label htmlFor="create-quest-impact" className="block text-xs font-medium text-[var(--text-secondary)]">
-                  Environmental Impact
+                  Környezeti hatás
                 </label>
                 <textarea
                   id="create-quest-impact"
                   required
-                  placeholder="Environmental impact explanation..."
+                  placeholder="Környezeti hatás magyarázata..."
                   value={newQuest.environmental_impact}
                   onChange={(e) => setNewQuest({...newQuest, environmental_impact: e.target.value})}
                   className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
@@ -543,12 +550,12 @@ export function AdminView() {
               </div>
               <div className="sm:col-span-2 space-y-1.5">
                 <label htmlFor="create-quest-criteria" className="block text-xs font-medium text-[var(--text-secondary)]">
-                  AI Verification Criteria
+                  AI-ellenőrzési feltételek
                 </label>
                 <textarea
                   id="create-quest-criteria"
                   required
-                  placeholder="AI Verification Criteria..."
+                  placeholder="AI-ellenőrzési feltételek..."
                   value={newQuest.verification_criteria}
                   onChange={(e) => setNewQuest({...newQuest, verification_criteria: e.target.value})}
                   className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
@@ -560,7 +567,7 @@ export function AdminView() {
                 className="sm:col-span-2 inline-flex min-h-[42px] items-center justify-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--accent-primary-fg)]"
               >
                 {busyId === 'create' && <Loader2 className="h-4 w-4 animate-spin" />}
-                <span>Publish Quest</span>
+                <span>Küldetés közzététele</span>
               </button>
             </form>
           )}
@@ -572,8 +579,8 @@ export function AdminView() {
                   <div className="space-y-0.5">
                     <p className="font-display text-sm font-semibold">{q.title}</p>
                     <p className="text-xs text-[var(--text-secondary)]">
-                      {q.category} · {formatQuestTypeLabel(q.quest_type)} · +{q.xp_reward} XP · +
-                      {q.eco_points_reward} pts · {q.estimated_minutes} min
+                      {formatCategoryLabel(q.category)} · {formatQuestTypeLabel(q.quest_type)} · +{q.xp_reward} XP · +
+                      {q.eco_points_reward} pont · {q.estimated_minutes} perc
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -583,7 +590,7 @@ export function AdminView() {
                       className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-1 text-xs font-semibold text-[var(--text-primary)] hover:border-lime-500/40"
                     >
                       <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
-                      <span>{editingQuestId === q.id ? 'Close' : 'Edit'}</span>
+                      <span>{editingQuestId === q.id ? 'Bezárás' : 'Szerkesztés'}</span>
                     </button>
                     <button
                       type="button"
@@ -595,7 +602,7 @@ export function AdminView() {
                           : 'border-[var(--border-hairline)] bg-[var(--bg-canvas)] text-[var(--text-secondary)]'
                       }`}
                     >
-                      {q.is_active ? 'Active' : 'Inactive'}
+                      {q.is_active ? 'Aktív' : 'Inaktív'}
                     </button>
                   </div>
                 </div>
@@ -607,12 +614,12 @@ export function AdminView() {
                   >
                     <div className="space-y-1">
                       <label htmlFor={`edit-${q.id}-title`} className="block text-xs font-medium text-[var(--text-secondary)]">
-                        Quest Title
+                        Küldetés címe
                       </label>
                       <input
                         id={`edit-${q.id}-title`}
                         required
-                        placeholder="Quest Title"
+                        placeholder="Küldetés címe"
                         value={editQuest.title}
                         onChange={(e) => setEditQuest({...editQuest, title: e.target.value})}
                         className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
@@ -620,7 +627,7 @@ export function AdminView() {
                     </div>
                     <div className="space-y-1">
                       <label htmlFor={`edit-${q.id}-category`} className="block text-xs font-medium text-[var(--text-secondary)]">
-                        Category
+                        Kategória
                       </label>
                       <select
                         id={`edit-${q.id}-category`}
@@ -635,7 +642,7 @@ export function AdminView() {
                       >
                         {QUEST_CATEGORIES.map((c) => (
                           <option key={c} value={c}>
-                            {c}
+                            {formatCategoryLabel(c)}
                           </option>
                         ))}
                       </select>
@@ -643,7 +650,7 @@ export function AdminView() {
                     <div className="grid grid-cols-2 gap-2">
                       <div className="space-y-1">
                         <label htmlFor={`edit-${q.id}-type`} className="block text-xs font-medium text-[var(--text-secondary)]">
-                          Frequency
+                          Gyakoriság
                         </label>
                         <select
                           id={`edit-${q.id}-type`}
@@ -660,7 +667,7 @@ export function AdminView() {
                       </div>
                       <div className="space-y-1">
                         <label htmlFor={`edit-${q.id}-difficulty`} className="block text-xs font-medium text-[var(--text-secondary)]">
-                          Difficulty
+                          Nehézség
                         </label>
                         <select
                           id={`edit-${q.id}-difficulty`}
@@ -679,14 +686,14 @@ export function AdminView() {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       <div className="space-y-1">
                         <label htmlFor={`edit-${q.id}-minutes`} className="block text-xs font-medium text-[var(--text-secondary)]">
-                          Minutes
+                          Perc
                         </label>
                         <input
                           id={`edit-${q.id}-minutes`}
                           type="number"
                           min={1}
                           max={480}
-                          placeholder="Minutes"
+                          placeholder="Perc"
                           value={editQuest.estimated_minutes}
                           onChange={(e) =>
                             setEditQuest({...editQuest, estimated_minutes: Number(e.target.value)})
@@ -731,13 +738,13 @@ export function AdminView() {
                     </div>
                     <div className="sm:col-span-2 space-y-1">
                       <label htmlFor={`edit-${q.id}-description`} className="block text-xs font-medium text-[var(--text-secondary)]">
-                        Short Description
+                        Rövid leírás
                       </label>
                       <textarea
                         id={`edit-${q.id}-description`}
                         required
                         rows={2}
-                        placeholder="Short description..."
+                        placeholder="Rövid leírás..."
                         value={editQuest.description}
                         onChange={(e) => setEditQuest({...editQuest, description: e.target.value})}
                         className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
@@ -745,13 +752,13 @@ export function AdminView() {
                     </div>
                     <div className="sm:col-span-2 space-y-1">
                       <label htmlFor={`edit-${q.id}-instructions`} className="block text-xs font-medium text-[var(--text-secondary)]">
-                        Step-by-Step Instructions
+                        Lépésről lépésre útmutató
                       </label>
                       <textarea
                         id={`edit-${q.id}-instructions`}
                         required
                         rows={3}
-                        placeholder="Step-by-step instructions..."
+                        placeholder="Lépésről lépésre útmutató..."
                         value={editQuest.instructions}
                         onChange={(e) => setEditQuest({...editQuest, instructions: e.target.value})}
                         className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
@@ -759,13 +766,13 @@ export function AdminView() {
                     </div>
                     <div className="sm:col-span-2 space-y-1">
                       <label htmlFor={`edit-${q.id}-impact`} className="block text-xs font-medium text-[var(--text-secondary)]">
-                        Environmental Impact
+                        Környezeti hatás
                       </label>
                       <textarea
                         id={`edit-${q.id}-impact`}
                         required
                         rows={2}
-                        placeholder="Environmental impact explanation..."
+                        placeholder="Környezeti hatás magyarázata..."
                         value={editQuest.environmental_impact}
                         onChange={(e) =>
                           setEditQuest({...editQuest, environmental_impact: e.target.value})
@@ -775,13 +782,13 @@ export function AdminView() {
                     </div>
                     <div className="sm:col-span-2 space-y-1">
                       <label htmlFor={`edit-${q.id}-criteria`} className="block text-xs font-medium text-[var(--text-secondary)]">
-                        AI Verification Criteria
+                        AI-ellenőrzési feltételek
                       </label>
                       <textarea
                         id={`edit-${q.id}-criteria`}
                         required
                         rows={2}
-                        placeholder="AI Verification Criteria..."
+                        placeholder="AI-ellenőrzési feltételek..."
                         value={editQuest.verification_criteria}
                         onChange={(e) =>
                           setEditQuest({...editQuest, verification_criteria: e.target.value})
@@ -798,7 +805,7 @@ export function AdminView() {
                         }}
                         className="min-h-[38px] rounded-xl border border-[var(--border-hairline)] px-4 py-1.5 text-xs font-semibold text-[var(--text-secondary)]"
                       >
-                        Cancel
+                        Mégse
                       </button>
                       <button
                         type="submit"
@@ -806,7 +813,7 @@ export function AdminView() {
                         className="inline-flex min-h-[38px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-1.5 text-xs font-semibold text-[var(--accent-primary-fg)] disabled:opacity-50"
                       >
                         {busyId === `edit:${q.id}` && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                        <span>Save Changes</span>
+                        <span>Módosítások mentése</span>
                       </button>
                     </div>
                   </form>

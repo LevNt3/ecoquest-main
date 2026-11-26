@@ -2,7 +2,7 @@ import {ArrowRight, Award, Camera, CheckCircle2, Flame, Sparkles, Trophy} from '
 import {useEffect, useState} from 'react';
 import type {AppRoute} from '../components/AppShell';
 import {StatusIndicator} from '../components/StatusBadge';
-import {apiFetch} from '../lib/api';
+import {apiFetch, formatCategoryLabel} from '../lib/api';
 import type {
   AchievementItem,
   LevelProgress,
@@ -48,7 +48,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
       })
       .catch((err) => {
         if (!active) return;
-        setError(err instanceof Error ? err.message : 'Failed to load dashboard');
+        setError(err instanceof Error ? err.message : 'Nem sikerült betölteni az irányítópultot');
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -75,7 +75,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
   if (error || !data) {
     return (
       <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-700 dark:text-rose-400">
-        {error || 'Could not load dashboard data.'}
+        {error || 'Nem sikerült betölteni az irányítópult adatait.'}
       </div>
     );
   }
@@ -90,9 +90,9 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
       {/* Header + Quick Action */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-xs text-[var(--text-secondary)]">UTC Day {data.todayUtc}</p>
+          <p className="text-xs text-[var(--text-secondary)]">UTC nap: {data.todayUtc}</p>
           <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-            Welcome back, {user.username}
+            Üdv újra, {user.username}!
           </h1>
         </div>
         {quickActionQuest && (
@@ -102,7 +102,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
             className="eq-interactive-btn inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 whitespace-nowrap shrink-0"
           >
             <Camera className="h-4 w-4" aria-hidden="true" />
-            <span>Submit a Quest</span>
+            <span>Küldetés beküldése</span>
           </button>
         )}
       </div>
@@ -114,12 +114,12 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
           className="eq-animate-card rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-3 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
         >
           <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
-            <span>Level Progression</span>
+            <span>Szintfejlődés</span>
             <span
               key={`lvl-${levelProgress.level}`}
               className="eq-animate-kpi font-mono-tabular font-semibold text-[var(--accent-primary)]"
             >
-              Level {levelProgress.level}
+              {levelProgress.level}. szint
             </span>
           </div>
           <div className="flex items-baseline justify-between">
@@ -127,8 +127,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
               {user.xp} XP
             </span>
             <span className="font-mono-tabular text-xs text-[var(--text-secondary)]">
-              {levelProgress.xpIntoLevel} / {levelProgress.xpNeededForNext} to Lvl{' '}
-              {levelProgress.level + 1}
+              {levelProgress.xpIntoLevel} / {levelProgress.xpNeededForNext} ({levelProgress.level + 1}. szintig)
             </span>
           </div>
           <div className="h-2.5 w-full overflow-hidden rounded-full bg-[var(--bg-surface-elevated)]">
@@ -146,14 +145,14 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
           className="eq-animate-card rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-2 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
         >
           <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
-            <span>EcoPoints Balance</span>
+            <span>EcoPoints egyenleg</span>
             <Sparkles className="h-4 w-4 text-[var(--accent-emerald)]" aria-hidden="true" />
           </div>
           <p key={`pts-${user.eco_points}`} className="eq-animate-kpi font-mono-tabular text-2xl font-bold">
             {user.eco_points}
           </p>
           <p className="text-xs text-[var(--text-secondary)]">
-            {completedCount} verified quest{completedCount === 1 ? '' : 's'} completed
+            {completedCount} igazolt küldetés teljesítve
           </p>
         </div>
 
@@ -162,14 +161,14 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
           className="eq-animate-card rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-2 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
         >
           <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
-            <span>Daily Streak</span>
-            <Flame className="h-4 w-4 text-amber-700 dark:text-amber-500" aria-hidden="true" />
+            <span>Napi sorozat</span>
+            <Flame className="h-4 w-4 text-amber-500" aria-hidden="true" />
           </div>
           <p key={`stk-${user.current_streak}`} className="eq-animate-kpi font-mono-tabular text-2xl font-bold">
-            {user.current_streak} day{user.current_streak === 1 ? '' : 's'}
+            {user.current_streak} nap
           </p>
           <p className="text-xs text-[var(--text-secondary)]">
-            Best {user.longest_streak}d · Resets UTC midnight (1-day grace)
+            Rekord: {user.longest_streak} nap · UTC éjfélkor nullázódik (1 nap türelem)
           </p>
         </div>
       </div>
@@ -179,13 +178,13 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
         {/* Today's Quests */}
         <section className="space-y-4 lg:col-span-7">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold">Today&apos;s Daily Quests</h2>
+            <h2 className="font-display text-lg font-semibold">Mai napi küldetések</h2>
             <button
               type="button"
               onClick={() => onNavigate('quests')}
               className="text-xs font-semibold text-[var(--accent-primary)] hover:underline"
             >
-              Browse All Quests →
+              Összes küldetés →
             </button>
           </div>
 
@@ -200,13 +199,13 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
               >
                 <div className="min-w-0 space-y-1">
                   <p className="text-xs text-[var(--text-secondary)]">
-                    {quest.category} · {quest.estimated_minutes} min
+                    {formatCategoryLabel(quest.category)} · {quest.estimated_minutes} perc
                   </p>
                   <p className="truncate font-display text-sm font-semibold group-hover:text-[var(--accent-primary)] transition-colors">
                     {quest.title}
                   </p>
                   <p className="font-mono-tabular text-xs text-[var(--accent-primary)]">
-                    +{quest.xp_reward} XP · +{quest.eco_points_reward} pts
+                    +{quest.xp_reward} XP · +{quest.eco_points_reward} pont
                   </p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
@@ -225,9 +224,9 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
         <div className="space-y-6 lg:col-span-5">
           <section className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-base font-semibold">Weekly UTC Progress</h2>
+              <h2 className="font-display text-base font-semibold">Heti UTC aktivitás</h2>
               <span className="font-mono-tabular text-xs text-[var(--text-secondary)]">
-                Last 7 Days
+                Elmúlt 7 nap
               </span>
             </div>
             <div className="grid grid-cols-7 gap-2">
@@ -253,13 +252,13 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
 
           <section className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-base font-semibold">Recent Achievements</h2>
+              <h2 className="font-display text-base font-semibold">Legutóbbi eredmények</h2>
               <button
                 type="button"
                 onClick={() => onNavigate('profile')}
                 className="text-xs font-semibold text-[var(--accent-primary)] hover:underline"
               >
-                View All ({unlockedAchievements.length}/{achievements.length})
+                Összes ({unlockedAchievements.length}/{achievements.length})
               </button>
             </div>
 
@@ -267,14 +266,14 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
               <div className="flex items-center gap-4 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4">
                 <img
                   src="/src/assets/images/badge_forest_guardian_1795617620663.jpg"
-                  alt="Forest Guardian achievement emblem"
+                  alt="Erdőőrző eredmény jelvény"
                   referrerPolicy="no-referrer"
                   className="h-12 w-12 rounded-xl object-cover shrink-0"
                 />
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold">Unlock Your First Badge</p>
+                  <p className="text-sm font-semibold">Oldd fel az első jelvényed</p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    Complete any daily quest to earn First Sprout (+25 bonus XP).
+                    Teljesíts bármely napi küldetést az Első hajtás (+25 bónusz XP) megszerzéséhez.
                   </p>
                 </div>
               </div>
@@ -306,7 +305,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
             {unlockedAchievements.length > 0 && (
               <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
                 <Award className="h-3.5 w-3.5 text-emerald-500" aria-hidden="true" />
-                <span>Next milestone unlocks automatically upon quest approval.</span>
+                <span>A következő mérföldkő jóváhagyott küldetéskor automatikusan feloldódik.</span>
               </div>
             )}
           </section>

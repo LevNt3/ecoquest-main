@@ -61,7 +61,7 @@ describe('Cloudflare Workers AI (Gemma 4) payload & response parsing', () => {
 
     assert.equal(parsed.status, 'approved');
     assert.equal(parsed.confidence, 0.91);
-    assert.equal(parsed.provider_note, `Evaluated via Cloudflare Workers AI (${MODEL})`);
+    assert.equal(parsed.provider_note, `Cloudflare Workers AI által értékelve (${MODEL})`);
   });
 
   it('parses a valid JSON response from OpenAI-style choices[0].message.content', () => {
@@ -93,7 +93,7 @@ describe('Cloudflare Workers AI (Gemma 4) payload & response parsing', () => {
 
     assert.equal(parsed.status, 'needs_review');
     assert.equal(parsed.confidence, 0.55);
-    assert.equal(parsed.provider_note, `Evaluated via Cloudflare Workers AI (${MODEL})`);
+    assert.equal(parsed.provider_note, `Cloudflare Workers AI által értékelve (${MODEL})`);
   });
 
   it('falls back to needs_review on API error payload (success: false)', () => {
@@ -158,7 +158,7 @@ describe('Cloudflare Workers AI (Gemma 4) payload & response parsing', () => {
       });
       assert.equal(result.status, 'needs_review');
       assert.equal(result.confidence, 0);
-      assert.match(result.provider_note || '', /not configured/i);
+      assert.match(result.provider_note || '', /nincsenek konfigurálva/i);
     } finally {
       if (prevId !== undefined) process.env.CLOUDFLARE_ACCOUNT_ID = prevId;
       if (prevToken !== undefined) process.env.CLOUDFLARE_API_TOKEN = prevToken;

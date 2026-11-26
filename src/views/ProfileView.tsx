@@ -42,7 +42,7 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
       setUsername(res.user.username);
       onUserSync(res.user, res.levelProgress);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load profile');
+      setError(err instanceof Error ? err.message : 'Nem sikerült betölteni a profilt');
     } finally {
       setLoading(false);
     }
@@ -65,10 +65,10 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
       if (data) {
         onUserSync(res.user, data.levelProgress);
       }
-      setMessage('Profile updated.');
+      setMessage('Profil frissítve.');
       await loadProfile();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update profile');
+      setError(err instanceof Error ? err.message : 'Nem sikerült frissíteni a profilt');
     } finally {
       setSaving(false);
     }
@@ -84,7 +84,7 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
       setConfirmDeleteId(null);
       await loadProfile();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not delete evidence');
+      setError(err instanceof Error ? err.message : 'Nem sikerült törölni a bizonyítékot');
     } finally {
       setDeletingId(null);
     }
@@ -97,7 +97,7 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
   if (!data) {
     return (
       <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-700 dark:text-rose-400">
-        {error || 'Unable to load profile.'}
+        {error || 'A profil nem tölthető be.'}
       </div>
     );
   }
@@ -119,10 +119,10 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
             <div>
               <h1 className="font-display text-2xl font-bold">{user.username}</h1>
               <p className="text-xs text-[var(--text-secondary)]">
-                {user.email} · Role: {user.role}
+                {user.email} · Szerepkör: {user.role === 'admin' ? 'Adminisztrátor' : 'Felhasználó'}
               </p>
               <p className="mt-1 font-mono-tabular text-xs font-semibold text-[var(--accent-primary)]">
-                Level {levelProgress.level} · {user.xp} XP · {user.eco_points} EcoPoints
+                {levelProgress.level}. szint · {user.xp} XP · {user.eco_points} EcoPoints
               </p>
             </div>
           </div>
@@ -132,7 +132,7 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
               <p key={`comp-${completedCount}`} className="eq-animate-kpi font-mono-tabular text-xl font-bold">
                 {completedCount}
               </p>
-              <p className="text-xs text-[var(--text-secondary)]">Completed</p>
+              <p className="text-xs text-[var(--text-secondary)]">Teljesítve</p>
             </div>
             <div className="text-center">
               <p
@@ -140,13 +140,13 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
                 className="eq-animate-kpi inline-flex items-center gap-1 font-mono-tabular text-xl font-bold text-amber-700 dark:text-amber-500"
               >
                 <Flame className="h-4 w-4" aria-hidden="true" />
-                {user.current_streak}d
+                {user.current_streak}n
               </p>
-              <p className="text-xs text-[var(--text-secondary)]">Current Streak</p>
+              <p className="text-xs text-[var(--text-secondary)]">Jelenlegi sorozat</p>
             </div>
             <div className="text-center">
-              <p className="font-mono-tabular text-xl font-bold">{user.longest_streak}d</p>
-              <p className="text-xs text-[var(--text-secondary)]">Best Streak</p>
+              <p className="font-mono-tabular text-xl font-bold">{user.longest_streak}n</p>
+              <p className="text-xs text-[var(--text-secondary)]">Legjobb sorozat</p>
             </div>
           </div>
         </div>
@@ -158,14 +158,14 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
           onSubmit={handleSaveProfile}
           className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4 lg:col-span-5"
         >
-          <h2 className="font-display text-lg font-semibold">Edit Profile</h2>
+          <h2 className="font-display text-lg font-semibold">Profil szerkesztése</h2>
 
           {message && <p className="text-xs text-emerald-700 dark:text-emerald-400">{message}</p>}
           {error && <p className="text-xs text-rose-700 dark:text-rose-400">{error}</p>}
 
           <div className="space-y-1.5">
             <label htmlFor="profile-username" className="block text-xs font-medium text-[var(--text-secondary)]">
-              Username
+              Felhasználónév
             </label>
             <input
               id="profile-username"
@@ -182,16 +182,16 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
             className="eq-interactive-btn inline-flex min-h-[42px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-5 py-2 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 disabled:opacity-50"
           >
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-            <span>Save Changes</span>
+            <span>Változtatások mentése</span>
           </button>
         </form>
 
         {/* Achievements */}
         <section className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4 lg:col-span-7">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold">Achievements</h2>
+            <h2 className="font-display text-lg font-semibold">Eredmények</h2>
             <span className="font-mono-tabular text-xs text-[var(--text-secondary)]">
-              {achievements.filter((a) => a.unlocked).length} / {achievements.length} Unlocked
+              {achievements.filter((a) => a.unlocked).length} / {achievements.length} feloldva
             </span>
           </div>
 
@@ -229,16 +229,16 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
       {/* Submission History & Reward Ledger */}
       <div className="grid gap-6 lg:grid-cols-12">
         <section className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4 lg:col-span-7">
-          <h2 className="font-display text-lg font-semibold">Quest Submission History</h2>
+          <h2 className="font-display text-lg font-semibold">Küldetések beküldési előzményei</h2>
           {submissions.length === 0 ? (
             <p className="text-sm text-[var(--text-secondary)]">
-              No quest submissions yet.{' '}
+              Még nincsenek beküldött küldetéseid.{' '}
               <button
                 type="button"
                 onClick={() => onNavigate('quests')}
                 className="font-semibold text-[var(--accent-primary)] hover:underline"
               >
-                Explore quests
+                Küldetések böngészése
               </button>
             </p>
           ) : (
@@ -251,10 +251,10 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
                       onClick={() => sub.quest_slug && onNavigate('quest-detail', sub.quest_slug)}
                       className="truncate font-medium text-sm hover:text-[var(--accent-primary)]"
                     >
-                      {sub.quest_title || 'Quest'}
+                      {sub.quest_title || 'Küldetés'}
                     </button>
                     <p className="text-xs text-[var(--text-secondary)]">
-                      Period {sub.period_key} · {new Date(sub.created_at).toLocaleDateString()}
+                      Időszak: {sub.period_key} · {new Date(sub.created_at).toLocaleDateString('hu-HU')}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
@@ -268,7 +268,7 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
                             onClick={() => void handleDeleteEvidence(sub.id)}
                             className="min-h-[34px] rounded-lg bg-rose-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-rose-500 disabled:opacity-50"
                           >
-                            {deletingId === sub.id ? 'Deleting...' : 'Confirm Delete'}
+                            {deletingId === sub.id ? 'Törlés...' : 'Törlés megerősítése'}
                           </button>
                           <button
                             type="button"
@@ -276,15 +276,15 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
                             onClick={() => setConfirmDeleteId(null)}
                             className="min-h-[34px] rounded-lg border border-[var(--border-hairline)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)]"
                           >
-                            Cancel
+                            Mégse
                           </button>
                         </div>
                       ) : (
                         <button
                           type="button"
                           onClick={() => setConfirmDeleteId(sub.id)}
-                          title="Delete stored evidence photo"
-                          aria-label="Delete stored evidence photo"
+                          title="Tárolt bizonyítékfotó törlése"
+                          aria-label="Tárolt bizonyítékfotó törlése"
                           className="min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg text-[var(--text-secondary)] hover:text-rose-700 dark:hover:text-rose-400 hover:bg-rose-500/10"
                         >
                           <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -298,10 +298,10 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
         </section>
 
         <section className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4 lg:col-span-5">
-          <h2 className="font-display text-lg font-semibold">Reward Ledger</h2>
+          <h2 className="font-display text-lg font-semibold">Jutalom főkönyv</h2>
           {transactions.length === 0 ? (
             <p className="text-sm text-[var(--text-secondary)]">
-              Verified quest rewards and achievement bonuses will appear here.
+              Az igazolt küldetések jutalmai és az eredménybónuszok itt fognak megjelenni.
             </p>
           ) : (
             <div className="divide-y divide-[var(--border-hairline)]">
@@ -312,7 +312,7 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
                     <span className="truncate">{tx.description}</span>
                   </div>
                   <span className="font-mono-tabular font-semibold text-[var(--accent-primary)] whitespace-nowrap shrink-0">
-                    +{tx.xp_delta} XP{tx.points_delta > 0 ? ` · +${tx.points_delta} pts` : ''}
+                    +{tx.xp_delta} XP{tx.points_delta > 0 ? ` · +${tx.points_delta} pont` : ''}
                   </span>
                 </div>
               ))}

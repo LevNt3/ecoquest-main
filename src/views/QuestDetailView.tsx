@@ -7,7 +7,6 @@ import {
   Loader2,
   Play,
   Trash2,
-  Upload,
   XCircle,
 } from 'lucide-react';
 import {useCallback, useEffect, useRef, useState} from 'react';
@@ -52,7 +51,6 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
   const [deletingPhoto, setDeletingPhoto] = useState(false);
 
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const stageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -383,19 +381,12 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
               </div>
             ) : (
               <form onSubmit={handleSubmitEvidence} className="space-y-4">
-                {/* Explicit User-Triggered Camera or File Picker */}
+                {/* Explicit User-Triggered Camera Picker */}
                 <input
                   ref={cameraInputRef}
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
                   capture="environment"
-                  onChange={(e) => void handleFileSelected(e.target.files?.[0])}
-                  className="sr-only"
-                />
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
                   onChange={(e) => void handleFileSelected(e.target.files?.[0])}
                   className="sr-only"
                 />
@@ -418,24 +409,14 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => cameraInputRef.current?.click()}
-                      className="eq-interactive-btn flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 text-xs font-medium hover:border-lime-500/50 hover:bg-[var(--bg-surface-elevated)]/40"
-                    >
-                      <Camera className="h-5 w-5 text-[var(--accent-primary)]" aria-hidden="true" />
-                      <span>Kamera használata</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="eq-interactive-btn flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 text-xs font-medium hover:border-lime-500/50 hover:bg-[var(--bg-surface-elevated)]/40"
-                    >
-                      <Upload className="h-5 w-5 text-[var(--accent-emerald)]" aria-hidden="true" />
-                      <span>Kép kiválasztása</span>
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => cameraInputRef.current?.click()}
+                    className="eq-interactive-btn flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 text-xs font-medium hover:border-lime-500/50 hover:bg-[var(--bg-surface-elevated)]/40"
+                  >
+                    <Camera className="h-5 w-5 text-[var(--accent-primary)]" aria-hidden="true" />
+                    <span>Kamera használata</span>
+                  </button>
                 )}
 
                 <div className="space-y-1.5">

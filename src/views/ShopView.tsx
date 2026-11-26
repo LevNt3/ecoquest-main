@@ -1,4 +1,4 @@
-import {Award, Coffee, Info, Palette, Sparkles, Ticket} from 'lucide-react';
+import {BadgePercent, Info, Sparkles, TreePine} from 'lucide-react';
 import {useEffect, useRef, useState} from 'react';
 import type {UserProfile} from '../shared/types';
 
@@ -12,41 +12,27 @@ interface PlaceholderReward {
   category: string;
   cost: number;
   description: string;
-  icon: typeof Award;
+  icon: typeof TreePine;
 }
 
 const PLACEHOLDER_REWARDS: PlaceholderReward[] = [
   {
-    id: 'badge-canopy',
-    title: 'Lombkorona-őr címer',
-    category: 'Digitális jelvény',
-    cost: 120,
-    description: 'Szálcsiszolt smaragd levéljelvény megjelenítése a profilod neve mellett.',
-    icon: Award,
+    id: 'plant-a-tree',
+    title: 'Fák ültetése',
+    category: 'Környezeti jutalom',
+    cost: 250,
+    description:
+      'Váltsd be az EcoPointjaidat egy valódi faültetési programra: minden beváltás egy őshonos csemete elültetését támogatja.',
+    icon: TreePine,
   },
   {
-    id: 'theme-bioluminescent',
-    title: 'Biolumineszcens moha téma',
-    category: 'Profiltéma',
-    cost: 200,
-    description: 'Egyedi profilkiemelő színséma és esti erdei felület-hangulat.',
-    icon: Palette,
-  },
-  {
-    id: 'coupon-campus-cafe',
-    title: 'Iskolai kávézó újrapohár-kedvezmény',
-    category: 'Jövőbeli partnerkupon',
-    cost: 350,
-    description: 'Tervezett partnerkedvezmény: 15% kedvezmény saját kulacs vagy pohár használatakor.',
-    icon: Coffee,
-  },
-  {
-    id: 'coupon-transit',
-    title: 'Helyi közbringa napijegy',
-    category: 'Jövőbeli partnerkupon',
-    cost: 500,
-    description: 'Tervezett mobilitási jutalom igazolt Fenntartható ingázás sorozatokért.',
-    icon: Ticket,
+    id: 'canteen-discount',
+    title: 'Büfé kedvezmény',
+    category: 'Iskolai partnerkedvezmény',
+    cost: 300,
+    description:
+      'Tervezett kedvezmény az iskolai büfében: az EcoPointjaidért 10% árengedményt kapsz egy fenntartható ételre vagy italra.',
+    icon: BadgePercent,
   },
 ];
 
@@ -84,7 +70,8 @@ export function ShopView({user}: ShopViewProps) {
             Jutalombolt előnézet
           </h1>
           <p className="text-sm text-[var(--text-secondary)]">
-            Tekintsd meg a tervezett digitális jelvényeket, témákat és partnerkedvezményeket.
+            Tekintsd meg a tervezett jutalmakat: az EcoPointjaidból valódi faültetést támogathatsz,
+            vagy büfé kedvezményt válthatsz be.
           </p>
         </div>
 
@@ -100,11 +87,12 @@ export function ShopView({user}: ShopViewProps) {
         <Info className="h-4 w-4 shrink-0 text-amber-700 dark:text-amber-400 mt-0.5" aria-hidden="true" />
         <span>
           A jutalombeváltás ebben az MVP demóban előnézeti funkció. Az EcoPoints egyenleged
-          biztonságosan rögzítésre kerül a szerver főkönyvében, valódi fizetés vagy beváltás még nem történik.
+          biztonságosan rögzítésre kerül a szerver főkönyvében, valódi beváltás (faültetés vagy
+          büfé kedvezmény) még nem történik.
         </span>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid max-w-4xl gap-5 sm:grid-cols-2">
         {PLACEHOLDER_REWARDS.map((item) => {
           const Icon = item.icon;
           const canAfford = user.eco_points >= item.cost;
@@ -158,7 +146,7 @@ export function ShopView({user}: ShopViewProps) {
             <p className="text-sm text-[var(--text-secondary)]">{selectedReward.description}</p>
             <p className="text-xs text-amber-800 dark:text-amber-300">
               Előnézeti elem ({selectedReward.cost} EcoPoints): A beváltás egy későbbi verzióban nyílik
-              meg az iskolai partnerkódok csatlakoztatása után.
+              meg a jutalmazási partnerek csatlakoztatása után.
             </p>
             <button
               ref={closeButtonRef}

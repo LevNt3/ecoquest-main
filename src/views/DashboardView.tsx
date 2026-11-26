@@ -107,11 +107,14 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
         )}
       </div>
 
-      {/* Primary KPI Strip */}
+      {/* Primary KPI Strip — interactive shortcuts */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <div
+        <button
+          type="button"
+          onClick={() => onNavigate('profile')}
+          aria-label="Szintfejlődés részletei: profil és jelvények megnyitása"
           style={{'--eq-delay': '0ms'} as React.CSSProperties}
-          className="eq-animate-card rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-3 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
+          className="eq-animate-card group flex w-full flex-col gap-3 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 text-left transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-500 active:translate-y-0"
         >
           <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
             <span>Szintfejlődés</span>
@@ -138,11 +141,21 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
               }}
             />
           </div>
-        </div>
+          <div className="mt-auto flex items-center justify-between pt-1 text-xs font-semibold text-[var(--accent-primary)]">
+            <span>Profil és jelvények</span>
+            <ArrowRight
+              className="h-3.5 w-3.5 transition-transform duration-150 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
+          </div>
+        </button>
 
-        <div
+        <button
+          type="button"
+          onClick={() => onNavigate('shop')}
+          aria-label="EcoPoints egyenleg: jutalombolt megnyitása"
           style={{'--eq-delay': '90ms'} as React.CSSProperties}
-          className="eq-animate-card rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-2 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
+          className="eq-animate-card group flex w-full flex-col gap-2 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 text-left transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-500 active:translate-y-0"
         >
           <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
             <span>EcoPoints egyenleg</span>
@@ -154,11 +167,21 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
           <p className="text-xs text-[var(--text-secondary)]">
             {completedCount} igazolt küldetés teljesítve
           </p>
-        </div>
+          <div className="mt-auto flex items-center justify-between pt-1 text-xs font-semibold text-[var(--accent-primary)]">
+            <span>Jutalombolt megnyitása</span>
+            <ArrowRight
+              className="h-3.5 w-3.5 transition-transform duration-150 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
+          </div>
+        </button>
 
-        <div
+        <button
+          type="button"
+          onClick={() => onNavigate('quests')}
+          aria-label="Napi sorozat: napi küldetések megnyitása"
           style={{'--eq-delay': '180ms'} as React.CSSProperties}
-          className="eq-animate-card rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-2 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
+          className="eq-animate-card group flex w-full flex-col gap-2 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 text-left transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-500 active:translate-y-0"
         >
           <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
             <span>Napi sorozat</span>
@@ -170,7 +193,14 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
           <p className="text-xs text-[var(--text-secondary)]">
             Rekord: {user.longest_streak} nap · UTC éjfélkor nullázódik (1 nap türelem)
           </p>
-        </div>
+          <div className="mt-auto flex items-center justify-between pt-1 text-xs font-semibold text-[var(--accent-primary)]">
+            <span>Napi küldetések</span>
+            <ArrowRight
+              className="h-3.5 w-3.5 transition-transform duration-150 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
+          </div>
+        </button>
       </div>
 
       {/* Main Workspace Grid */}

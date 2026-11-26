@@ -1,4 +1,4 @@
-import {BadgePercent, Info, Sparkles, TreePine} from 'lucide-react';
+import {BadgePercent, Bus, Info, Sandwich, Sparkles, Trash2, TreePine, UtensilsCrossed} from 'lucide-react';
 import {useEffect, useRef, useState} from 'react';
 import type {UserProfile} from '../shared/types';
 
@@ -33,6 +33,42 @@ const PLACEHOLDER_REWARDS: PlaceholderReward[] = [
     description:
       'Tervezett kedvezmény az iskolai büfében: az EcoPointjaidért 10% árengedményt kapsz egy fenntartható ételre vagy italra.',
     icon: BadgePercent,
+  },
+  {
+    id: 'school-recycling-bins',
+    title: 'Több szemetes az iskola területére',
+    category: 'Iskolai fejlesztés',
+    cost: 400,
+    description:
+      'Az EcoPointjaidból további szelektív gyűjtőket helyezünk el az iskola udvarán és folyosóin, hogy mindenki könnyebben szelektálhasson.',
+    icon: Trash2,
+  },
+  {
+    id: 'free-canteen-item',
+    title: 'Ingyenes termék a büféből',
+    category: 'Iskolai partnerkedvezmény',
+    cost: 200,
+    description:
+      'Tervezett jutalom: egy ingyenes, fenntartható termék (például gyümölcs vagy újratölthető ital) az iskolai büféből.',
+    icon: Sandwich,
+  },
+  {
+    id: 'monthly-transit-pass',
+    title: 'Bérlet bejárós diákoknak egy hónapig',
+    category: 'Fenntartható mobilitás',
+    cost: 500,
+    description:
+      'Tervezett jutalom: egy hónapos helyi bérlet bejárós diákoknak, hogy az autós ingázás helyett tömegközlekedést válasszanak.',
+    icon: Bus,
+  },
+  {
+    id: 'fast-food-coupon',
+    title: 'Kupon bármilyen gyorsétterembe',
+    category: 'Partnerkupon',
+    cost: 350,
+    description:
+      'Tervezett partnerkupon: kedvezmény bármely részt vevő gyorsétteremben, ha fenntarthatóbb csomagolást választasz.',
+    icon: UtensilsCrossed,
   },
 ];
 
@@ -70,8 +106,8 @@ export function ShopView({user}: ShopViewProps) {
             Jutalombolt előnézet
           </h1>
           <p className="text-sm text-[var(--text-secondary)]">
-            Tekintsd meg a tervezett jutalmakat: az EcoPointjaidból valódi faültetést támogathatsz,
-            vagy büfé kedvezményt válthatsz be.
+            Tekintsd meg a tervezett jutalmakat: támogathatsz faültetést és iskolai fejlesztéseket,
+            vagy válthatsz büfé- és éttermi kedvezményeket.
           </p>
         </div>
 
@@ -87,12 +123,11 @@ export function ShopView({user}: ShopViewProps) {
         <Info className="h-4 w-4 shrink-0 text-amber-700 dark:text-amber-400 mt-0.5" aria-hidden="true" />
         <span>
           A jutalombeváltás ebben az MVP demóban előnézeti funkció. Az EcoPoints egyenleged
-          biztonságosan rögzítésre kerül a szerver főkönyvében, valódi beváltás (faültetés vagy
-          büfé kedvezmény) még nem történik.
+          biztonságosan rögzítésre kerül a szerver főkönyvében, valódi beváltás még nem történik.
         </span>
       </div>
 
-      <div className="grid max-w-4xl gap-5 sm:grid-cols-2">
+      <div className="grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {PLACEHOLDER_REWARDS.map((item) => {
           const Icon = item.icon;
           const canAfford = user.eco_points >= item.cost;

@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {AppShell, type AppRoute} from './components/AppShell';
 import {apiFetch} from './lib/api';
 import type {LevelProgress, UserProfile} from './shared/types';
@@ -52,6 +52,8 @@ function formatHashRoute(route: AppRoute, slug?: string): string {
 export default function App() {
   const initialHash = parseHashRoute();
   const [user, setUser] = useState<UserProfile | null>(null);
+  const userRef = useRef<UserProfile | null>(null);
+  userRef.current = user;
   const [, setLevelProgress] = useState<LevelProgress | null>(null);
   const [booting, setBooting] = useState(true);
   const [route, setRoute] = useState<AppRoute>(initialHash.route);
@@ -105,12 +107,13 @@ export default function App() {
     function handleHashChange() {
       if (booting) return;
       const parsed = parseHashRoute();
-      if (!user && !PUBLIC_ROUTES.includes(parsed.route)) {
+      const currentUser = userRef.current;
+      if (!currentUser && !PUBLIC_ROUTES.includes(parsed.route)) {
         setRoute('login');
         syncUrlHash('login');
         return;
       }
-      if (parsed.route === 'admin' && user?.role !== 'admin') {
+      if (parsed.route === 'admin' && currentUser?.role !== 'admin') {
         setRoute('dashboard');
         syncUrlHash('dashboard');
         return;
@@ -121,7 +124,7 @@ export default function App() {
 
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [booting, user, syncUrlHash]);
+  }, [booting, syncUrlHash]);
 
   const handleNavigate = useCallback(
     (nextRoute: AppRoute, slug?: string) => {
@@ -153,17 +156,20 @@ export default function App() {
 
   const handleAuthSuccess = useCallback(
     (nextUser: UserProfile, nextProgress: LevelProgress) => {
+      userRef.current = nextUser;
       setUser(nextUser);
       setLevelProgress(nextProgress);
       setTheme(nextUser.theme_preference || 'dark');
       setRoute('dashboard');
       syncUrlHash('dashboard');
+      window.scrollTo({top: 0, behavior: 'smooth'});
     },
     [syncUrlHash],
   );
 
   const handleLogout = useCallback(async () => {
     await apiFetch('/api/auth/logout', {method: 'POST'}).catch(() => null);
+    userRef.current = null;
     setUser(null);
     setLevelProgress(null);
     setRoute('landing');

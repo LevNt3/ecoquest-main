@@ -77,7 +77,7 @@ Read [PRODUCT.md](PRODUCT.md) and [DESIGN.md](DESIGN.md) before making product o
 ## 5. Key File Map
 
 - `server.ts` — Express + Vite server entry, production env guard (`SESSION_SECRET`, `ADMIN_PASSCODE`).
-- `server/db.ts` — SQLite schema, 13 starter quests + 8 achievements, `finalizeSubmissionTx`.
+- `server/db.ts` — SQLite schema, 12 starter quests + 8 achievements, `finalizeSubmissionTx`.
 - `server/cloudflare-ai.ts` — Cloudflare Workers AI (`@cf/google/gemma-4-26b-a4b-it`) verifier & `needs_review` fallback.
 - `server/gamification.ts` — Level curve, UTC date/week period keys, UTC streak calculation with 1-day grace.
 - `server/auth.ts` — `scrypt` password hashing, HMAC session cookies, CSRF header check.

@@ -132,22 +132,6 @@ insert into public.quests (
     true
   ),
   (
-    'five-minute-flow',
-    'Five-Minute Flow',
-    'Cap your shower or tap flow at 5 minutes using a physical or phone timer.',
-    E'1. Set a 5-minute countdown timer before turning on the water.\n2. Keep the shower concise and turn off water while lathering.\n3. Photograph your timer showing 5:00 or completed countdown beside a dry sink counter.',
-    'Cutting shower length from 10 minutes to 5 minutes saves up to 45 liters of heated water per session.',
-    'Water Conservation',
-    'medium',
-    'daily',
-    5,
-    40,
-    20,
-    'photo',
-    'Image must show a 5-minute countdown timer on a phone or kitchen timer near a bathroom sink or tile counter (no people in frame).',
-    true
-  ),
-  (
     'cloud-declutter',
     'Cloud Declutter',
     'Delete at least 50 old promotional emails and empty your spam/trash folders.',

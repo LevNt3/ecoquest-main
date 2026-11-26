@@ -1,0 +1,260 @@
+{
+  ".impeccable/config.json": {
+    "mtime": 1795676615.251013,
+    "seen": 1795689994.348211,
+    "ast_hash": "f0e171bf8dad7043fef4c4d8b7890aec",
+    "semantic_hash": "f0e171bf8dad7043fef4c4d8b7890aec"
+  },
+  ".impeccable/design.json": {
+    "mtime": 1795676996.8271337,
+    "seen": 1795689994.3482232,
+    "ast_hash": "b22a92deecd1b140e396d30bb051800e",
+    "semantic_hash": "b22a92deecd1b140e396d30bb051800e"
+  },
+  "metadata.json": {
+    "mtime": 1795637041.052437,
+    "seen": 1795689994.34823,
+    "ast_hash": "fa0c16a63891bcc350e84784fdfc34ab",
+    "semantic_hash": "fa0c16a63891bcc350e84784fdfc34ab"
+  },
+  "package.json": {
+    "mtime": 1795638885.2682838,
+    "seen": 1795689994.3482337,
+    "ast_hash": "7172c236a362f26b561a0a5419537953",
+    "semantic_hash": "7172c236a362f26b561a0a5419537953"
+  },
+  "server.ts": {
+    "mtime": 1795639939.4053159,
+    "seen": 1795689994.348237,
+    "ast_hash": "ebd878af814dbbdf9c89eeb2d5d329f5",
+    "semantic_hash": "ebd878af814dbbdf9c89eeb2d5d329f5"
+  },
+  "server/auth.ts": {
+    "mtime": 1795637041.052437,
+    "seen": 1795689994.3482394,
+    "ast_hash": "b33265fa5e811bf1c336ccbc985e69c3",
+    "semantic_hash": "b33265fa5e811bf1c336ccbc985e69c3"
+  },
+  "server/cloudflare-ai.ts": {
+    "mtime": 1795689131.816647,
+    "seen": 1795689994.3482418,
+    "ast_hash": "98590e77365a508df18d50ca2a9071b3",
+    "semantic_hash": "98590e77365a508df18d50ca2a9071b3"
+  },
+  "server/db.ts": {
+    "mtime": 1795689106.6267211,
+    "seen": 1795689994.348244,
+    "ast_hash": "8f371adb1879bd41c63776b77f4eb812",
+    "semantic_hash": "8f371adb1879bd41c63776b77f4eb812"
+  },
+  "server/gamification.ts": {
+    "mtime": 1795637041.0527902,
+    "seen": 1795689994.3482463,
+    "ast_hash": "9cb7e01780de2048ae6f0d6d45f402b5",
+    "semantic_hash": "9cb7e01780de2048ae6f0d6d45f402b5"
+  },
+  "server/openrouter.ts": {
+    "mtime": 1795637041.0527902,
+    "seen": 1795689994.3482482,
+    "ast_hash": "061a52f16be2de477a29265ec31da5a7",
+    "semantic_hash": "061a52f16be2de477a29265ec31da5a7"
+  },
+  "server/routes.ts": {
+    "mtime": 1795689120.135598,
+    "seen": 1795689994.3482504,
+    "ast_hash": "301ec9155ebb0bdf1b15f8147842e220",
+    "semantic_hash": "301ec9155ebb0bdf1b15f8147842e220"
+  },
+  "src/App.tsx": {
+    "mtime": 1795688866.2279282,
+    "seen": 1795689994.3482533,
+    "ast_hash": "97b04ccd17f57df555b1deb4c72b2d29",
+    "semantic_hash": "97b04ccd17f57df555b1deb4c72b2d29"
+  },
+  "src/components/AppShell.tsx": {
+    "mtime": 1795688916.53353,
+    "seen": 1795689994.348255,
+    "ast_hash": "76d8ef44bbea7d6a69b689c06514dca9",
+    "semantic_hash": "76d8ef44bbea7d6a69b689c06514dca9"
+  },
+  "src/components/StatusBadge.tsx": {
+    "mtime": 1795688858.341868,
+    "seen": 1795689994.3482573,
+    "ast_hash": "f9cf9e9998c7863bc55044734ef3ea96",
+    "semantic_hash": "f9cf9e9998c7863bc55044734ef3ea96"
+  },
+  "src/lib/api.ts": {
+    "mtime": 1795688857.1117048,
+    "seen": 1795689994.348259,
+    "ast_hash": "f724902a82f81b7000577166ba26c003",
+    "semantic_hash": "f724902a82f81b7000577166ba26c003"
+  },
+  "src/main.tsx": {
+    "mtime": 1795637041.0766885,
+    "seen": 1795689994.348261,
+    "ast_hash": "c54bc4338b4552045d4ff81e948ad087",
+    "semantic_hash": "c54bc4338b4552045d4ff81e948ad087"
+  },
+  "src/shared/types.ts": {
+    "mtime": 1795678873.8075743,
+    "seen": 1795689994.3482633,
+    "ast_hash": "130428aeb31e2f1782fcc894066fc57d",
+    "semantic_hash": "130428aeb31e2f1782fcc894066fc57d"
+  },
+  "src/views/AdminView.tsx": {
+    "mtime": 1795689020.8966398,
+    "seen": 1795689994.3482654,
+    "ast_hash": "1d67cceb73a85d64e99df6a37d05a1d2",
+    "semantic_hash": "1d67cceb73a85d64e99df6a37d05a1d2"
+  },
+  "src/views/AuthView.tsx": {
+    "mtime": 1795688919.338522,
+    "seen": 1795689994.34827,
+    "ast_hash": "9230166109ba08f51c2d1ceca0195ae2",
+    "semantic_hash": "9230166109ba08f51c2d1ceca0195ae2"
+  },
+  "src/views/DashboardView.tsx": {
+    "mtime": 1795689014.6101584,
+    "seen": 1795689994.3482718,
+    "ast_hash": "2b5e996b0e702e2a996c3dce51210a28",
+    "semantic_hash": "2b5e996b0e702e2a996c3dce51210a28"
+  },
+  "src/views/LandingView.tsx": {
+    "mtime": 1795688917.927776,
+    "seen": 1795689994.3482742,
+    "ast_hash": "500ed4fd46e7027d2e98cfcd852340a5",
+    "semantic_hash": "500ed4fd46e7027d2e98cfcd852340a5"
+  },
+  "src/views/ProfileView.tsx": {
+    "mtime": 1795689019.216395,
+    "seen": 1795689994.3482761,
+    "ast_hash": "606ad68f963765eb0d22fe877e3be62a",
+    "semantic_hash": "606ad68f963765eb0d22fe877e3be62a"
+  },
+  "src/views/QuestDetailView.tsx": {
+    "mtime": 1795690316.9332516,
+    "seen": 1795689994.3482788,
+    "ast_hash": "7fc92a7339539e876ffde4bdb629031c",
+    "semantic_hash": "7fc92a7339539e876ffde4bdb629031c"
+  },
+  "src/views/QuestExplorerView.tsx": {
+    "mtime": 1795689016.135487,
+    "seen": 1795689994.3482811,
+    "ast_hash": "913e8d0389be0fc73cf15de121a8ef8d",
+    "semantic_hash": "913e8d0389be0fc73cf15de121a8ef8d"
+  },
+  "src/views/SettingsView.tsx": {
+    "mtime": 1795688922.3534296,
+    "seen": 1795689994.348283,
+    "ast_hash": "2df4995171b73f379d2cede62cf5a5fb",
+    "semantic_hash": "2df4995171b73f379d2cede62cf5a5fb"
+  },
+  "src/views/ShopView.tsx": {
+    "mtime": 1795688920.7465177,
+    "seen": 1795689994.3482854,
+    "ast_hash": "2c9928b34d21e62665d3179946b56b5d",
+    "semantic_hash": "2c9928b34d21e62665d3179946b56b5d"
+  },
+  "supabase/migrations/001_initial_schema.sql": {
+    "mtime": 1795637041.078147,
+    "seen": 1795689994.3482878,
+    "ast_hash": "ff65622779c09008316a55e6f580cb8e",
+    "semantic_hash": "ff65622779c09008316a55e6f580cb8e"
+  },
+  "supabase/seed.sql": {
+    "mtime": 1795638938.5223103,
+    "seen": 1795689994.3482897,
+    "ast_hash": "cbdffc945e616051b4203352c59862fe",
+    "semantic_hash": "cbdffc945e616051b4203352c59862fe"
+  },
+  "tests/cloudflare-ai.test.ts": {
+    "mtime": 1795689135.8188019,
+    "seen": 1795689994.3482916,
+    "ast_hash": "1a340f49e24e7bf6af7c68f7c479845f",
+    "semantic_hash": "1a340f49e24e7bf6af7c68f7c479845f"
+  },
+  "tests/gamification.test.ts": {
+    "mtime": 1795638882.3133934,
+    "seen": 1795689994.3482935,
+    "ast_hash": "40f0a68251672d668b4d78acc66a987d",
+    "semantic_hash": "40f0a68251672d668b4d78acc66a987d"
+  },
+  "tests/schemas.test.ts": {
+    "mtime": 1795638884.0203302,
+    "seen": 1795689994.3482957,
+    "ast_hash": "4b7634165370becd2346e11f559a0774",
+    "semantic_hash": "4b7634165370becd2346e11f559a0774"
+  },
+  "tsconfig.json": {
+    "mtime": 1795637041.078147,
+    "seen": 1795689994.348298,
+    "ast_hash": "c9ce11f97b614219001b418db5fe4190",
+    "semantic_hash": "c9ce11f97b614219001b418db5fe4190"
+  },
+  "vite.config.ts": {
+    "mtime": 1795637041.078147,
+    "seen": 1795689994.3483,
+    "ast_hash": "45dbeb394e27129d844dece781990b73",
+    "semantic_hash": "45dbeb394e27129d844dece781990b73"
+  },
+  "AGENTS.md": {
+    "mtime": 1795689584.4551156,
+    "seen": 1795689994.3483021,
+    "ast_hash": "fbb03f2df72db31b199f045b286e918e",
+    "semantic_hash": "fbb03f2df72db31b199f045b286e918e"
+  },
+  "DESIGN.md": {
+    "mtime": 1795676995.777136,
+    "seen": 1795689994.348304,
+    "ast_hash": "41ad1ac7a08862096bcfec80eceaeace",
+    "semantic_hash": "41ad1ac7a08862096bcfec80eceaeace"
+  },
+  "PRODUCT.md": {
+    "mtime": 1795676489.1802752,
+    "seen": 1795689994.3483062,
+    "ast_hash": "5c1c318c71b55813680cf2db0740ff28",
+    "semantic_hash": "5c1c318c71b55813680cf2db0740ff28"
+  },
+  "index.html": {
+    "mtime": 1795688854.566129,
+    "seen": 1795689994.3483086,
+    "ast_hash": "d7755d65c9d32aad7a16249d425c3004",
+    "semantic_hash": "d7755d65c9d32aad7a16249d425c3004"
+  },
+  "public/icons/icon-maskable.svg": {
+    "mtime": 1795638920.858965,
+    "seen": 1795689994.3483107,
+    "ast_hash": "e0c4c08e47aaba71da4464379649cc53",
+    "semantic_hash": "e0c4c08e47aaba71da4464379649cc53"
+  },
+  "public/icons/icon.svg": {
+    "mtime": 1795638919.6630092,
+    "seen": 1795689994.3483126,
+    "ast_hash": "e59e1c0190d6cf6b6f9b66eec5d562b3",
+    "semantic_hash": "e59e1c0190d6cf6b6f9b66eec5d562b3"
+  },
+  "src/assets/images/badge_forest_guardian_1795617620663.jpg": {
+    "mtime": 1795637041.0574396,
+    "seen": 1795689994.3483148,
+    "ast_hash": "ae4773dfa3b24e7acc87df17a07d3f4e",
+    "semantic_hash": "ae4773dfa3b24e7acc87df17a07d3f4e"
+  },
+  "src/assets/images/hero_eco_canopy_1795617618936.jpg": {
+    "mtime": 1795637041.0664442,
+    "seen": 1795689994.348317,
+    "ast_hash": "ee41bd23d78df990564d4feb443fef91",
+    "semantic_hash": "ee41bd23d78df990564d4feb443fef91"
+  },
+  "src/assets/images/quest_digital_notes_1795617620749.jpg": {
+    "mtime": 1795637041.070446,
+    "seen": 1795689994.3483193,
+    "ast_hash": "aade05389d1e56f660a4dbdac583bac6",
+    "semantic_hash": "aade05389d1e56f660a4dbdac583bac6"
+  },
+  "src/assets/images/quest_sustainable_commute_1795617621118.jpg": {
+    "mtime": 1795637041.0764492,
+    "seen": 1795689994.3483212,
+    "ast_hash": "bcbacf027acfe7aafbfca296b530a2ab",
+    "semantic_hash": "bcbacf027acfe7aafbfca296b530a2ab"
+  }
+}

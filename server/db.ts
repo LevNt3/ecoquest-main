@@ -268,24 +268,6 @@ const STARTER_QUESTS: SeedQuest[] = [
     image_url: null,
   },
   {
-    slug: 'five-minute-flow',
-    title: 'Ötperces zuhany',
-    description: 'Korlátozd a zuhanyzást vagy vízfolyatást legfeljebb 5 percre fizikai vagy telefonos időzítővel.',
-    instructions:
-      '1. Állíts be egy 5 perces visszaszámlálót a víz megnyitása előtt.\n2. Zuhanyozz röviden, és zárd el a vizet szappanozás közben.\n3. Fotózd le az 5:00-át vagy lejárt időzítőt mutató órát egy száraz mosdópult mellett.',
-    environmental_impact:
-      'A zuhanyzás idejének 10 percről 5 percre csökkentése alkalmanként akár 45 liter felmelegített vizet is megtakarít.',
-    category: 'Water Conservation',
-    difficulty: 'medium',
-    quest_type: 'daily',
-    estimated_minutes: 5,
-    xp_reward: 40,
-    eco_points_reward: 20,
-    verification_criteria:
-      'A képen 5 perces visszaszámláló időzítőnek kell látszania telefonon vagy konyhai órán fürdőszobai mosdó vagy csempézett pult mellett (személyek nélkül a képen).',
-    image_url: null,
-  },
-  {
     slug: 'cloud-declutter',
     title: 'Felhő nagytakarítás',
     description: 'Törölj legalább 50 régi promóciós e-mailt, és ürítsd ki a Spam és Kuka mappákat.',
@@ -493,6 +475,7 @@ function seedDatabase(): void {
   `);
 
   const tx = db.transaction(() => {
+    db.prepare("DELETE FROM quests WHERE slug = 'five-minute-flow'").run();
     for (const q of STARTER_QUESTS) {
       insertQuest.run({
         id: crypto.randomUUID(),

@@ -22,7 +22,7 @@ Unlike honor-system habit trackers or expensive AI wrappers, EcoQuest pairs **co
 
 ## Operating Context
 
-- **Core user loop:** Browse/filter 13 starter quests across 7 categories → `Start Quest` → capture/upload compressed JPEG/PNG/WebP photo evidence (`<= 5 MB`) with optional note → server-side AI verification (`approved`, `rejected`, or `needs_review`) → atomic reward credit (`finalizeSubmissionTx`) → Dashboard streak & 7-day UTC activity tracking → Profile & Reward Transaction ledger.
+- **Core user loop:** Browse/filter 12 starter quests across 7 categories → `Start Quest` → capture/upload compressed JPEG/PNG/WebP photo evidence (`<= 5 MB`) with optional note → server-side AI verification (`approved`, `rejected`, or `needs_review`) → atomic reward credit (`finalizeSubmissionTx`) → Dashboard streak & 7-day UTC activity tracking → Profile & Reward Transaction ledger.
 - **Moderation loop:** Admin Console (`Review Queue` + `Quest Manager`) allows role-verified admins to inspect private evidence photos, approve or reject `needs_review` submissions (with `approved` terminal), create new quests, and edit/toggle existing quests.
 - **Streak & reset rules:** UTC midnight reset with a 1-day grace period (same UTC day keeps streak; `+1` or `+2` UTC days increments; `3+` missed UTC days resets to `1`).
 - **Demo environment:** Local/self-hosted Vite + React + Express + SQLite (`./data/ecoquest.db`) prototype; external Supabase PostgreSQL schema (`supabase/migrations/001_initial_schema.sql`) and seed (`supabase/seed.sql`) are preserved as migration blueprints and not yet applied.
@@ -43,7 +43,7 @@ Unlike honor-system habit trackers or expensive AI wrappers, EcoQuest pairs **co
 
 ## Evidence on Hand
 
-- **Working prototype:** Express + SQLite backend (`server.ts`, `server/*`) and React + Vite frontend (`src/views/*`, `src/components/*`) with 13 seeded quests and 8 seeded achievements.
+- **Working prototype:** Express + SQLite backend (`server.ts`, `server/*`) and React + Vite frontend (`src/views/*`, `src/components/*`) with 12 seeded quests and 8 seeded achievements.
 - **Generated visual assets:** `src/assets/images/hero_eco_canopy_1795617618936.jpg`, `quest_digital_notes_1795617620749.jpg`, `quest_sustainable_commute_1795617621118.jpg`, `badge_forest_guardian_1795617620663.jpg`.
 - **PWA assets:** `public/manifest.webmanifest`, `public/icons/icon.svg`, `public/icons/icon-maskable.svg`.
 - **Absences (do not fabricate):** No real customer testimonials, third-party sustainability certifications, or live reward fulfillment partners exist.

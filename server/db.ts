@@ -32,7 +32,6 @@ db.exec(`
     email TEXT UNIQUE NOT NULL,
     username TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
-    avatar_url TEXT,
     role TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin')),
     xp INTEGER NOT NULL DEFAULT 0 CHECK (xp >= 0),
     level INTEGER NOT NULL DEFAULT 1 CHECK (level >= 1),

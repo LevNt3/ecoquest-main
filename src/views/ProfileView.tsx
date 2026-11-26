@@ -25,18 +25,13 @@ interface ProfileViewProps {
   onUserSync: (user: UserProfile, levelProgress: LevelProgress) => void;
 }
 
-const AVATAR_PRESETS = [
-  '/src/assets/images/badge_forest_guardian_1795617620663.jpg',
-  '/src/assets/images/quest_digital_notes_1795617620749.jpg',
-  '/src/assets/images/quest_sustainable_commute_1795617621118.jpg',
-];
-
 export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
   const [data, setData] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState<string>('');
   const [saving, setSaving] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,7 +40,6 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
       const res = await apiFetch<ProfileResponse>('/api/profile');
       setData(res);
       setUsername(res.user.username);
-      setAvatarUrl(res.user.avatar_url || AVATAR_PRESETS[0]);
       onUserSync(res.user, res.levelProgress);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load profile');
@@ -66,7 +60,7 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
     try {
       const res = await apiFetch<{user: UserProfile}>('/api/profile', {
         method: 'PATCH',
-        body: JSON.stringify({username: username.trim(), avatar_url: avatarUrl}),
+        body: JSON.stringify({username: username.trim()}),
       });
       if (data) {
         onUserSync(res.user, data.levelProgress);
@@ -81,13 +75,18 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
   }
 
   async function handleDeleteEvidence(submissionId: string) {
+    setDeletingId(submissionId);
+    setError(null);
     try {
       await apiFetch(`/api/submissions/${encodeURIComponent(submissionId)}/evidence`, {
         method: 'DELETE',
       });
+      setConfirmDeleteId(null);
       await loadProfile();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not delete evidence');
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -97,7 +96,7 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
 
   if (!data) {
     return (
-      <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-400">
+      <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-700 dark:text-rose-400">
         {error || 'Unable to load profile.'}
       </div>
     );
@@ -111,12 +110,12 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
       <div className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6">
         <div className="flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <img
-              src={user.avatar_url || AVATAR_PRESETS[0]}
-              alt={`${user.username} avatar`}
-              referrerPolicy="no-referrer"
-              className="h-16 w-16 rounded-2xl border border-[var(--border-hairline)] object-cover"
-            />
+            <div
+              aria-hidden="true"
+              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface-elevated)] font-display text-2xl font-bold text-[var(--accent-primary)]"
+            >
+              {(user.username.slice(0, 1) || 'E').toUpperCase()}
+            </div>
             <div>
               <h1 className="font-display text-2xl font-bold">{user.username}</h1>
               <p className="text-xs text-[var(--text-secondary)]">
@@ -130,11 +129,16 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
 
           <div className="flex items-center gap-6 text-sm">
             <div className="text-center">
-              <p className="font-mono-tabular text-xl font-bold">{completedCount}</p>
+              <p key={`comp-${completedCount}`} className="eq-animate-kpi font-mono-tabular text-xl font-bold">
+                {completedCount}
+              </p>
               <p className="text-xs text-[var(--text-secondary)]">Completed</p>
             </div>
             <div className="text-center">
-              <p className="inline-flex items-center gap-1 font-mono-tabular text-xl font-bold text-amber-500">
+              <p
+                key={`p-stk-${user.current_streak}`}
+                className="eq-animate-kpi inline-flex items-center gap-1 font-mono-tabular text-xl font-bold text-amber-700 dark:text-amber-500"
+              >
                 <Flame className="h-4 w-4" aria-hidden="true" />
                 {user.current_streak}d
               </p>
@@ -156,8 +160,8 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
         >
           <h2 className="font-display text-lg font-semibold">Edit Profile</h2>
 
-          {message && <p className="text-xs text-emerald-400">{message}</p>}
-          {error && <p className="text-xs text-rose-400">{error}</p>}
+          {message && <p className="text-xs text-emerald-700 dark:text-emerald-400">{message}</p>}
+          {error && <p className="text-xs text-rose-700 dark:text-rose-400">{error}</p>}
 
           <div className="space-y-1.5">
             <label htmlFor="profile-username" className="block text-xs font-medium text-[var(--text-secondary)]">
@@ -168,37 +172,14 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+              className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
             />
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-[var(--text-secondary)]">Select Avatar</p>
-            <div className="flex items-center gap-3">
-              {AVATAR_PRESETS.map((preset, idx) => (
-                <button
-                  key={preset}
-                  type="button"
-                  onClick={() => setAvatarUrl(preset)}
-                  className={`overflow-hidden rounded-xl border-2 transition-all ${
-                    avatarUrl === preset ? 'border-lime-500 scale-105' : 'border-transparent opacity-70'
-                  }`}
-                >
-                  <img
-                    src={preset}
-                    alt={`Avatar preset ${idx + 1}`}
-                    referrerPolicy="no-referrer"
-                    className="h-12 w-12 object-cover"
-                  />
-                </button>
-              ))}
-            </div>
           </div>
 
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex min-h-[42px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-5 py-2 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 disabled:opacity-50"
+            className="eq-interactive-btn inline-flex min-h-[42px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-5 py-2 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 disabled:opacity-50"
           >
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}
             <span>Save Changes</span>
@@ -215,19 +196,20 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            {achievements.map((ach) => (
+            {achievements.map((ach, idx) => (
               <div
                 key={ach.id}
-                className={`rounded-xl border p-3.5 space-y-1 ${
+                style={{'--eq-delay': `${Math.min(idx, 7) * 85}ms`} as React.CSSProperties}
+                className={`eq-animate-card rounded-xl border p-3.5 space-y-1 transition-[transform,border-color] duration-200 hover:-translate-y-1 ${
                   ach.unlocked
-                    ? 'border-emerald-500/40 bg-emerald-500/10'
-                    : 'border-[var(--border-hairline)] bg-[var(--bg-canvas)] opacity-65'
+                    ? 'border-emerald-500/40 bg-emerald-500/10 hover:border-lime-500/60'
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-canvas)] opacity-65 hover:border-lime-500/40'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="inline-flex items-center gap-1.5 text-sm font-semibold">
                     {ach.unlocked ? (
-                      <Trophy className="h-4 w-4 text-lime-400" aria-hidden="true" />
+                      <Trophy className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
                     ) : (
                       <Award className="h-4 w-4 text-[var(--text-secondary)]" aria-hidden="true" />
                     )}
@@ -275,19 +257,39 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
                       Period {sub.period_key} · {new Date(sub.created_at).toLocaleDateString()}
                     </p>
                   </div>
-                  <div className="flex items-center gap-3 shrink-0">
+                  <div className="flex items-center gap-2 shrink-0">
                     <StatusIndicator status={sub.status} />
-                    {sub.has_evidence && (
-                      <button
-                        type="button"
-                        onClick={() => void handleDeleteEvidence(sub.id)}
-                        title="Delete stored evidence photo"
-                        aria-label="Delete stored evidence photo"
-                        className="min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg text-[var(--text-secondary)] hover:text-rose-400 hover:bg-rose-500/10"
-                      >
-                        <Trash2 className="h-4 w-4" aria-hidden="true" />
-                      </button>
-                    )}
+                    {sub.has_evidence &&
+                      (confirmDeleteId === sub.id ? (
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            disabled={deletingId === sub.id}
+                            onClick={() => void handleDeleteEvidence(sub.id)}
+                            className="min-h-[34px] rounded-lg bg-rose-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-rose-500 disabled:opacity-50"
+                          >
+                            {deletingId === sub.id ? 'Deleting...' : 'Confirm Delete'}
+                          </button>
+                          <button
+                            type="button"
+                            disabled={deletingId === sub.id}
+                            onClick={() => setConfirmDeleteId(null)}
+                            className="min-h-[34px] rounded-lg border border-[var(--border-hairline)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)]"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setConfirmDeleteId(sub.id)}
+                          title="Delete stored evidence photo"
+                          aria-label="Delete stored evidence photo"
+                          className="min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg text-[var(--text-secondary)] hover:text-rose-700 dark:hover:text-rose-400 hover:bg-rose-500/10"
+                        >
+                          <Trash2 className="h-4 w-4" aria-hidden="true" />
+                        </button>
+                      ))}
                   </div>
                 </div>
               ))}
@@ -306,7 +308,7 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
               {transactions.map((tx) => (
                 <div key={tx.id} className="flex items-center justify-between gap-3 py-3 text-xs">
                   <div className="flex items-center gap-2 min-w-0">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
+                    <CheckCircle2 className="h-3.5 w-3.5 text-[var(--accent-emerald)] shrink-0" aria-hidden="true" />
                     <span className="truncate">{tx.description}</span>
                   </div>
                   <span className="font-mono-tabular font-semibold text-[var(--accent-primary)] whitespace-nowrap shrink-0">

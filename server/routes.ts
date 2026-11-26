@@ -37,7 +37,6 @@ function mapProfile(row: Record<string, unknown>): UserProfile {
     id: String(row.id),
     email: String(row.email),
     username: String(row.username),
-    avatar_url: row.avatar_url ? String(row.avatar_url) : null,
     role: row.role === 'admin' ? 'admin' : 'user',
     xp: Number(row.xp),
     level: Number(row.level),
@@ -613,10 +612,6 @@ export function createApiRouter(): Router {
       }
       updates.push('username = ?');
       values.push(parsed.data.username.trim());
-    }
-    if (parsed.data.avatar_url !== undefined) {
-      updates.push('avatar_url = ?');
-      values.push(parsed.data.avatar_url);
     }
     if (parsed.data.theme_preference !== undefined) {
       updates.push('theme_preference = ?');

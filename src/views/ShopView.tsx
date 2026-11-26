@@ -1,5 +1,5 @@
 import {Award, Coffee, Info, Palette, Sparkles, Ticket} from 'lucide-react';
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import type {UserProfile} from '../shared/types';
 
 interface ShopViewProps {
@@ -52,6 +52,29 @@ const PLACEHOLDER_REWARDS: PlaceholderReward[] = [
 
 export function ShopView({user}: ShopViewProps) {
   const [selectedReward, setSelectedReward] = useState<PlaceholderReward | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!selectedReward) return;
+    closeButtonRef.current?.focus();
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setSelectedReward(null);
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      lastFocusedRef.current?.focus();
+    };
+  }, [selectedReward]);
+
+  function openRewardModal(item: PlaceholderReward) {
+    lastFocusedRef.current = document.activeElement as HTMLElement | null;
+    setSelectedReward(item);
+  }
 
   return (
     <div className="space-y-6">
@@ -73,8 +96,8 @@ export function ShopView({user}: ShopViewProps) {
         </div>
       </div>
 
-      <div className="flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs leading-relaxed text-amber-200">
-        <Info className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" aria-hidden="true" />
+      <div className="flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs leading-relaxed text-amber-900 dark:text-amber-200">
+        <Info className="h-4 w-4 shrink-0 text-amber-700 dark:text-amber-400 mt-0.5" aria-hidden="true" />
         <span>
           Reward redemption is a placeholder preview for this MVP. Your EcoPoints balance is tracked
           securely in the server ledger, and no payments or real-world fulfillment are processed.
@@ -88,7 +111,8 @@ export function ShopView({user}: ShopViewProps) {
           return (
             <div
               key={item.id}
-              className="flex flex-col justify-between rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4"
+              style={{'--eq-delay': `${PLACEHOLDER_REWARDS.indexOf(item) * 85}ms`} as React.CSSProperties}
+              className="eq-animate-card flex flex-col justify-between rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -99,7 +123,7 @@ export function ShopView({user}: ShopViewProps) {
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <Icon className="h-5 w-5 text-emerald-500 shrink-0" aria-hidden="true" />
+                  <Icon className="h-5 w-5 text-[var(--accent-emerald)] shrink-0" aria-hidden="true" />
                   <h2 className="font-display text-lg font-semibold">{item.title}</h2>
                 </div>
                 <p className="text-sm text-[var(--text-secondary)]">{item.description}</p>
@@ -107,8 +131,8 @@ export function ShopView({user}: ShopViewProps) {
 
               <button
                 type="button"
-                onClick={() => setSelectedReward(item)}
-                className="min-h-[42px] w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-4 py-2 text-xs font-semibold hover:bg-[var(--bg-surface-elevated)] transition-colors"
+                onClick={() => openRewardModal(item)}
+                className="eq-interactive-btn min-h-[42px] w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-4 py-2 text-xs font-semibold hover:border-lime-500/40 hover:bg-[var(--bg-surface-elevated)]"
               >
                 {canAfford ? 'Preview Reward (Coming Soon)' : `Need ${item.cost - user.eco_points} more pts`}
               </button>
@@ -121,16 +145,23 @@ export function ShopView({user}: ShopViewProps) {
         <div
           role="dialog"
           aria-modal="true"
+          aria-labelledby="shop-modal-title"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedReward(null);
+          }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
         >
-          <div className="w-full max-w-md rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4">
-            <h3 className="font-display text-lg font-semibold">{selectedReward.title}</h3>
+          <div className="eq-animate-banner w-full max-w-md rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4">
+            <h3 id="shop-modal-title" className="font-display text-lg font-semibold">
+              {selectedReward.title}
+            </h3>
             <p className="text-sm text-[var(--text-secondary)]">{selectedReward.description}</p>
-            <p className="text-xs text-amber-400">
+            <p className="text-xs text-amber-800 dark:text-amber-300">
               Placeholder Item ({selectedReward.cost} EcoPoints): Redemption will unlock in a future
               release once campus partner codes are connected.
             </p>
             <button
+              ref={closeButtonRef}
               type="button"
               onClick={() => setSelectedReward(null)}
               className="w-full min-h-[42px] rounded-xl bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--accent-primary-fg)]"

@@ -46,7 +46,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
               onClick={() => onNavigate('landing')}
               className="flex items-center gap-2 font-display text-lg font-bold tracking-tight whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-500"
             >
-              <Leaf className="h-5 w-5 text-lime-500" aria-hidden="true" />
+              <Leaf className="h-5 w-5 text-[var(--accent-primary)]" aria-hidden="true" />
               <span>EcoQuest</span>
             </button>
 
@@ -106,7 +106,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
                 <button
                   type="button"
                   onClick={() => onNavigate('dashboard')}
-                  className="min-h-[40px] rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 transition-opacity whitespace-nowrap shrink-0"
+                  className="eq-interactive-btn min-h-[40px] rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 whitespace-nowrap shrink-0"
                 >
                   Open Dashboard
                 </button>
@@ -114,7 +114,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
                 <button
                   type="button"
                   onClick={() => onNavigate(route === 'signup' ? 'login' : 'signup')}
-                  className="min-h-[40px] rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 transition-opacity whitespace-nowrap shrink-0"
+                  className="eq-interactive-btn min-h-[40px] rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 whitespace-nowrap shrink-0"
                 >
                   {route === 'signup' ? 'Sign In' : 'Get Started'}
                 </button>
@@ -123,7 +123,9 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
           </div>
         </header>
 
-        <main>{children}</main>
+        <main key={route} className="eq-animate-view">
+          {children}
+        </main>
       </div>
     );
   }
@@ -147,7 +149,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
       {/* Desktop Left Sidebar */}
       <aside className="hidden lg:flex lg:w-60 lg:flex-col lg:fixed lg:inset-y-0 border-r border-[var(--border-hairline)] bg-[var(--bg-surface)]">
         <div className="flex items-center gap-2.5 px-6 py-5 border-b border-[var(--border-hairline)]">
-          <Leaf className="h-5 w-5 text-lime-500" aria-hidden="true" />
+          <Leaf className="h-5 w-5 text-[var(--accent-primary)]" aria-hidden="true" />
           <button
             type="button"
             onClick={() => onNavigate('dashboard')}
@@ -165,14 +167,18 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
               <button
                 key={item.id}
                 type="button"
+                aria-current={isActive ? 'page' : undefined}
                 onClick={() => onNavigate(item.id)}
-                className={`flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors whitespace-nowrap ${
+                className={`group eq-interactive-btn flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium whitespace-nowrap ${
                   isActive
                     ? 'bg-[var(--bg-surface-elevated)] text-[var(--accent-primary)]'
                     : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-elevated)]/60 hover:text-[var(--text-primary)]'
                 }`}
               >
-                <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <Icon
+                  className="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
                 <span>{item.label}</span>
               </button>
             );
@@ -181,7 +187,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
 
         <div className="border-t border-[var(--border-hairline)] p-4 space-y-3">
           <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
-            <span>Level {user.level}</span>
+            <span className="font-mono-tabular">Level {user.level}</span>
             <span className="font-mono-tabular font-semibold text-[var(--text-primary)]">
               {user.eco_points} pts
             </span>
@@ -216,11 +222,11 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
             onClick={() => onNavigate('dashboard')}
             className="flex items-center gap-2 font-display text-base font-bold whitespace-nowrap shrink-0"
           >
-            <Leaf className="h-4 w-4 text-lime-500" aria-hidden="true" />
+            <Leaf className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
             <span>EcoQuest</span>
           </button>
           <div className="flex items-center gap-4 text-xs font-mono-tabular">
-            <span className="inline-flex items-center gap-1 text-amber-500">
+            <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-500">
               <Flame className="h-3.5 w-3.5" aria-hidden="true" />
               {user.current_streak}d
             </span>
@@ -232,7 +238,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
                 type="button"
                 onClick={() => onNavigate('admin')}
                 aria-label="Admin Queue"
-                className="min-h-[40px] min-w-[40px] flex items-center justify-center text-emerald-500"
+                className="min-h-[40px] min-w-[40px] flex items-center justify-center text-[var(--accent-emerald)]"
               >
                 <ShieldCheck className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -241,7 +247,9 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
         </header>
 
         <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6 pb-24 sm:px-6 lg:px-8 lg:py-8 lg:pb-10">
-          {children}
+          <div key={route} className="eq-animate-view">
+            {children}
+          </div>
         </main>
       </div>
 
@@ -263,12 +271,16 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
             <button
               key={item.id}
               type="button"
+              aria-current={isActive ? 'page' : undefined}
               onClick={() => onNavigate(item.id)}
-              className={`flex flex-col items-center justify-center min-h-[44px] transition-colors ${
+              className={`eq-interactive-btn flex flex-col items-center justify-center min-h-[44px] ${
                 isActive ? 'text-[var(--accent-primary)]' : 'text-[var(--text-secondary)]'
               }`}
             >
-              <Icon className="h-5 w-5" aria-hidden="true" />
+              <Icon
+                className={`h-5 w-5 transition-transform duration-150 ${isActive ? 'scale-105' : ''}`}
+                aria-hidden="true"
+              />
               <span className="mt-1 text-[10px] font-medium tracking-tight">{item.label}</span>
             </button>
           );

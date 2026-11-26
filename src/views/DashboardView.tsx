@@ -31,6 +31,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [barMounted, setBarMounted] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -39,6 +40,11 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
         if (!active) return;
         setData(res);
         onUserSync(res.user, res.levelProgress);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            if (active) setBarMounted(true);
+          });
+        });
       })
       .catch((err) => {
         if (!active) return;
@@ -68,7 +74,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
 
   if (error || !data) {
     return (
-      <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-400">
+      <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-700 dark:text-rose-400">
         {error || 'Could not load dashboard data.'}
       </div>
     );
@@ -93,7 +99,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
           <button
             type="button"
             onClick={() => onNavigate('quest-detail', quickActionQuest.slug)}
-            className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 transition-opacity whitespace-nowrap shrink-0"
+            className="eq-interactive-btn inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 whitespace-nowrap shrink-0"
           >
             <Camera className="h-4 w-4" aria-hidden="true" />
             <span>Submit a Quest</span>
@@ -103,45 +109,63 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
 
       {/* Primary KPI Strip */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-3">
+        <div
+          style={{'--eq-delay': '0ms'} as React.CSSProperties}
+          className="eq-animate-card rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-3 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
+        >
           <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
             <span>Level Progression</span>
-            <span className="font-mono-tabular font-semibold text-[var(--accent-primary)]">
+            <span
+              key={`lvl-${levelProgress.level}`}
+              className="eq-animate-kpi font-mono-tabular font-semibold text-[var(--accent-primary)]"
+            >
               Level {levelProgress.level}
             </span>
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="font-mono-tabular text-2xl font-bold">{user.xp} XP</span>
+            <span key={`xp-${user.xp}`} className="eq-animate-kpi font-mono-tabular text-2xl font-bold">
+              {user.xp} XP
+            </span>
             <span className="font-mono-tabular text-xs text-[var(--text-secondary)]">
               {levelProgress.xpIntoLevel} / {levelProgress.xpNeededForNext} to Lvl{' '}
               {levelProgress.level + 1}
             </span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--bg-surface-elevated)]">
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-[var(--bg-surface-elevated)]">
             <div
-              className="h-full bg-[var(--accent-primary)] transition-all duration-300"
-              style={{width: `${levelProgress.progressPercent}%`}}
+              className="eq-xp-bar h-full w-full rounded-full bg-[var(--accent-primary)]"
+              style={{
+                transform: `scaleX(${barMounted ? Math.max(0, Math.min(1, levelProgress.progressPercent / 100)) : 0})`,
+              }}
             />
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-2">
+        <div
+          style={{'--eq-delay': '90ms'} as React.CSSProperties}
+          className="eq-animate-card rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-2 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
+        >
           <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
             <span>EcoPoints Balance</span>
-            <Sparkles className="h-4 w-4 text-emerald-500" aria-hidden="true" />
+            <Sparkles className="h-4 w-4 text-[var(--accent-emerald)]" aria-hidden="true" />
           </div>
-          <p className="font-mono-tabular text-2xl font-bold">{user.eco_points}</p>
+          <p key={`pts-${user.eco_points}`} className="eq-animate-kpi font-mono-tabular text-2xl font-bold">
+            {user.eco_points}
+          </p>
           <p className="text-xs text-[var(--text-secondary)]">
             {completedCount} verified quest{completedCount === 1 ? '' : 's'} completed
           </p>
         </div>
 
-        <div className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-2">
+        <div
+          style={{'--eq-delay': '180ms'} as React.CSSProperties}
+          className="eq-animate-card rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-2 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
+        >
           <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
             <span>Daily Streak</span>
-            <Flame className="h-4 w-4 text-amber-500" aria-hidden="true" />
+            <Flame className="h-4 w-4 text-amber-700 dark:text-amber-500" aria-hidden="true" />
           </div>
-          <p className="font-mono-tabular text-2xl font-bold">
+          <p key={`stk-${user.current_streak}`} className="eq-animate-kpi font-mono-tabular text-2xl font-bold">
             {user.current_streak} day{user.current_streak === 1 ? '' : 's'}
           </p>
           <p className="text-xs text-[var(--text-secondary)]">
@@ -166,25 +190,31 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
           </div>
 
           <div className="divide-y divide-[var(--border-hairline)] rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)]">
-            {dailyQuests.map((quest) => (
+            {dailyQuests.map((quest, idx) => (
               <button
                 key={quest.id}
                 type="button"
+                style={{'--eq-delay': `${idx * 80}ms`} as React.CSSProperties}
                 onClick={() => onNavigate('quest-detail', quest.slug)}
-                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left hover:bg-[var(--bg-surface-elevated)]/60 transition-colors first:rounded-t-2xl last:rounded-b-2xl"
+                className="eq-animate-card group flex w-full items-center justify-between gap-4 px-5 py-4 text-left hover:bg-[var(--bg-surface-elevated)]/70 transition-[transform,background-color] duration-200 active:scale-[0.98] first:rounded-t-2xl last:rounded-b-2xl"
               >
                 <div className="min-w-0 space-y-1">
                   <p className="text-xs text-[var(--text-secondary)]">
                     {quest.category} · {quest.estimated_minutes} min
                   </p>
-                  <p className="truncate font-display text-sm font-semibold">{quest.title}</p>
+                  <p className="truncate font-display text-sm font-semibold group-hover:text-[var(--accent-primary)] transition-colors">
+                    {quest.title}
+                  </p>
                   <p className="font-mono-tabular text-xs text-[var(--accent-primary)]">
                     +{quest.xp_reward} XP · +{quest.eco_points_reward} pts
                   </p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
                   <StatusIndicator status={quest.user_status || 'available'} />
-                  <ArrowRight className="h-4 w-4 text-[var(--text-secondary)]" aria-hidden="true" />
+                  <ArrowRight
+                    className="h-4 w-4 text-[var(--text-secondary)] transition-transform duration-150 group-hover:translate-x-1 group-hover:text-[var(--accent-primary)]"
+                    aria-hidden="true"
+                  />
                 </div>
               </button>
             ))}
@@ -208,7 +238,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
                     <div
                       className={`flex h-10 w-full items-center justify-center rounded-xl border text-xs font-mono-tabular font-semibold ${
                         active
-                          ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-400'
+                          ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400'
                           : 'border-[var(--border-hairline)] bg-[var(--bg-canvas)] text-[var(--text-secondary)]'
                       }`}
                     >
@@ -250,13 +280,14 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
               </div>
             ) : (
               <div className="space-y-2.5">
-                {unlockedAchievements.slice(0, 3).map((ach) => (
+                {unlockedAchievements.slice(0, 3).map((ach, idx) => (
                   <div
                     key={ach.id}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-4 py-3"
+                    style={{'--eq-delay': `${idx * 90}ms`} as React.CSSProperties}
+                    className="eq-animate-card flex items-center justify-between gap-3 rounded-xl border border-emerald-500/30 bg-[var(--bg-canvas)] px-4 py-3 transition-[transform,border-color] duration-200 hover:-translate-y-0.5 hover:border-lime-500/60"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <Trophy className="h-4 w-4 text-lime-400 shrink-0" aria-hidden="true" />
+                      <Trophy className="h-4 w-4 text-[var(--accent-primary)] shrink-0" aria-hidden="true" />
                       <div className="min-w-0">
                         <p className="truncate text-sm font-semibold">{ach.title}</p>
                         <p className="truncate text-xs text-[var(--text-secondary)]">

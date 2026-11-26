@@ -209,7 +209,7 @@ export function AdminView() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
-          <ShieldCheck className="h-6 w-6 text-emerald-500" aria-hidden="true" />
+          <ShieldCheck className="h-6 w-6 text-[var(--accent-emerald)]" aria-hidden="true" />
           <div>
             <h1 className="font-display text-2xl font-bold tracking-tight">Admin Console</h1>
             <p className="text-xs text-[var(--text-secondary)]">
@@ -247,7 +247,7 @@ export function AdminView() {
       {error && (
         <div
           role="alert"
-          className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-400"
+          className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-700 dark:text-rose-400"
         >
           {error}
         </div>
@@ -261,7 +261,7 @@ export function AdminView() {
               onClick={() => setStatusFilter('needs_review')}
               className={`min-h-[36px] rounded-lg px-3 py-1.5 text-xs font-medium border ${
                 statusFilter === 'needs_review'
-                  ? 'border-amber-500/40 bg-amber-500/15 text-amber-300'
+                  ? 'border-amber-500/40 bg-amber-500/15 text-amber-800 dark:text-amber-300'
                   : 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)]'
               }`}
             >
@@ -328,15 +328,24 @@ export function AdminView() {
 
                   {sub.status !== 'approved' && (
                     <div className="space-y-2 border-t border-[var(--border-hairline)] pt-3">
-                      <input
-                        type="text"
-                        value={reviewReasons[sub.id] || ''}
-                        onChange={(e) =>
-                          setReviewReasons((prev) => ({...prev, [sub.id]: e.target.value}))
-                        }
-                        placeholder="Optional review reason..."
-                        className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-xs"
-                      />
+                      <div className="space-y-1">
+                        <label
+                          htmlFor={`review-reason-${sub.id}`}
+                          className="block text-[11px] font-medium text-[var(--text-secondary)]"
+                        >
+                          Review Reason (optional)
+                        </label>
+                        <input
+                          id={`review-reason-${sub.id}`}
+                          type="text"
+                          value={reviewReasons[sub.id] || ''}
+                          onChange={(e) =>
+                            setReviewReasons((prev) => ({...prev, [sub.id]: e.target.value}))
+                          }
+                          placeholder="Optional review reason..."
+                          className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-xs focus-visible:ring-2 focus-visible:ring-lime-500"
+                        />
+                      </div>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
@@ -351,7 +360,7 @@ export function AdminView() {
                           type="button"
                           disabled={busyId === sub.id}
                           onClick={() => void handleReview(sub.id, 'rejected')}
-                          className="flex-1 inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-400 hover:bg-rose-500/20 disabled:opacity-50"
+                          className="flex-1 inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-700 dark:text-rose-400 hover:bg-rose-500/20 disabled:opacity-50"
                         >
                           <XCircle className="h-3.5 w-3.5" aria-hidden="true" />
                           <span>Reject</span>
@@ -382,103 +391,169 @@ export function AdminView() {
               onSubmit={handleCreateQuest}
               className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 grid gap-4 sm:grid-cols-2"
             >
-              <input
-                required
-                placeholder="Slug (e.g. cold-water-wash)"
-                value={newQuest.slug}
-                onChange={(e) => setNewQuest({...newQuest, slug: e.target.value})}
-                className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm"
-              />
-              <input
-                required
-                placeholder="Quest Title"
-                value={newQuest.title}
-                onChange={(e) => setNewQuest({...newQuest, title: e.target.value})}
-                className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm"
-              />
-              <select
-                value={newQuest.category}
-                onChange={(e) =>
-                  setNewQuest({...newQuest, category: e.target.value as (typeof QUEST_CATEGORIES)[number]})
-                }
-                className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm"
-              >
-                {QUEST_CATEGORIES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1.5">
+                <label htmlFor="create-quest-slug" className="block text-xs font-medium text-[var(--text-secondary)]">
+                  Quest Slug
+                </label>
+                <input
+                  id="create-quest-slug"
+                  required
+                  placeholder="e.g. cold-water-wash"
+                  value={newQuest.slug}
+                  onChange={(e) => setNewQuest({...newQuest, slug: e.target.value})}
+                  className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label htmlFor="create-quest-title" className="block text-xs font-medium text-[var(--text-secondary)]">
+                  Quest Title
+                </label>
+                <input
+                  id="create-quest-title"
+                  required
+                  placeholder="Quest Title"
+                  value={newQuest.title}
+                  onChange={(e) => setNewQuest({...newQuest, title: e.target.value})}
+                  className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label htmlFor="create-quest-category" className="block text-xs font-medium text-[var(--text-secondary)]">
+                  Category
+                </label>
                 <select
-                  value={newQuest.quest_type}
-                  onChange={(e) => setNewQuest({...newQuest, quest_type: e.target.value})}
-                  className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm"
+                  id="create-quest-category"
+                  value={newQuest.category}
+                  onChange={(e) =>
+                    setNewQuest({...newQuest, category: e.target.value as (typeof QUEST_CATEGORIES)[number]})
+                  }
+                  className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
                 >
-                  {QUEST_TYPES.map((t) => (
-                    <option key={t} value={t}>
-                      {formatQuestTypeLabel(t)}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={newQuest.difficulty}
-                  onChange={(e) => setNewQuest({...newQuest, difficulty: e.target.value})}
-                  className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm"
-                >
-                  {QUEST_DIFFICULTIES.map((d) => (
-                    <option key={d} value={d}>
-                      {formatDifficultyLabel(d)}
+                  {QUEST_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
                     </option>
                   ))}
                 </select>
               </div>
-              <input
-                type="number"
-                min={5}
-                placeholder="XP Reward"
-                value={newQuest.xp_reward}
-                onChange={(e) => setNewQuest({...newQuest, xp_reward: Number(e.target.value)})}
-                className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm"
-              />
-              <input
-                type="number"
-                min={0}
-                placeholder="EcoPoints Reward"
-                value={newQuest.eco_points_reward}
-                onChange={(e) =>
-                  setNewQuest({...newQuest, eco_points_reward: Number(e.target.value)})
-                }
-                className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm"
-              />
-              <textarea
-                required
-                placeholder="Short description..."
-                value={newQuest.description}
-                onChange={(e) => setNewQuest({...newQuest, description: e.target.value})}
-                className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm"
-              />
-              <textarea
-                required
-                placeholder="Step-by-step instructions..."
-                value={newQuest.instructions}
-                onChange={(e) => setNewQuest({...newQuest, instructions: e.target.value})}
-                className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm"
-              />
-              <textarea
-                required
-                placeholder="Environmental impact explanation..."
-                value={newQuest.environmental_impact}
-                onChange={(e) => setNewQuest({...newQuest, environmental_impact: e.target.value})}
-                className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm"
-              />
-              <textarea
-                required
-                placeholder="AI Verification Criteria..."
-                value={newQuest.verification_criteria}
-                onChange={(e) => setNewQuest({...newQuest, verification_criteria: e.target.value})}
-                className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm"
-              />
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1.5">
+                  <label htmlFor="create-quest-type" className="block text-xs font-medium text-[var(--text-secondary)]">
+                    Frequency
+                  </label>
+                  <select
+                    id="create-quest-type"
+                    value={newQuest.quest_type}
+                    onChange={(e) => setNewQuest({...newQuest, quest_type: e.target.value})}
+                    className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                  >
+                    {QUEST_TYPES.map((t) => (
+                      <option key={t} value={t}>
+                        {formatQuestTypeLabel(t)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label htmlFor="create-quest-difficulty" className="block text-xs font-medium text-[var(--text-secondary)]">
+                    Difficulty
+                  </label>
+                  <select
+                    id="create-quest-difficulty"
+                    value={newQuest.difficulty}
+                    onChange={(e) => setNewQuest({...newQuest, difficulty: e.target.value})}
+                    className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                  >
+                    {QUEST_DIFFICULTIES.map((d) => (
+                      <option key={d} value={d}>
+                        {formatDifficultyLabel(d)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <label htmlFor="create-quest-xp" className="block text-xs font-medium text-[var(--text-secondary)]">
+                  XP Reward
+                </label>
+                <input
+                  id="create-quest-xp"
+                  type="number"
+                  min={5}
+                  placeholder="XP Reward"
+                  value={newQuest.xp_reward}
+                  onChange={(e) => setNewQuest({...newQuest, xp_reward: Number(e.target.value)})}
+                  className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label htmlFor="create-quest-points" className="block text-xs font-medium text-[var(--text-secondary)]">
+                  EcoPoints Reward
+                </label>
+                <input
+                  id="create-quest-points"
+                  type="number"
+                  min={0}
+                  placeholder="EcoPoints Reward"
+                  value={newQuest.eco_points_reward}
+                  onChange={(e) =>
+                    setNewQuest({...newQuest, eco_points_reward: Number(e.target.value)})
+                  }
+                  className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                />
+              </div>
+              <div className="sm:col-span-2 space-y-1.5">
+                <label htmlFor="create-quest-description" className="block text-xs font-medium text-[var(--text-secondary)]">
+                  Short Description
+                </label>
+                <textarea
+                  id="create-quest-description"
+                  required
+                  placeholder="Short description..."
+                  value={newQuest.description}
+                  onChange={(e) => setNewQuest({...newQuest, description: e.target.value})}
+                  className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                />
+              </div>
+              <div className="sm:col-span-2 space-y-1.5">
+                <label htmlFor="create-quest-instructions" className="block text-xs font-medium text-[var(--text-secondary)]">
+                  Step-by-Step Instructions
+                </label>
+                <textarea
+                  id="create-quest-instructions"
+                  required
+                  placeholder="Step-by-step instructions..."
+                  value={newQuest.instructions}
+                  onChange={(e) => setNewQuest({...newQuest, instructions: e.target.value})}
+                  className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                />
+              </div>
+              <div className="sm:col-span-2 space-y-1.5">
+                <label htmlFor="create-quest-impact" className="block text-xs font-medium text-[var(--text-secondary)]">
+                  Environmental Impact
+                </label>
+                <textarea
+                  id="create-quest-impact"
+                  required
+                  placeholder="Environmental impact explanation..."
+                  value={newQuest.environmental_impact}
+                  onChange={(e) => setNewQuest({...newQuest, environmental_impact: e.target.value})}
+                  className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                />
+              </div>
+              <div className="sm:col-span-2 space-y-1.5">
+                <label htmlFor="create-quest-criteria" className="block text-xs font-medium text-[var(--text-secondary)]">
+                  AI Verification Criteria
+                </label>
+                <textarea
+                  id="create-quest-criteria"
+                  required
+                  placeholder="AI Verification Criteria..."
+                  value={newQuest.verification_criteria}
+                  onChange={(e) => setNewQuest({...newQuest, verification_criteria: e.target.value})}
+                  className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                />
+              </div>
               <button
                 type="submit"
                 disabled={busyId === 'create'}
@@ -516,7 +591,7 @@ export function AdminView() {
                       onClick={() => void handleToggleQuestActive(q)}
                       className={`min-h-[36px] rounded-lg border px-3 py-1 text-xs font-semibold ${
                         q.is_active
-                          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
+                          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
                           : 'border-[var(--border-hairline)] bg-[var(--bg-canvas)] text-[var(--text-secondary)]'
                       }`}
                     >
@@ -530,127 +605,190 @@ export function AdminView() {
                     onSubmit={(e) => void handleSaveQuestEdit(e, q.id)}
                     className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 grid gap-3 sm:grid-cols-2"
                   >
-                    <input
-                      required
-                      placeholder="Quest Title"
-                      value={editQuest.title}
-                      onChange={(e) => setEditQuest({...editQuest, title: e.target.value})}
-                      className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
-                    />
-                    <select
-                      value={editQuest.category}
-                      onChange={(e) =>
-                        setEditQuest({
-                          ...editQuest,
-                          category: e.target.value as (typeof QUEST_CATEGORIES)[number],
-                        })
-                      }
-                      className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
-                    >
-                      {QUEST_CATEGORIES.map((c) => (
-                        <option key={c} value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="space-y-1">
+                      <label htmlFor={`edit-${q.id}-title`} className="block text-xs font-medium text-[var(--text-secondary)]">
+                        Quest Title
+                      </label>
+                      <input
+                        id={`edit-${q.id}-title`}
+                        required
+                        placeholder="Quest Title"
+                        value={editQuest.title}
+                        onChange={(e) => setEditQuest({...editQuest, title: e.target.value})}
+                        className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label htmlFor={`edit-${q.id}-category`} className="block text-xs font-medium text-[var(--text-secondary)]">
+                        Category
+                      </label>
+                      <select
+                        id={`edit-${q.id}-category`}
+                        value={editQuest.category}
+                        onChange={(e) =>
+                          setEditQuest({
+                            ...editQuest,
+                            category: e.target.value as (typeof QUEST_CATEGORIES)[number],
+                          })
+                        }
+                        className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                      >
+                        {QUEST_CATEGORIES.map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     <div className="grid grid-cols-2 gap-2">
-                      <select
-                        value={editQuest.quest_type}
-                        onChange={(e) => setEditQuest({...editQuest, quest_type: e.target.value})}
-                        className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
-                      >
-                        {QUEST_TYPES.map((t) => (
-                          <option key={t} value={t}>
-                            {formatQuestTypeLabel(t)}
-                          </option>
-                        ))}
-                      </select>
-                      <select
-                        value={editQuest.difficulty}
-                        onChange={(e) => setEditQuest({...editQuest, difficulty: e.target.value})}
-                        className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
-                      >
-                        {QUEST_DIFFICULTIES.map((d) => (
-                          <option key={d} value={d}>
-                            {formatDifficultyLabel(d)}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="space-y-1">
+                        <label htmlFor={`edit-${q.id}-type`} className="block text-xs font-medium text-[var(--text-secondary)]">
+                          Frequency
+                        </label>
+                        <select
+                          id={`edit-${q.id}-type`}
+                          value={editQuest.quest_type}
+                          onChange={(e) => setEditQuest({...editQuest, quest_type: e.target.value})}
+                          className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                        >
+                          {QUEST_TYPES.map((t) => (
+                            <option key={t} value={t}>
+                              {formatQuestTypeLabel(t)}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="space-y-1">
+                        <label htmlFor={`edit-${q.id}-difficulty`} className="block text-xs font-medium text-[var(--text-secondary)]">
+                          Difficulty
+                        </label>
+                        <select
+                          id={`edit-${q.id}-difficulty`}
+                          value={editQuest.difficulty}
+                          onChange={(e) => setEditQuest({...editQuest, difficulty: e.target.value})}
+                          className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                        >
+                          {QUEST_DIFFICULTIES.map((d) => (
+                            <option key={d} value={d}>
+                              {formatDifficultyLabel(d)}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      <input
-                        type="number"
-                        min={1}
-                        max={480}
-                        title="Estimated Minutes"
-                        placeholder="Minutes"
-                        value={editQuest.estimated_minutes}
-                        onChange={(e) =>
-                          setEditQuest({...editQuest, estimated_minutes: Number(e.target.value)})
-                        }
-                        className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
-                      />
-                      <input
-                        type="number"
-                        min={5}
-                        max={1000}
-                        title="XP Reward"
-                        placeholder="XP"
-                        value={editQuest.xp_reward}
-                        onChange={(e) =>
-                          setEditQuest({...editQuest, xp_reward: Number(e.target.value)})
-                        }
-                        className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
-                      />
-                      <input
-                        type="number"
-                        min={0}
-                        max={1000}
-                        title="EcoPoints Reward"
-                        placeholder="EcoPoints"
-                        value={editQuest.eco_points_reward}
-                        onChange={(e) =>
-                          setEditQuest({...editQuest, eco_points_reward: Number(e.target.value)})
-                        }
-                        className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      <div className="space-y-1">
+                        <label htmlFor={`edit-${q.id}-minutes`} className="block text-xs font-medium text-[var(--text-secondary)]">
+                          Minutes
+                        </label>
+                        <input
+                          id={`edit-${q.id}-minutes`}
+                          type="number"
+                          min={1}
+                          max={480}
+                          placeholder="Minutes"
+                          value={editQuest.estimated_minutes}
+                          onChange={(e) =>
+                            setEditQuest({...editQuest, estimated_minutes: Number(e.target.value)})
+                          }
+                          className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label htmlFor={`edit-${q.id}-xp`} className="block text-xs font-medium text-[var(--text-secondary)]">
+                          XP
+                        </label>
+                        <input
+                          id={`edit-${q.id}-xp`}
+                          type="number"
+                          min={5}
+                          max={1000}
+                          placeholder="XP"
+                          value={editQuest.xp_reward}
+                          onChange={(e) =>
+                            setEditQuest({...editQuest, xp_reward: Number(e.target.value)})
+                          }
+                          className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label htmlFor={`edit-${q.id}-points`} className="block text-xs font-medium text-[var(--text-secondary)]">
+                          EcoPoints
+                        </label>
+                        <input
+                          id={`edit-${q.id}-points`}
+                          type="number"
+                          min={0}
+                          max={1000}
+                          placeholder="EcoPoints"
+                          value={editQuest.eco_points_reward}
+                          onChange={(e) =>
+                            setEditQuest({...editQuest, eco_points_reward: Number(e.target.value)})
+                          }
+                          className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="sm:col-span-2 space-y-1">
+                      <label htmlFor={`edit-${q.id}-description`} className="block text-xs font-medium text-[var(--text-secondary)]">
+                        Short Description
+                      </label>
+                      <textarea
+                        id={`edit-${q.id}-description`}
+                        required
+                        rows={2}
+                        placeholder="Short description..."
+                        value={editQuest.description}
+                        onChange={(e) => setEditQuest({...editQuest, description: e.target.value})}
+                        className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
                       />
                     </div>
-                    <textarea
-                      required
-                      rows={2}
-                      placeholder="Short description..."
-                      value={editQuest.description}
-                      onChange={(e) => setEditQuest({...editQuest, description: e.target.value})}
-                      className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
-                    />
-                    <textarea
-                      required
-                      rows={3}
-                      placeholder="Step-by-step instructions..."
-                      value={editQuest.instructions}
-                      onChange={(e) => setEditQuest({...editQuest, instructions: e.target.value})}
-                      className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
-                    />
-                    <textarea
-                      required
-                      rows={2}
-                      placeholder="Environmental impact explanation..."
-                      value={editQuest.environmental_impact}
-                      onChange={(e) =>
-                        setEditQuest({...editQuest, environmental_impact: e.target.value})
-                      }
-                      className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
-                    />
-                    <textarea
-                      required
-                      rows={2}
-                      placeholder="AI Verification Criteria..."
-                      value={editQuest.verification_criteria}
-                      onChange={(e) =>
-                        setEditQuest({...editQuest, verification_criteria: e.target.value})
-                      }
-                      className="sm:col-span-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm"
-                    />
+                    <div className="sm:col-span-2 space-y-1">
+                      <label htmlFor={`edit-${q.id}-instructions`} className="block text-xs font-medium text-[var(--text-secondary)]">
+                        Step-by-Step Instructions
+                      </label>
+                      <textarea
+                        id={`edit-${q.id}-instructions`}
+                        required
+                        rows={3}
+                        placeholder="Step-by-step instructions..."
+                        value={editQuest.instructions}
+                        onChange={(e) => setEditQuest({...editQuest, instructions: e.target.value})}
+                        className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                      />
+                    </div>
+                    <div className="sm:col-span-2 space-y-1">
+                      <label htmlFor={`edit-${q.id}-impact`} className="block text-xs font-medium text-[var(--text-secondary)]">
+                        Environmental Impact
+                      </label>
+                      <textarea
+                        id={`edit-${q.id}-impact`}
+                        required
+                        rows={2}
+                        placeholder="Environmental impact explanation..."
+                        value={editQuest.environmental_impact}
+                        onChange={(e) =>
+                          setEditQuest({...editQuest, environmental_impact: e.target.value})
+                        }
+                        className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                      />
+                    </div>
+                    <div className="sm:col-span-2 space-y-1">
+                      <label htmlFor={`edit-${q.id}-criteria`} className="block text-xs font-medium text-[var(--text-secondary)]">
+                        AI Verification Criteria
+                      </label>
+                      <textarea
+                        id={`edit-${q.id}-criteria`}
+                        required
+                        rows={2}
+                        placeholder="AI Verification Criteria..."
+                        value={editQuest.verification_criteria}
+                        onChange={(e) =>
+                          setEditQuest({...editQuest, verification_criteria: e.target.value})
+                        }
+                        className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
+                      />
+                    </div>
                     <div className="sm:col-span-2 flex items-center justify-end gap-2">
                       <button
                         type="button"

@@ -43,10 +43,24 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
   const [userNote, setUserNote] = useState('');
   const [uploadStage, setUploadStage] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
-  const [rewardBanner, setRewardBanner] = useState<string | null>(null);
+  const [statusBanner, setStatusBanner] = useState<{
+    tone: 'approved' | 'needs_review' | 'rejected';
+    text: string;
+  } | null>(null);
+  const [confirmDeletePhoto, setConfirmDeletePhoto] = useState(false);
+  const [deletingPhoto, setDeletingPhoto] = useState(false);
 
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const stageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (stageTimerRef.current) {
+        clearTimeout(stageTimerRef.current);
+      }
+    };
+  }, []);
 
   const loadQuest = useCallback(async () => {
     try {
@@ -98,12 +112,17 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
     e.preventDefault();
     if (!quest || !previewDataUrl) return;
     setActionError(null);
-    setRewardBanner(null);
+    setStatusBanner(null);
     setUploadStage('Uploading photo to private storage...');
 
+    if (stageTimerRef.current) {
+      clearTimeout(stageTimerRef.current);
+      stageTimerRef.current = null;
+    }
+
     try {
-      const stageTimer = setTimeout(() => {
-        setUploadStage('Analyzing visible evidence with OpenRouter vision...');
+      stageTimerRef.current = setTimeout(() => {
+        setUploadStage('Analyzing visible evidence with Cloudflare Workers AI...');
       }, 600);
 
       const res = await apiFetch<{
@@ -125,7 +144,6 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
         }),
       });
 
-      clearTimeout(stageTimer);
       onUserSync(res.user, res.levelProgress);
       setPreviewDataUrl(null);
       setUserNote('');
@@ -135,28 +153,47 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
           res.reward.newAchievements.length > 0
             ? ` Unlocked: ${res.reward.newAchievements.join(', ')}.`
             : '';
-        setRewardBanner(
-          `Verified! Earned +${res.reward.xpAwarded} XP and +${res.reward.pointsAwarded} EcoPoints.${achText}`,
-        );
+        setStatusBanner({
+          tone: 'approved',
+          text: `Verified! Earned +${res.reward.xpAwarded} XP and +${res.reward.pointsAwarded} EcoPoints.${achText}`,
+        });
+      } else if (res.reward.submissionStatus === 'needs_review') {
+        setStatusBanner({
+          tone: 'needs_review',
+          text: 'Submitted! Your photo is timestamped and safely queued for human admin review. Your XP, EcoPoints, and UTC streak will be credited once approved.',
+        });
+      } else if (res.reward.submissionStatus === 'rejected') {
+        setStatusBanner({
+          tone: 'rejected',
+          text: 'Verification did not pass. Check the verification criteria and limitations below, then upload a clearer photo.',
+        });
       }
 
       await loadQuest();
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Verification request failed');
     } finally {
+      if (stageTimerRef.current) {
+        clearTimeout(stageTimerRef.current);
+        stageTimerRef.current = null;
+      }
       setUploadStage(null);
     }
   }
 
   async function handleDeleteEvidence(submissionId: string) {
     setActionError(null);
+    setDeletingPhoto(true);
     try {
       await apiFetch(`/api/submissions/${encodeURIComponent(submissionId)}/evidence`, {
         method: 'DELETE',
       });
+      setConfirmDeletePhoto(false);
       await loadQuest();
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Could not delete evidence photo');
+    } finally {
+      setDeletingPhoto(false);
     }
   }
 
@@ -175,7 +212,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           <span>Back to Quests</span>
         </button>
-        <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-400">
+        <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-700 dark:text-rose-400">
           {error || 'Quest not found'}
         </div>
       </div>
@@ -240,7 +277,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
               </div>
               <div>
                 <p className="text-xs text-[var(--text-secondary)]">EcoPoints</p>
-                <p className="font-mono-tabular font-semibold text-emerald-500">
+                <p className="font-mono-tabular font-semibold text-[var(--accent-emerald)]">
                   +{quest.eco_points_reward} pts
                 </p>
               </div>
@@ -277,20 +314,33 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
 
         {/* Action & Evidence Verification Column */}
         <div className="space-y-6 lg:col-span-5">
-          {rewardBanner && (
+          {statusBanner && (
             <div
+              key={`${statusBanner.tone}-${statusBanner.text}`}
               role="status"
-              className="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-300 flex items-start gap-3"
+              className={`eq-animate-banner rounded-2xl border p-4 text-sm flex items-start gap-3 ${
+                statusBanner.tone === 'approved'
+                  ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300'
+                  : statusBanner.tone === 'needs_review'
+                    ? 'border-amber-500/40 bg-amber-500/10 text-amber-900 dark:text-amber-200'
+                    : 'border-rose-500/40 bg-rose-500/10 text-rose-800 dark:text-rose-300'
+              }`}
             >
-              <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-400" aria-hidden="true" />
-              <span>{rewardBanner}</span>
+              {statusBanner.tone === 'approved' ? (
+                <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
+              ) : statusBanner.tone === 'needs_review' ? (
+                <AlertCircle className="h-5 w-5 shrink-0 text-amber-700 dark:text-amber-400" aria-hidden="true" />
+              ) : (
+                <XCircle className="h-5 w-5 shrink-0 text-rose-700 dark:text-rose-400" aria-hidden="true" />
+              )}
+              <span>{statusBanner.text}</span>
             </div>
           )}
 
           {actionError && (
             <div
               role="alert"
-              className="rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-400 flex items-start gap-3"
+              className="eq-animate-banner rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-700 dark:text-rose-400 flex items-start gap-3"
             >
               <XCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
               <span>{actionError}</span>
@@ -305,7 +355,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                   type="button"
                   onClick={handleStartQuest}
                   disabled={starting}
-                  className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-1.5 text-xs font-semibold hover:bg-[var(--bg-surface-elevated)] transition-colors"
+                  className="eq-interactive-btn inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-1.5 text-xs font-semibold hover:bg-[var(--bg-surface-elevated)]"
                 >
                   {starting ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -322,12 +372,12 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                 <p className="text-sm font-semibold">
                   {latest?.status === 'approved'
                     ? 'Quest Completed for This Period'
-                    : 'Submission Awaiting Review'}
+                    : 'Submission Timestamped & Queued for Review'}
                 </p>
                 <p className="text-xs text-[var(--text-secondary)]">
                   {latest?.status === 'approved'
                     ? `Verified for period ${quest.period_key}. Come back on the next reset cycle!`
-                    : 'Your photo is in the admin moderation queue. Rewards are credited once approved.'}
+                    : 'Your photo evidence is saved in the admin moderation queue. Your XP, EcoPoints, and streak will update as soon as a reviewer approves it.'}
                 </p>
               </div>
             ) : (
@@ -361,7 +411,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                     <button
                       type="button"
                       onClick={() => setPreviewDataUrl(null)}
-                      className="text-xs font-medium text-rose-400 hover:underline"
+                      className="text-xs font-medium text-rose-700 dark:text-rose-400 hover:underline"
                     >
                       Remove selected photo
                     </button>
@@ -371,7 +421,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                     <button
                       type="button"
                       onClick={() => cameraInputRef.current?.click()}
-                      className="flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 text-xs font-medium hover:border-lime-500/50 transition-colors"
+                      className="eq-interactive-btn flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 text-xs font-medium hover:border-lime-500/50 hover:bg-[var(--bg-surface-elevated)]/40"
                     >
                       <Camera className="h-5 w-5 text-[var(--accent-primary)]" aria-hidden="true" />
                       <span>Use Camera</span>
@@ -379,9 +429,9 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 text-xs font-medium hover:border-lime-500/50 transition-colors"
+                      className="eq-interactive-btn flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--border-hairline)] bg-[var(--bg-canvas)] p-4 text-xs font-medium hover:border-lime-500/50 hover:bg-[var(--bg-surface-elevated)]/40"
                     >
-                      <Upload className="h-5 w-5 text-emerald-500" aria-hidden="true" />
+                      <Upload className="h-5 w-5 text-[var(--accent-emerald)]" aria-hidden="true" />
                       <span>Choose Image</span>
                     </button>
                   </div>
@@ -398,20 +448,20 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                     value={userNote}
                     onChange={(e) => setUserNote(e.target.value)}
                     placeholder="Briefly describe what the photo shows (e.g., sorted cans and paper)..."
-                    className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+                    className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
                   />
                 </div>
 
                 <div className="flex items-start gap-2 rounded-xl bg-[var(--bg-canvas)] p-3 text-xs text-[var(--text-secondary)]">
                   <Info className="h-4 w-4 shrink-0 text-[var(--accent-primary)] mt-0.5" aria-hidden="true" />
                   <span>
-                    Uploaded photos are stored privately and sent to OpenRouter solely to verify this
-                    quest&apos;s criteria. Do not include faces or sensitive documents.
+                    Uploaded photos are stored privately and sent to Cloudflare Workers AI solely to
+                    verify this quest&apos;s criteria. Do not include faces or sensitive documents.
                   </span>
                 </div>
 
                 {uploadStage && (
-                  <div className="flex items-center gap-2.5 rounded-xl border border-lime-500/30 bg-lime-500/10 px-4 py-3 text-xs font-medium text-lime-300">
+                  <div className="flex items-center gap-2.5 rounded-xl border border-lime-500/30 bg-lime-500/10 px-4 py-3 text-xs font-medium text-lime-800 dark:text-lime-300">
                     <Loader2 className="h-4 w-4 animate-spin shrink-0" aria-hidden="true" />
                     <span>{uploadStage}</span>
                   </div>
@@ -420,7 +470,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                 <button
                   type="submit"
                   disabled={!previewDataUrl || Boolean(uploadStage)}
-                  className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 disabled:opacity-50 transition-opacity"
+                  className="eq-interactive-btn flex w-full min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[var(--accent-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 disabled:opacity-50"
                 >
                   <span>Submit for Verification</span>
                 </button>
@@ -430,7 +480,10 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
 
           {/* Latest Submission Verification Details */}
           {latest && (
-            <div className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4">
+            <div
+              key={latest.id + latest.status}
+              className="eq-animate-card rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4"
+            >
               <div className="flex items-center justify-between gap-2">
                 <h3 className="font-display text-base font-semibold">Submission Result</h3>
                 <StatusIndicator status={latest.status} />
@@ -443,14 +496,38 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
                     alt="Uploaded submission evidence"
                     className="max-h-48 w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] object-contain"
                   />
-                  <button
-                    type="button"
-                    onClick={() => void handleDeleteEvidence(latest.id)}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-400 hover:underline"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>Delete Evidence Photo</span>
-                  </button>
+                  {confirmDeletePhoto ? (
+                    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3">
+                      <span className="text-xs font-medium text-rose-800 dark:text-rose-300 mr-auto">
+                        Delete this photo permanently? Your verification record stays intact.
+                      </span>
+                      <button
+                        type="button"
+                        disabled={deletingPhoto}
+                        onClick={() => void handleDeleteEvidence(latest.id)}
+                        className="min-h-[34px] rounded-lg bg-rose-600 px-3 py-1 text-xs font-semibold text-white hover:bg-rose-500 disabled:opacity-50"
+                      >
+                        {deletingPhoto ? 'Deleting...' : 'Confirm Delete Photo'}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={deletingPhoto}
+                        onClick={() => setConfirmDeletePhoto(false)}
+                        className="min-h-[34px] rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 py-1 text-xs font-medium text-[var(--text-secondary)]"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setConfirmDeletePhoto(true)}
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-700 dark:text-rose-400 hover:underline"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Delete Evidence Photo</span>
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -490,7 +567,7 @@ export function QuestDetailView({slug, onNavigate, onUserSync}: QuestDetailViewP
 
                   {latest.ai_result.limitations.length > 0 && (
                     <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 space-y-1">
-                      <p className="flex items-center gap-1.5 font-semibold text-amber-400">
+                      <p className="flex items-center gap-1.5 font-semibold text-amber-700 dark:text-amber-400">
                         <AlertCircle className="h-3.5 w-3.5" aria-hidden="true" />
                         <span>Verification Limitations</span>
                       </p>

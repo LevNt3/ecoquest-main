@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-26T08:09:30+01:00",
+  "title": "Design System: EcoQuest",
+  "extensions": {
+    "colorMeta": {
+      "canopy-lime": {
+        "role": "primary",
+        "displayName": "Canopy Lime",
+        "canonical": "#84cc16",
+        "tonalRamp": ["#1a2e05", "#2d4f09", "#3f6a0c", "#4d7c0f", "#65a30d", "#84cc16", "#bef264", "#ecfccb"]
+      },
+      "canopy-lime-fg": {
+        "role": "neutral",
+        "displayName": "Deep Canopy Ink",
+        "canonical": "#061109",
+        "tonalRamp": ["#030905", "#061109", "#0c2012", "#15321d", "#264d31", "#447350", "#82ad8d", "#d8ebe0"]
+      },
+      "canopy-lime-light": {
+        "role": "primary",
+        "displayName": "Canopy Lime (Light Theme)",
+        "canonical": "#4d7c0f",
+        "tonalRamp": ["#1a2e05", "#2d4f09", "#3f6a0c", "#4d7c0f", "#65a30d", "#84cc16", "#bef264", "#ecfccb"]
+      },
+      "emerald-verified": {
+        "role": "secondary",
+        "displayName": "Emerald Verified",
+        "canonical": "#10b981",
+        "tonalRamp": ["#022c22", "#064e3b", "#047857", "#059669", "#10b981", "#34d399", "#6ee7b7", "#d1fae5"]
+      },
+      "emerald-verified-light": {
+        "role": "secondary",
+        "displayName": "Emerald Verified (Light Theme)",
+        "canonical": "#059669",
+        "tonalRamp": ["#022c22", "#064e3b", "#047857", "#059669", "#10b981", "#34d399", "#6ee7b7", "#d1fae5"]
+      },
+      "forest-obsidian": {
+        "role": "neutral",
+        "displayName": "Forest Obsidian",
+        "canonical": "#070d0a",
+        "tonalRamp": ["#040806", "#070d0a", "#0e1713", "#14221b", "#20342b", "#3a5649", "#749284", "#d9e6df"]
+      },
+      "pine-surface": {
+        "role": "neutral",
+        "displayName": "Pine Surface",
+        "canonical": "#0e1713",
+        "tonalRamp": ["#040806", "#070d0a", "#0e1713", "#14221b", "#20342b", "#3a5649", "#749284", "#d9e6df"]
+      },
+      "moss-elevated": {
+        "role": "neutral",
+        "displayName": "Moss Elevated",
+        "canonical": "#14221b",
+        "tonalRamp": ["#040806", "#070d0a", "#0e1713", "#14221b", "#20342b", "#3a5649", "#749284", "#d9e6df"]
+      },
+      "mist-text": {
+        "role": "neutral",
+        "displayName": "Mist Text",
+        "canonical": "#f1f7f3",
+        "tonalRamp": ["#0b1611", "#1d2e25", "#35493e", "#4a5d52", "#6c8075", "#92a89c", "#c6d6cd", "#f1f7f3"]
+      },
+      "lichen-muted": {
+        "role": "neutral",
+        "displayName": "Lichen Muted",
+        "canonical": "#92a89c",
+        "tonalRamp": ["#0b1611", "#1d2e25", "#35493e", "#4a5d52", "#6c8075", "#92a89c", "#c6d6cd", "#f1f7f3"]
+      },
+      "sage-canvas": {
+        "role": "neutral",
+        "displayName": "Sage Canvas",
+        "canonical": "#f4f7f5",
+        "tonalRamp": ["#0b1611", "#1d2e25", "#35493e", "#4a5d52", "#75887d", "#afc0b6", "#eaf1ec", "#f4f7f5"]
+      },
+      "sage-surface": {
+        "role": "neutral",
+        "displayName": "Sage Surface",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#0b1611", "#1d2e25", "#35493e", "#4a5d52", "#75887d", "#afc0b6", "#eaf1ec", "#ffffff"]
+      },
+      "sage-elevated": {
+        "role": "neutral",
+        "displayName": "Sage Elevated",
+        "canonical": "#eaf1ec",
+        "tonalRamp": ["#0b1611", "#1d2e25", "#35493e", "#4a5d52", "#75887d", "#afc0b6", "#eaf1ec", "#f4f7f5"]
+      },
+      "ink-obsidian": {
+        "role": "neutral",
+        "displayName": "Ink Obsidian",
+        "canonical": "#0b1611",
+        "tonalRamp": ["#0b1611", "#1d2e25", "#35493e", "#4a5d52", "#75887d", "#afc0b6", "#eaf1ec", "#f4f7f5"]
+      },
+      "slate-moss": {
+        "role": "neutral",
+        "displayName": "Slate Moss",
+        "canonical": "#4a5d52",
+        "tonalRamp": ["#0b1611", "#1d2e25", "#35493e", "#4a5d52", "#75887d", "#afc0b6", "#eaf1ec", "#f4f7f5"]
+      },
+      "amber-review": {
+        "role": "neutral",
+        "displayName": "Amber Review",
+        "canonical": "#fbbf24",
+        "tonalRamp": ["#451a03", "#78350f", "#92400e", "#b45309", "#d97706", "#f59e0b", "#fbbf24", "#fef3c7"]
+      },
+      "rose-rejected": {
+        "role": "neutral",
+        "displayName": "Rose Rejected",
+        "canonical": "#fb7185",
+        "tonalRamp": ["#4c0519", "#881337", "#9f1239", "#be123c", "#e11d48", "#f43f5e", "#fb7185", "#ffe4e6"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display (Plus Jakarta Sans)", "purpose": "Landing hero headline and major marketing statements." },
+      "headline": { "displayName": "Headline (Plus Jakarta Sans)", "purpose": "Authenticated view titles and section headers." },
+      "title": { "displayName": "Title (Plus Jakarta Sans)", "purpose": "Quest cards, review items, and panel titles." },
+      "body": { "displayName": "Body (DM Sans)", "purpose": "Quest instructions, descriptions, and privacy copy." },
+      "label": { "displayName": "Telemetry & Labels (JetBrains Mono)", "purpose": "XP, EcoPoints, streaks, confidence percentages, and inline metadata." }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "opacity-hover",
+        "value": "150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Subtle opacity and background-color state transitions on buttons and nav links (disabled under prefers-reduced-motion)."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary action CTA used for quest submission, publishing, and onboarding.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\"><span>Submit a Quest</span><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 20px; border-radius: 12px; border: none; background: var(--accent-primary, #84cc16); color: var(--accent-primary-fg, #061109); font-family: var(--font-body, 'DM Sans', sans-serif); font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.15s ease; } .ds-btn-primary:hover { opacity: 0.9; } .ds-btn-primary:focus-visible { outline: 2px solid #84cc16; outline-offset: 3px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Secondary hairline-bordered action for Sign In, Cancel, and inline Edit controls.",
+      "html": "<button class=\"ds-btn-secondary\" type=\"button\">Sign In</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border-hairline, rgba(163, 230, 53, 0.12)); background: var(--bg-surface, #0e1713); color: var(--text-primary, #f1f7f3); font-family: var(--font-body, 'DM Sans', sans-serif); font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color 0.15s ease; } .ds-btn-secondary:hover { background: var(--bg-surface-elevated, #14221b); } .ds-btn-secondary:focus-visible { outline: 2px solid #84cc16; outline-offset: 3px; }"
+    },
+    {
+      "name": "Surface Card",
+      "kind": "card",
+      "refersTo": "card-surface",
+      "description": "Flat, hairline-bordered container for KPI telemetry, quests, and review items.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-meta\"><span>Level Progression</span><span class=\"ds-mono\">Level 3</span></div><div class=\"ds-card-kpi\"><span class=\"ds-kpi-val\">250 XP</span><span class=\"ds-kpi-sub\">0 / 200 to Lvl 4</span></div><div class=\"ds-progress-track\"><div class=\"ds-progress-fill\" style=\"width: 45%\"></div></div></div>",
+      "css": ".ds-card { border-radius: 16px; border: 1px solid var(--border-hairline, rgba(163, 230, 53, 0.12)); background: var(--bg-surface, #0e1713); color: var(--text-primary, #f1f7f3); padding: 20px; display: flex; flex-direction: column; gap: 12px; } .ds-card-meta { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--text-secondary, #92a89c); } .ds-mono { font-family: var(--font-mono, 'JetBrains Mono', monospace); font-variant-numeric: tabular-nums; font-weight: 600; color: var(--accent-primary, #84cc16); } .ds-card-kpi { display: flex; align-items: baseline; justify-content: space-between; } .ds-kpi-val { font-family: var(--font-mono, 'JetBrains Mono', monospace); font-variant-numeric: tabular-nums; font-size: 24px; font-weight: 700; } .ds-kpi-sub { font-family: var(--font-mono, 'JetBrains Mono', monospace); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--text-secondary, #92a89c); } .ds-progress-track { height: 8px; width: 100%; border-radius: 9999px; background: var(--bg-surface-elevated, #14221b); overflow: hidden; } .ds-progress-fill { height: 100%; border-radius: 9999px; background: var(--accent-primary, #84cc16); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Recessed canvas input field used in auth, quest search, and admin forms.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Search quests or categories...\" />",
+      "css": ".ds-input { width: 100%; min-height: 42px; padding: 8px 14px; border-radius: 12px; border: 1px solid var(--border-hairline, rgba(163, 230, 53, 0.12)); background: var(--bg-canvas, #070d0a); color: var(--text-primary, #f1f7f3); font-family: var(--font-body, 'DM Sans', sans-serif); font-size: 14px; } .ds-input::placeholder { color: var(--text-secondary, #92a89c); } .ds-input:focus-visible { outline: 2px solid #84cc16; outline-offset: 2px; }"
+    },
+    {
+      "name": "Status Indicator",
+      "kind": "chip",
+      "description": "Inline icon-plus-text semantic indicator used for quest and submission states.",
+      "html": "<span class=\"ds-status-approved\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m9 12 2 2 4-4\"/></svg><span>Approved</span></span>",
+      "css": ".ds-status-approved { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-body, 'DM Sans', sans-serif); font-size: 12px; font-weight: 500; color: var(--accent-emerald, #10b981); white-space: nowrap; }"
+    },
+    {
+      "name": "Sidebar Navigation Item",
+      "kind": "nav",
+      "description": "Active desktop sidebar navigation link with Moss Elevated highlight.",
+      "html": "<button class=\"ds-nav-item ds-nav-active\" type=\"button\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\"/><rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\"/><rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\"/><rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\"/></svg><span>Dashboard</span></button>",
+      "css": ".ds-nav-item { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 10px 14px; border-radius: 12px; border: none; background: transparent; color: var(--text-secondary, #92a89c); font-family: var(--font-body, 'DM Sans', sans-serif); font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 0.15s ease, color 0.15s ease; } .ds-nav-item:hover { background: var(--bg-surface-elevated, #14221b); color: var(--text-primary, #f1f7f3); } .ds-nav-active { background: var(--bg-surface-elevated, #14221b); color: var(--accent-primary, #84cc16); font-weight: 600; } .ds-nav-item:focus-visible { outline: 2px solid #84cc16; outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Journal",
+    "overview": "EcoQuest is a calm, grounded, evidence-led sustainability ledger. Rather than leaning on loud gamification or glossy gradients, the interface treats real-world eco-actions like field entries: dark nocturnal surfaces recede behind crisp botanical lime actions, tabular XP/EcoPoints telemetry, and unboxed metadata.\n\nThe system defaults to a dark-first Forest Obsidian mode and pairs seamlessly with a Light Sage toggle via CSS custom properties. Surfaces rely on quiet tonal stepping and subtle hairline borders rather than drop shadows, keeping photo evidence, verification criteria, and daily quest progress immediately scannable on both mobile thumb-zones and desktop workstations.",
+    "keyCharacteristics": [
+      "Dark-first nocturnal canvas with a Light Sage theme parity toggle",
+      "High-contrast botanical lime primary actions paired with emerald verification states",
+      "Flat tonal layering with hairline borders instead of drop shadows",
+      "Tabular monospace numerals for all XP, EcoPoints, streaks, and confidence scores",
+      "Icon-plus-text semantic status indicators that never rely on color alone"
+    ],
+    "rules": [
+      {
+        "name": "The Rare Lime Rule",
+        "body": "Canopy Lime is reserved for primary actions, active navigation/tab states, and key progress markers; never flood card backgrounds or body copy with it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Semantic Clarity Rule",
+        "body": "Verification statuses (`approved`, `needs_review`, `rejected`, `in_progress`, `pending`) always pair a distinct Lucide icon with explicit text and semantic tint.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Telemetry Rule",
+        "body": "Every numeric progression value (XP, level progress, EcoPoints, UTC streak days, AI confidence %) uses `JetBrains Mono` with `font-variant-numeric: tabular-nums` so numbers never jitter when updated.",
+        "section": "typography"
+      },
+      {
+        "name": "The Zero-Shadow Rule",
+        "body": "Never add `box-shadow` elevation to cards, buttons, or nav bars; convey containment with `1px` hairline borders and tonal surface steps.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use CSS custom properties (`--bg-canvas`, `--bg-surface`, `--accent-primary`) so Dark Forest and Light Sage themes stay in lockstep.",
+      "Do pair every status color with a Lucide icon and explicit text label.",
+      "Do format all XP, EcoPoints, streak counts, and confidence scores with `JetBrains Mono` and `tabular-nums`.",
+      "Do keep quest metadata inline and unboxed (`Category · Difficulty · Duration`)."
+    ],
+    "donts": [
+      "Don't add drop shadows (`box-shadow`) to cards or buttons; preserve flat tonal layering.",
+      "Don't wrap every metadata tag in nested pill badges inside cards.",
+      "Don't use Canopy Lime for large background fills or long-form body text.",
+      "Don't disable or override `prefers-reduced-motion` safeguards."
+    ]
+  }
+}

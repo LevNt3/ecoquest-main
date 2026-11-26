@@ -72,7 +72,7 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
         {serverError && (
           <div
             role="alert"
-            className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-400"
+            className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-400"
           >
             {serverError}
           </div>
@@ -89,11 +89,11 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
                 type="email"
                 autoComplete="email"
                 {...loginForm.register('email')}
-                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
                 placeholder="alex@university.edu"
               />
               {loginForm.formState.errors.email && (
-                <p className="text-xs text-rose-400">{loginForm.formState.errors.email.message}</p>
+                <p className="text-xs text-rose-700 dark:text-rose-400">{loginForm.formState.errors.email.message}</p>
               )}
             </div>
 
@@ -106,11 +106,11 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
                 type="password"
                 autoComplete="current-password"
                 {...loginForm.register('password')}
-                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
                 placeholder="••••••••"
               />
               {loginForm.formState.errors.password && (
-                <p className="text-xs text-rose-400">{loginForm.formState.errors.password.message}</p>
+                <p className="text-xs text-rose-700 dark:text-rose-400">{loginForm.formState.errors.password.message}</p>
               )}
             </div>
 
@@ -134,11 +134,11 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
                 type="text"
                 autoComplete="username"
                 {...signupForm.register('username')}
-                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
                 placeholder="eco_explorer"
               />
               {signupForm.formState.errors.username && (
-                <p className="text-xs text-rose-400">{signupForm.formState.errors.username.message}</p>
+                <p className="text-xs text-rose-700 dark:text-rose-400">{signupForm.formState.errors.username.message}</p>
               )}
             </div>
 
@@ -151,11 +151,11 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
                 type="email"
                 autoComplete="email"
                 {...signupForm.register('email')}
-                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
                 placeholder="alex@university.edu"
               />
               {signupForm.formState.errors.email && (
-                <p className="text-xs text-rose-400">{signupForm.formState.errors.email.message}</p>
+                <p className="text-xs text-rose-700 dark:text-rose-400">{signupForm.formState.errors.email.message}</p>
               )}
             </div>
 
@@ -168,11 +168,11 @@ export function AuthView({mode, onSuccess, onNavigate}: AuthViewProps) {
                 type="password"
                 autoComplete="new-password"
                 {...signupForm.register('password')}
-                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+                className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3.5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
                 placeholder="••••••••"
               />
               {signupForm.formState.errors.password && (
-                <p className="text-xs text-rose-400">{signupForm.formState.errors.password.message}</p>
+                <p className="text-xs text-rose-700 dark:text-rose-400">{signupForm.formState.errors.password.message}</p>
               )}
             </div>
 

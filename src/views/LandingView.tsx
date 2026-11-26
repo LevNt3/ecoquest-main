@@ -63,25 +63,25 @@ export function LandingView({isAuthenticated, onNavigate}: LandingViewProps) {
                 <button
                   type="button"
                   onClick={() => onNavigate('dashboard')}
-                  className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-6 py-3 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 transition-opacity"
+                  className="group eq-interactive-btn inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-6 py-3 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90"
                 >
                   <span>Go to Dashboard</span>
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
                 </button>
               ) : (
                 <>
                   <button
                     type="button"
                     onClick={() => onNavigate('signup')}
-                    className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-6 py-3 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90 transition-opacity"
+                    className="group eq-interactive-btn inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[var(--accent-primary)] px-6 py-3 text-sm font-semibold text-[var(--accent-primary-fg)] hover:opacity-90"
                   >
                     <span>Start Your First Quest</span>
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
                   </button>
                   <button
                     type="button"
                     onClick={() => onNavigate('login')}
-                    className="inline-flex min-h-[44px] items-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-5 py-3 text-sm font-semibold hover:bg-[var(--bg-surface-elevated)] transition-colors"
+                    className="eq-interactive-btn inline-flex min-h-[44px] items-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-5 py-3 text-sm font-semibold hover:bg-[var(--bg-surface-elevated)]"
                   >
                     Sign In
                   </button>
@@ -139,7 +139,7 @@ export function LandingView({isAuthenticated, onNavigate}: LandingViewProps) {
             {
               step: '03. Earn XP & Streaks',
               icon: ShieldCheck,
-              copy: 'OpenRouter vision evaluates only visible evidence. Ambiguous submissions queue safely for human admin review.',
+              copy: 'Cloudflare Workers AI evaluates only visible evidence. Ambiguous submissions queue safely for human admin review.',
             },
           ].map((item) => {
             const Icon = item.icon;
@@ -178,10 +178,11 @@ export function LandingView({isAuthenticated, onNavigate}: LandingViewProps) {
         </div>
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {SAMPLE_QUESTS.map((quest) => (
+          {SAMPLE_QUESTS.map((quest, idx) => (
             <article
               key={quest.slug}
-              className="flex flex-col overflow-hidden rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)]"
+              style={{'--eq-delay': `${idx * 90}ms`} as React.CSSProperties}
+              className="eq-animate-card flex flex-col overflow-hidden rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
             >
               <div className="aspect-[4/3] w-full overflow-hidden bg-[var(--bg-surface-elevated)]">
                 {quest.image ? (
@@ -235,11 +236,11 @@ export function LandingView({isAuthenticated, onNavigate}: LandingViewProps) {
               </p>
               <div className="flex items-center gap-6 pt-2 text-sm">
                 <span className="inline-flex items-center gap-1.5">
-                  <Flame className="h-4 w-4 text-amber-500" aria-hidden="true" />
+                  <Flame className="h-4 w-4 text-amber-700 dark:text-amber-500" aria-hidden="true" />
                   <span>UTC Streaks + 1-Day Grace</span>
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <Award className="h-4 w-4 text-emerald-500" aria-hidden="true" />
+                  <Award className="h-4 w-4 text-[var(--accent-emerald)]" aria-hidden="true" />
                   <span>8 Unlockable Milestones</span>
                 </span>
               </div>
@@ -289,16 +290,16 @@ export function LandingView({isAuthenticated, onNavigate}: LandingViewProps) {
           </div>
           <div className="lg:col-span-4 flex flex-col gap-2 text-sm text-[var(--text-secondary)]">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" aria-hidden="true" />
+              <CheckCircle2 className="h-4 w-4 text-[var(--accent-emerald)] shrink-0" aria-hidden="true" />
               <span>Private evidence storage with instant delete</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" aria-hidden="true" />
+              <CheckCircle2 className="h-4 w-4 text-[var(--accent-emerald)] shrink-0" aria-hidden="true" />
               <span>Zero purchase requirements</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" aria-hidden="true" />
-              <span>Server-verified rewards & transparent AI limits</span>
+              <CheckCircle2 className="h-4 w-4 text-[var(--accent-emerald)] shrink-0" aria-hidden="true" />
+              <span>Server-verified rewards &amp; transparent AI limits</span>
             </div>
           </div>
         </div>

@@ -96,7 +96,6 @@ export const UpdateProfileSchema = z.object({
     .max(24)
     .regex(/^[a-zA-Z0-9_-]+$/, 'Username may contain letters, numbers, _ and -')
     .optional(),
-  avatar_url: z.string().max(300).nullable().optional(),
   theme_preference: z.enum(['dark', 'light']).optional(),
 });
 
@@ -119,7 +118,6 @@ export interface UserProfile {
   id: string;
   email: string;
   username: string;
-  avatar_url: string | null;
   role: UserRole;
   xp: number;
   level: number;

@@ -81,7 +81,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search quests (e.g., water, digital, commute)..."
               aria-label="Search quests"
-              className="w-full min-h-[42px] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+              className="w-full min-h-[42px] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] pl-10 pr-4 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
             />
           </div>
 
@@ -90,7 +90,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               aria-label="Filter by category"
-              className="w-full min-h-[42px] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+              className="w-full min-h-[42px] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
             >
               <option value="all">All Categories</option>
               {QUEST_CATEGORIES.map((cat) => (
@@ -106,7 +106,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value)}
               aria-label="Filter by difficulty"
-              className="w-full min-h-[42px] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+              className="w-full min-h-[42px] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-canvas)] px-3 text-sm focus-visible:ring-2 focus-visible:ring-lime-500"
             >
               <option value="all">All Difficulties</option>
               {QUEST_DIFFICULTIES.map((diff) => (
@@ -128,7 +128,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
               key={tab.id}
               type="button"
               onClick={() => setQuestType(tab.id)}
-              className={`min-h-[38px] rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0 ${
+              className={`eq-interactive-btn min-h-[38px] rounded-lg px-3.5 py-1.5 text-xs font-medium whitespace-nowrap shrink-0 ${
                 questType === tab.id
                   ? 'bg-[var(--accent-primary)] text-[var(--accent-primary-fg)]'
                   : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
@@ -148,7 +148,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
           ))}
         </div>
       ) : error ? (
-        <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-400">
+        <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-700 dark:text-rose-400">
           {error}
         </div>
       ) : filteredQuests.length === 0 ? (
@@ -170,12 +170,13 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
         </div>
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredQuests.map((quest) => (
+          {filteredQuests.map((quest, idx) => (
             <button
               key={quest.id}
               type="button"
+              style={{'--eq-delay': `${Math.min(idx, 8) * 85}ms`} as React.CSSProperties}
               onClick={() => onNavigate('quest-detail', quest.slug)}
-              className="group flex flex-col justify-between rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 text-left hover:border-lime-500/40 hover:bg-[var(--bg-surface-elevated)]/40 transition-colors"
+              className="eq-animate-card group flex flex-col justify-between rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 text-left transition-[transform,border-color,background-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60 hover:bg-[var(--bg-surface-elevated)]/45 active:scale-95"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
@@ -207,7 +208,10 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
                 <span className="inline-flex items-center gap-1 text-[var(--text-secondary)]">
                   <Camera className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Photo</span>
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  <ArrowRight
+                    className="h-3.5 w-3.5 transition-transform duration-150 group-hover:translate-x-1 group-hover:text-[var(--accent-primary)]"
+                    aria-hidden="true"
+                  />
                 </span>
               </div>
             </button>

@@ -111,6 +111,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
       <div className="grid gap-4 sm:grid-cols-3">
         <button
           type="button"
+          data-spotlight
           onClick={() => onNavigate('profile')}
           aria-label="Szintfejlődés részletei: profil és jelvények megnyitása"
           style={{'--eq-delay': '0ms'} as React.CSSProperties}
@@ -152,6 +153,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
 
         <button
           type="button"
+          data-spotlight
           onClick={() => onNavigate('shop')}
           aria-label="EcoPoints egyenleg: jutalombolt megnyitása"
           style={{'--eq-delay': '90ms'} as React.CSSProperties}
@@ -178,6 +180,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
 
         <button
           type="button"
+          data-spotlight
           onClick={() => onNavigate('quests')}
           aria-label="Napi sorozat: napi küldetések megnyitása"
           style={{'--eq-delay': '180ms'} as React.CSSProperties}
@@ -223,6 +226,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
               <button
                 key={quest.id}
                 type="button"
+                data-spotlight
                 style={{'--eq-delay': `${idx * 80}ms`} as React.CSSProperties}
                 onClick={() => onNavigate('quest-detail', quest.slug)}
                 className="eq-animate-card group flex w-full items-center justify-between gap-4 px-5 py-4 text-left hover:bg-[var(--bg-surface-elevated)]/70 transition-[transform,background-color] duration-200 active:scale-[0.98] first:rounded-t-2xl last:rounded-b-2xl"

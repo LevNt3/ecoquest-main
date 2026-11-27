@@ -1,8 +1,10 @@
-import {Award, CheckCircle2, Flame, Loader2, Trash2, Trophy} from 'lucide-react';
+import {Award, CheckCircle2, Flame, Loader2, Lock, Trash2, Trophy} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 import type {AppRoute} from '../components/AppShell';
 import {StatusIndicator} from '../components/StatusBadge';
 import {apiFetch} from '../lib/api';
+import {getLevelTier, LEVEL_TIERS} from '../lib/levels';
+import {xpRequiredForLevel, xpToNextLevel} from '../shared/levels';
 import type {
   AchievementItem,
   LevelProgress,
@@ -103,6 +105,7 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
   }
 
   const {user, levelProgress, completedCount, submissions, transactions, achievements} = data;
+  const currentTier = getLevelTier(levelProgress.level);
 
   return (
     <div className="space-y-8">
@@ -122,7 +125,7 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
                 {user.email} · Szerepkör: {user.role === 'admin' ? 'Adminisztrátor' : 'Felhasználó'}
               </p>
               <p className="mt-1 font-mono-tabular text-xs font-semibold text-[var(--accent-primary)]">
-                {levelProgress.level}. szint · {user.xp} XP · {user.eco_points} EcoPoints
+                {levelProgress.level}. szint{currentTier ? ` · ${currentTier.name}` : ''} · {user.xp} XP · {user.eco_points} EcoPoints
               </p>
             </div>
           </div>
@@ -151,6 +154,113 @@ export function ProfileView({onNavigate, onUserSync}: ProfileViewProps) {
           </div>
         </div>
       </div>
+
+      {/* Level ladder */}
+      <section
+        aria-labelledby="levels-heading"
+        className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4"
+      >
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="space-y-1">
+            <h2 id="levels-heading" className="font-display text-lg font-semibold">
+              Szintlépcső
+            </h2>
+            <p className="text-xs text-[var(--text-secondary)]">
+              Haladj a csírától a természetőrig — minden szint új környezetvédelmi rangot nyit meg.
+            </p>
+          </div>
+          <span className="font-mono-tabular text-xs font-semibold text-[var(--accent-primary)]">
+            {Math.min(levelProgress.level, LEVEL_TIERS.length)} / {LEVEL_TIERS.length} feloldva
+          </span>
+        </div>
+
+        <ol
+          aria-label="Szintek és a következő szinthez szükséges XP"
+          className="eq-scroll-x flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
+        >
+          {LEVEL_TIERS.map((tier) => {
+            const Icon = tier.icon;
+            const unlocked = tier.level <= levelProgress.level;
+            const isCurrent = tier.level === levelProgress.level;
+            const isMaxTier = tier.level === LEVEL_TIERS.length;
+            const xpForNext = xpToNextLevel(tier.level);
+            const remainingXp = Math.max(0, xpRequiredForLevel(tier.level + 1) - user.xp);
+
+            return (
+              <li key={tier.level} className="w-40 shrink-0 snap-start">
+                <div
+                  className={`flex h-full flex-col gap-3 rounded-2xl border p-4 transition-[transform,border-color] duration-200 hover:-translate-y-0.5 ${
+                    isCurrent
+                      ? 'border-lime-500/60 bg-lime-500/10'
+                      : unlocked
+                        ? 'border-emerald-500/30 bg-emerald-500/5'
+                        : 'border-[var(--border-hairline)] bg-[var(--bg-canvas)]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-mono-tabular text-[11px] font-semibold text-[var(--text-secondary)]">
+                      {tier.level}. szint
+                    </span>
+                    {isCurrent && (
+                      <span className="rounded-full bg-[var(--accent-primary)] px-2 py-0.5 text-[10px] font-semibold text-[var(--accent-primary-fg)]">
+                        Jelenlegi
+                      </span>
+                    )}
+                  </div>
+
+                  <div
+                    className={`flex h-11 w-11 items-center justify-center rounded-xl border ${
+                      unlocked
+                        ? 'border-emerald-500/40 bg-emerald-500/10 text-[var(--accent-emerald)]'
+                        : 'border-[var(--border-hairline)] bg-[var(--bg-surface-elevated)] text-[var(--text-secondary)]'
+                    }`}
+                  >
+                    {unlocked ? (
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    ) : (
+                      <Lock className="h-5 w-5" aria-hidden="true" />
+                    )}
+                  </div>
+
+                  <div className="space-y-1">
+                    <p
+                      className={`font-display text-sm font-semibold ${
+                        unlocked ? '' : 'text-[var(--text-secondary)]'
+                      }`}
+                    >
+                      {!unlocked && <span className="sr-only">Zárolt szint: </span>}
+                      {tier.name}
+                    </p>
+                    <p className="font-mono-tabular text-[11px] leading-snug text-[var(--text-secondary)]">
+                      {isMaxTier
+                        ? 'Legmagasabb szint'
+                        : `${xpForNext} XP a ${tier.level + 1}. szintig`}
+                    </p>
+                    {isCurrent && !isMaxTier && (
+                      <p className="font-mono-tabular text-[11px] font-semibold text-[var(--accent-primary)]">
+                        Még {remainingXp} XP
+                      </p>
+                    )}
+                  </div>
+
+                  {isCurrent && !isMaxTier && (
+                    <div className="mt-auto h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg-surface-elevated)]">
+                      <div
+                        className="h-full rounded-full bg-[var(--accent-primary)]"
+                        style={{width: `${Math.max(0, Math.min(100, levelProgress.progressPercent))}%`}}
+                      />
+                    </div>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+
+        <p className="text-[11px] text-[var(--text-secondary)]">
+          A zárolt szintek ikonjai lakatot mutatnak, amíg el nem éred a szükséges XP-t.
+        </p>
+      </section>
 
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Edit Profile */}

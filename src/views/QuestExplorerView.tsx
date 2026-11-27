@@ -179,6 +179,7 @@ export function QuestExplorerView({onNavigate}: QuestExplorerViewProps) {
             <button
               key={quest.id}
               type="button"
+              data-spotlight
               style={{'--eq-delay': `${Math.min(idx, 8) * 85}ms`} as React.CSSProperties}
               onClick={() => onNavigate('quest-detail', quest.slug)}
               className="eq-animate-card group flex flex-col justify-between rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 text-left transition-[transform,border-color,background-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60 hover:bg-[var(--bg-surface-elevated)]/45 active:scale-95"

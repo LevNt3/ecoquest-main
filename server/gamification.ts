@@ -1,4 +1,7 @@
 import type {QuestType} from '../src/shared/types.ts';
+import {xpRequiredForLevel} from '../src/shared/levels.ts';
+
+export {xpRequiredForLevel};
 
 /**
  * Configurable level curve:
@@ -14,10 +17,6 @@ import type {QuestType} from '../src/shared/types.ts';
  *   L=4 -> 25 * 3 * 6 = 450
  *   L=5 -> 25 * 4 * 7 = 700
  */
-export function xpRequiredForLevel(level: number): number {
-  if (level <= 1) return 0;
-  return 25 * (level - 1) * (level + 2);
-}
 
 export function calculateLevelFromXp(xp: number): number {
   const safeXp = Math.max(0, Math.floor(xp));

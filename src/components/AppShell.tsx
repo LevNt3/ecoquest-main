@@ -37,7 +37,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
 
   if (isPublic) {
     return (
-      <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)]">
+      <div className="min-h-screen bg-transparent text-[var(--text-primary)]">
         {/* Strict 3-zone Top Bar Contract */}
         <header className="sticky top-0 z-30 border-b border-[var(--border-hairline)] bg-[var(--bg-canvas)]/90 backdrop-blur-md">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-8 px-4 py-3.5 sm:px-6">
@@ -145,7 +145,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
   const activeNavId: AppRoute = route === 'quest-detail' ? 'quests' : route;
 
   return (
-    <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] lg:flex">
+    <div className="min-h-screen bg-transparent text-[var(--text-primary)] lg:flex">
       {/* Desktop Left Sidebar */}
       <aside className="hidden lg:flex lg:w-60 lg:flex-col lg:fixed lg:inset-y-0 border-r border-[var(--border-hairline)] bg-[var(--bg-surface)]">
         <div className="flex items-center gap-2.5 px-6 py-5 border-b border-[var(--border-hairline)]">
@@ -168,6 +168,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
                 key={item.id}
                 type="button"
                 aria-current={isActive ? 'page' : undefined}
+                data-spotlight
                 onClick={() => onNavigate(item.id)}
                 className={`group eq-interactive-btn flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium whitespace-nowrap ${
                   isActive
@@ -272,6 +273,7 @@ export function AppShell({route, user, onNavigate, onLogout, children}: AppShell
               key={item.id}
               type="button"
               aria-current={isActive ? 'page' : undefined}
+              data-spotlight
               onClick={() => onNavigate(item.id)}
               className={`eq-interactive-btn flex flex-col items-center justify-center min-h-[44px] ${
                 isActive ? 'text-[var(--accent-primary)]' : 'text-[var(--text-secondary)]'

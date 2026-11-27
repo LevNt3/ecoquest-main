@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {AppShell, type AppRoute} from './components/AppShell';
 import {apiFetch} from './lib/api';
+import {usePointerSpotlight} from './lib/usePointerSpotlight';
 import type {LevelProgress, UserProfile} from './shared/types';
 import {AdminView} from './views/AdminView';
 import {AuthView} from './views/AuthView';
@@ -50,6 +51,7 @@ function formatHashRoute(route: AppRoute, slug?: string): string {
 }
 
 export default function App() {
+  usePointerSpotlight();
   const initialHash = parseHashRoute();
   const [user, setUser] = useState<UserProfile | null>(null);
   const userRef = useRef<UserProfile | null>(null);

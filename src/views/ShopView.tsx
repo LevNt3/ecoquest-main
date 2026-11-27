@@ -134,6 +134,7 @@ export function ShopView({user}: ShopViewProps) {
           return (
             <div
               key={item.id}
+              data-spotlight
               style={{'--eq-delay': `${PLACEHOLDER_REWARDS.indexOf(item) * 85}ms`} as React.CSSProperties}
               className="eq-animate-card flex flex-col justify-between rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 space-y-4 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-lime-500/60"
             >

@@ -98,7 +98,7 @@ The system defaults to a dark-first Forest Obsidian mode and pairs seamlessly wi
 **Key Characteristics:**
 - Dark-first nocturnal canvas with a Light Sage theme parity toggle
 - High-contrast botanical lime primary actions paired with emerald verification states
-- Flat tonal layering with hairline borders instead of drop shadows
+- Translucent liquid-glass surfaces floating over a fixed botanical aurora, still with zero drop shadows
 - Tabular monospace numerals for all XP, EcoPoints, streaks, and confidence scores
 - Icon-plus-text semantic status indicators that never rely on color alone
 
@@ -154,6 +154,19 @@ EcoQuest is a **flat, tonally layered** system with **zero drop shadows**. Depth
 
 ### Named Rules
 **The Zero-Shadow Rule.** Never add `box-shadow` elevation to cards, buttons, or nav bars; convey containment with `1px` hairline borders and tonal surface steps.
+
+### Liquid Glass Layer
+
+Every surface that uses the `--bg-surface` token automatically receives a translucent **liquid glass** material, inspired by iOS Liquid Glass:
+
+- **Ambient aurora:** the page canvas paints three fixed radial gradients (`--aurora-lime`, `--aurora-emerald`, `--aurora-teal`) so the glass has color to refract while scrolling.
+- **Material:** `--bg-surface` is a semi-transparent tint (`rgba(255, 255, 255, 0.58)` in Light Sage, `rgba(18, 30, 24, 0.55)` in Dark Forest) with `backdrop-filter: blur(18px) saturate(165%)`.
+- **Specular rim:** a masked `1px` gradient ring (`::before`) traces a bright top-left highlight that fades toward the bottom-right, imitating a lit glass edge.
+- **Sheen:** a diagonal low-alpha white gradient adds the characteristic curved-glass reflection.
+- **Zero shadows preserved:** depth still comes from translucency, blur, and the specular rim — never `box-shadow`.
+- **Fallback:** browsers without `backdrop-filter` receive a near-opaque surface tint so text contrast never drops.
+
+The material is scoped by the `bg-[var(--bg-surface)]` attribute selector, so cards, the sidebar, modals, and panels stay in lockstep across both themes without per-component classes.
 
 ## Shapes
 

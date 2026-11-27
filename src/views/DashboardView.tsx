@@ -254,7 +254,7 @@ export function DashboardView({onNavigate, onUserSync}: DashboardViewProps) {
         <div className="space-y-6 lg:col-span-5">
           <section className="rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-base font-semibold">Heti UTC aktivitás</h2>
+              <h2 className="font-display text-base font-semibold">Heti aktivitás</h2>
               <span className="font-mono-tabular text-xs text-[var(--text-secondary)]">
                 Elmúlt 7 nap
               </span>

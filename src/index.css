@@ -27,6 +27,7 @@
 
   /* Cursor spotlight on interactive surfaces */
   --spotlight-color: rgba(132, 204, 22, 0.3);
+  --spotlight-core: rgba(255, 255, 255, 0.5);
 
   --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-body: "DM Sans", system-ui, sans-serif;
@@ -54,6 +55,7 @@
   --aurora-teal: rgba(45, 212, 191, 0.08);
 
   --spotlight-color: rgba(132, 204, 22, 0.22);
+  --spotlight-core: rgba(255, 255, 255, 0.1);
 }
 
 @layer base {
@@ -142,33 +144,117 @@
   }
 }
 
-/* Cursor spotlight: a themed radial highlight that follows the pointer. */
+/* Cursor spotlight: a themed radial highlight that follows the pointer.
+   Applied to every card, interactive control and glass surface. */
 @layer components {
   @media (hover: hover) and (pointer: fine) {
-    [data-spotlight] {
+    :is(
+      [data-spotlight],
+      .eq-animate-card,
+      .eq-interactive-btn,
+      [class*="bg-[var(--bg-surface)]"]
+    ) {
       position: relative;
       isolation: isolate;
     }
 
-    [data-spotlight]::after {
+    :is(
+      [data-spotlight],
+      .eq-animate-card,
+      .eq-interactive-btn,
+      [class*="bg-[var(--bg-surface)]"]
+    )::after {
       content: "";
       position: absolute;
       inset: 0;
       z-index: -1;
       border-radius: inherit;
-      background: radial-gradient(
-        170px circle at var(--eq-pointer-x, 50%) var(--eq-pointer-y, 50%),
-        var(--spotlight-color),
-        transparent 68%
-      );
+      background:
+        radial-gradient(
+          circle calc(var(--eq-spotlight-size, 170px) * 0.55) at
+            var(--eq-pointer-x, 50%) var(--eq-pointer-y, 50%),
+          var(--spotlight-core),
+          transparent 72%
+        ),
+        radial-gradient(
+          circle var(--eq-spotlight-size, 170px) at
+            var(--eq-pointer-x, 50%) var(--eq-pointer-y, 50%),
+          var(--spotlight-color),
+          transparent 70%
+        );
       opacity: 0;
-      transition: opacity 180ms ease;
+      transform: scale(0.9);
+      transition:
+        opacity 220ms ease,
+        transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
       pointer-events: none;
+      will-change: opacity, transform;
     }
 
-    [data-spotlight]:hover::after {
+    /* Only the deepest hovered surface glows: `usePointerSpotlight` marks that
+       single element with `.eq-spotlight-on`. Hover alone is not enough because
+       nested surfaces (e.g. quest rows inside a glass list panel) would all
+       light up, leaving a stale highlight frozen where the pointer entered. */
+    .eq-spotlight-on::after {
       opacity: 1;
+      transform: scale(1);
     }
+  }
+
+  /* Touch: a soft, theme-coloured wave blooms from the touch point. */
+  .eq-ripple-host {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .eq-ripple {
+    position: absolute;
+    z-index: -1;
+    left: var(--eq-ripple-x, 50%);
+    top: var(--eq-ripple-y, 50%);
+    width: var(--eq-ripple-size, 240px);
+    height: var(--eq-ripple-size, 240px);
+    margin-left: calc(var(--eq-ripple-size, 240px) / -2);
+    margin-top: calc(var(--eq-ripple-size, 240px) / -2);
+    border-radius: 9999px;
+    background:
+      radial-gradient(circle, var(--spotlight-core) 0%, transparent 38%),
+      radial-gradient(
+        circle,
+        transparent 38%,
+        var(--spotlight-color) 58%,
+        transparent 78%
+      );
+    pointer-events: none;
+    will-change: transform, opacity;
+    animation: eq-ripple-wave 640ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+@keyframes eq-ripple-wave {
+  0% {
+    transform: scale(0.08);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  60% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes eq-ripple-fade {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 0;
   }
 }
 
@@ -311,6 +397,12 @@
 
   .eq-interactive-btn:hover:not(:disabled),
   .eq-interactive-btn:active:not(:disabled) {
+    transform: none !important;
+  }
+
+  /* Touch wave: keep the themed bloom, but fade it instead of expanding it. */
+  .eq-ripple {
+    animation-name: eq-ripple-fade !important;
     transform: none !important;
   }
 }

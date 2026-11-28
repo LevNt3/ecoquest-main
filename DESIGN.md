@@ -168,6 +168,17 @@ Every surface that uses the `--bg-surface` token automatically receives a transl
 
 The material is scoped by the `bg-[var(--bg-surface)]` attribute selector, so cards, the sidebar, modals, and panels stay in lockstep across both themes without per-component classes.
 
+### Pointer & Touch Feedback
+
+Interactive surfaces answer the cursor and the finger with the same lime/emerald light, never with shadows:
+
+- **Cursor spotlight:** every card (`.eq-animate-card`), control (`.eq-interactive-btn`), glass panel (`bg-[var(--bg-surface)]`) and `[data-spotlight]` element paints a two-stop radial glow (`--spotlight-core` + `--spotlight-color`) behind its content. `usePointerSpotlight` eases the highlight toward the pointer (`--eq-pointer-x` / `--eq-pointer-y`, `--eq-spotlight-size`) with a `0.22` lerp per frame and re-anchors it on scroll, so the light glides instead of snapping.
+- **Single active surface:** only the innermost hovered surface receives `.eq-spotlight-on`, the class that reveals the glow. Nested surfaces (a quest row inside a glass list panel, a reward card inside a section) must never glow at the same time, otherwise the outer one freezes at the entry point. Leaving the surface, the viewport or the window clears the class and fades the glow out.
+- **Reveal motion:** the glow fades in over `220ms` and scales from `0.9` to `1` over `280ms` with the `ease-out-expo` curve, so entry feels like light blooming through glass.
+- **Touch wave:** on touch/pen input, `pointerdown` spawns a short-lived `.eq-ripple` wave that blooms from the contact point for `640ms` and cleans itself up. It uses the same theme tokens, so it matches the glass in both themes.
+- **Device gating:** the spotlight only runs under `@media (hover: hover) and (pointer: fine)`; touch devices get the wave instead of a sticky hover glow.
+- **Reduced motion:** `prefers-reduced-motion` swaps the wave's expansion for a pure opacity fade and disables the button lift/press transforms.
+
 ## Shapes
 
 - **Compact Controls (`8px` radius):** Top-bar CTAs, segmented filter buttons, and compact admin toggles.
